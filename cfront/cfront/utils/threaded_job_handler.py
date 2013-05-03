@@ -17,8 +17,9 @@ import redis
 redis_key = None
 def init_env(p):
     global redis_key
-    redis_key = "cfront-{0}:job:hits".format("dev" if cfront_settings.get("debug_mode",False) else "prod")
     env = bootstrap(p)
+
+    redis_key = "cfront-{0}:job:hits".format("dev" if cfront_settings.get("debug_mode",False) else "prod")
 
 def queue_loop(ofs,stride):
     while True:
@@ -40,6 +41,7 @@ def worker(jobs_q,**genomes):
             genome_name = job["genome_name"]  
             results = genome_db.fetch_hits_in_thread_shm(guide, genome_name, genomes[genome_name])   
             print "SPACER ID IN WORKER is {0}".format(spacerid)
+            print "REDIS KEY" + redis_key
             r.rpush(redis_key,
                     json.dumps({"spacerid": spacerid,
                                 "results":results}))

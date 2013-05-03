@@ -27,13 +27,13 @@
 	<div class="control-group">
 	  <span class="control-label">sequence type</span>
 	  <div  class="controls">
-	    <label  class="radio input-type-select">
-	      <input type="radio" name="inputRadios" id="optionsRadios1" value="unique_genomic" checked>
-	      unique genomic region (23-500 nt) <a class="annotation show-genome-example">[..demo]</a>
-	    </label>
 	    <label class="radio input-type-select">
-	      <input  type="radio" name="inputRadios" id="optionsRadios2" value="other_region">
+	      <input  type="radio" name="inputRadios" id="optionsRadios2" value="other_region" checked>
 	      other region (23-500 nt) <a class="annotation show-other-example">[..demo]</a>
+	    </label>
+	    <label  class="radio input-type-select">
+	      <input type="radio" name="inputRadios" id="optionsRadios1" value="unique_genomic" >
+	      unique genomic region (23-500 nt) <a class="annotation show-genome-example">[..demo]</a>
 	    </label>
 	  </div> 
 	</div>
