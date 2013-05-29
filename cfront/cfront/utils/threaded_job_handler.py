@@ -17,8 +17,9 @@ import redis
 redis_key = None
 def init_env(p):
     global redis_key
-    redis_key = "cfront-{0}:job:hits".format("dev" if cfront_settings.get("debug_mode",False) else "prod")
     env = bootstrap(p)
+    redis_key = "cfront-{0}:job:hits".format("dev" if cfront_settings.get("debug_mode",False) else "prod")
+
 
 def queue_loop(ofs,stride):
     while True:
@@ -84,7 +85,7 @@ def process_queue(ofs, stride):
 
 
     procs = []
-    max_procs = 4
+    max_procs = 8
     manager = Manager()
     jobs_q = JoinableQueue()
 
