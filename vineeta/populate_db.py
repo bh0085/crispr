@@ -13,20 +13,7 @@ locs1k = os.path.join(DATAPATH,'locs1k.txt')
 locsall = os.path.join(DATAPATH,'all_loci.txt')
 
 bytes_10k = 10000000 #273,000 lines
-bytes_1m = 1000000000 #27M lines
-def fetch_data(tablename = "loci1kt" ):
-    max_bytes = {"loci1kt":bytes_10k,
-                 "loci10mt":bytes_1m}[tablename]
-    print "fetching data with max bytes {0}".format(max_bytes)
-    with open(locsall) as f:
-        lines10m = f.readlines(max_bytes)
-    rows = [ dict(id=i, seq= l.split("\t")[3].strip()[:-3]) for i,l in enumerate(lines10m)]
-    
-    #for r in rows:
-    #    for let in ["A","G","T","C"]:
-    #        r[let] = r["seq"].count(let)
-
-    return rows
+bytes_1m =  1000000000 #27M lines
 
 
 def populate_range_tables():
@@ -62,7 +49,7 @@ def populate_range_tables():
     conn.close()
 
 
-def populate_trgm_tables(table):
+def populate_trgm_tables(table,nlines):
     '''
     Populates tables indexed by GIST for a trigram query.
     '''
@@ -84,12 +71,16 @@ def populate_trgm_tables(table):
     # the correct conversion (no more SQL injections!)
     cols = ["id", "seq"]
     rows = fetch_data(tablename = tablename)
-    
-    for i,r in enumerate( rows ):
-            generic_insert = ("""INSERT INTO {0} (""" + ", ".join(cols)+ """) VALUES ( %s, %s)""").format(tablename)
-            cur.execute(generic_insert,[r[c] for c in cols])
+    generic_insert = ("""INSERT INTO {0} (""" + ", ".join(cols)+ """) VALUES ( %s, %s)""").format(tablename)
+
+    with open(locsall) as f:
+        for i,l in enumerate(f):
+            if i > nlines:
+                break
+            row = dict(id=i, seq= l.split("\t")[3].strip()[:-3])
+            cur.execute(generic_insert,[row[c] for c in cols])
             if i %100000 == 0:
-                print "{0:2} ({1} / {2})".format( float(i) / len(rows), i, len(rows))
+                print "{0:2} ({1} / {2})".format( float(i) / nlines, i, nlines)
     conn.commit()
     conn.close()
 
@@ -121,11 +112,13 @@ if __name__ == "__main__":
     parser.add_argument('--table','-t',dest="table",
                         default="loci1kt",type=str,
                         help="table name to store, query")
+    parser.add_argument('--nlines','-n',dest="nlines",
+                        default=10000,type=int,
+                        help="number of lines to enter into db")
     args = parser.parse_args()
     
 
-
     if args.reset:
-        populate_trgm_tables(table = args.table)
+        populate_trgm_tables(args.table,args.nlines)
     if args.query:
-        query_trgm_tables(table = args.table)
+        query_trgm_tables(args.table)
