@@ -33,7 +33,7 @@ def populate_range_tables():
     '''
     Populates tables indexed by letter distribution for a range query.
     '''
-    conn  = psycopg2.connect("dbname=vineeta user=postgres")
+    conn  = psycopg2.connect("dbname=vineeta user=ben")
     cur = conn.cursor()
     init_table = """
     CREATE TABLE loci10m (
@@ -66,7 +66,7 @@ def populate_trgm_tables(table):
     '''
     Populates tables indexed by GIST for a trigram query.
     '''
-    conn  = psycopg2.connect("dbname=vineeta user=postgres")
+    conn  = psycopg2.connect("dbname=vineeta user=ben")
     cur = conn.cursor()
     tablename = table
     init_table = """
