@@ -8,7 +8,7 @@ and builds an index on that distribution
 import os, argparse, psycopg2
 
 
-DATAPATH='~/data/zlab/vineeta'
+DATAPATH=os.path.join(os.environ['HOME'],'/data/zlab/vineeta')
 locs1k = os.path.join(DATAPATH,'locs1k.txt')
 locsall = os.path.join(DATAPATH,'all_loci.txt')
 
