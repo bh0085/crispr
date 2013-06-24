@@ -70,7 +70,6 @@ def populate_trgm_tables(table,nlines):
     # Pass data to fill a query placeholders and let Psycopg perform
     # the correct conversion (no more SQL injections!)
     cols = ["id", "seq"]
-    rows = fetch_data(tablename = tablename)
     generic_insert = ("""INSERT INTO {0} (""" + ", ".join(cols)+ """) VALUES ( %s, %s)""").format(tablename)
 
     with open(locsall) as f:
