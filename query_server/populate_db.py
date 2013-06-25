@@ -80,27 +80,45 @@ def populate_trgm_table(table,nlines):
 
 def index_trgm_table(table):
     global cur
-    cur.execute("CREATE INDEX ON {0}_gist_idx USING GIST(seq gist_trgm_ops);".format(table))
+    cur.execute("""
+SET search_path TO "$user",public, extensions;
+CREATE INDEX ON {0} USING GIST(seq gist_trgm_ops);""".format(table))
+
 
 def drop_trgm_table(table):
     global cur
-    cur.executes("DROP TABLE {0};".format(table))
+    cur.execute("DROP TABLE {0};".format(table))
 
 def query_trgm_table(table):
-    query = """
+    query_seq = "GAAAACTTGGTCTCTAAATG"
+    query_sql = """
 SET search_path TO "$user",public, extensions;
-EXPLAIN ANALYZE SELECT seq, seq <-> 'GAAAACTTGGTCTCTAAATG'
+SELECT set_limit(.1), show_limit();  
+EXPLAIN ANALYZE SELECT seq, seq <-> '{1}'
 FROM {0}
-ORDER BY seq <-> 'GAAAACTTGGTCTCTAAATG'
+WHERE seq % '{1}'
+ORDER BY seq <-> '{1}'
 LIMIT 10;
-""".format(table)
+""".format(table, query_seq)
 
-    global curr
-    cur.execute(query)
-    print cur.fetchall()
+    global cur
+    cur.execute(query_sql)
+    for r in cur.fetchall():
+        print r
+
+def get_index_size(table):
+    global cur
+    cur.execute("select pg_size_pretty(pg_total_relation_size('{0}') - pg_relation_size('{0}'));".format(table))
+    for r in cur.fetchall(): print r
+    cur.execute( "select pg_size_pretty(pg_relation_size('{0}'));".format(table))
+    for r in cur.fetchall(): print r
+    
     
 
 if __name__ == "__main__":
+    '''
+    runs scripts to populate and test the crispr loci database.
+    '''
     parser = argparse.ArgumentParser()
     parser.add_argument('--reset','-r',dest="reset",
                         default=False,const=True,action="store_const",
@@ -120,11 +138,14 @@ if __name__ == "__main__":
     parser.add_argument('--drop', '-d', dest = 'drop',
                         default=False, const=True, action="store_const",
                         help="drops the table TABLE before running")
+    parser.add_argument('--size', '-s', dest = 'size',
+                        default=False, const=True, action="store_const",
+                        help="prints the size of TABLE and associated indexes")
     args = parser.parse_args()
 
 
-    if not args.drop or args.reset or\
-       args.make_index or args.query:
+    if not (args.drop or args.reset or\
+            args.make_index or args.query or args.size):
         parser.print_help()
         exit()
 
@@ -140,6 +161,8 @@ if __name__ == "__main__":
         index_trgm_table(args.table)
     if args.query:
         query_trgm_table(args.table)
+    if args.size:
+        get_index_size(args.table)
 
     conn.commit()
     conn.close()
