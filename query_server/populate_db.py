@@ -46,7 +46,7 @@ def populate_range_tables():
 
 
 
-def populate_trgm_tables(table,nlines):
+def populate_trgm_table(table,nlines):
     '''
     Populates tables indexed by GIST for a trigram query.
     '''
@@ -78,15 +78,15 @@ def populate_trgm_tables(table,nlines):
             if i %100000 == 0:
                 print "{0:2} ({1} / {2})".format( float(i) / nlines, i, nlines)
 
-def index_trgm_tables(table):
+def index_trgm_table(table):
     global cur
     cur.execute("CREATE INDEX ON {0}_gist_idx USING GIST(seq gist_trgm_ops);".format(table))
 
-def delete_trgm_tables(table):
+def delete_trgm_table(table):
     global cur
     cur.executes("DROP TABLE {0};".format(table))
 
-def query_trgm_tables(table):
+def query_trgm_table(table):
     query = """
 SET search_path TO "$user",public, extensions;
 EXPLAIN ANALYZE SELECT seq, seq <-> 'GAAAACTTGGTCTCTAAATG'
@@ -114,10 +114,10 @@ if __name__ == "__main__":
     parser.add_argument('--nlines','-n',dest="nlines",
                         default=10000,type=int,
                         help="number of lines to enter into db")
-    parser.add_argument('--make-index','i',dest="make_index",
+    parser.add_argument('--make-index','-i',dest="make_index",
                         default=False, const=True, action="store_const",
                         help="create a gist index on TABLE")
-    parser.add_argument('--delete', 'd', dest = 'delete_table',
+    parser.add_argument('--delete', '-d', dest = 'delete_table',
                         default=False, const=True, action="store_const",
                         help="deletes the table TABLE before running")
     args = parser.parse_args()
@@ -133,13 +133,13 @@ if __name__ == "__main__":
     cur = conn.cursor()
     
     if args.delete:
-        delete_trgm_tables(args.table)
+        delete_trgm_table(args.table)
     if args.reset:
-        populate_trgm_tables(args.table,args.nlines)
+        populate_trgm_table(args.table,args.nlines)
     if args.make_index:
-        index_trgm_tables(args.table)
+        index_trgm_table(args.table)
     if args.query:
-        query_trgm_tables(args.table)
+        query_trgm_table(args.table)
 
     conn.commit()
     conn.close()
