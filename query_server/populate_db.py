@@ -123,8 +123,8 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
 
-    if not args.delete or args.reset or\
-       args.make_index or args.args.query:
+    if not args.drop or args.reset or\
+       args.make_index or args.query:
         parser.print_help()
         exit()
 
