@@ -94,7 +94,7 @@ FROM {0}
 ORDER BY seq <-> 'GAAAACTTGGTCTCTAAATG'
 LIMIT 10;
 """.format(table)
-    conn  = psycopg2.connect("dbname=vineeta user=postgres")
+    conn  = psycopg2.connect("dbname=vineeta user=ben")
     cur = conn.cursor()
     cur.execute(query)
     print cur.fetchall()
