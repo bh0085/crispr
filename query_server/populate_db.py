@@ -128,8 +128,9 @@ if __name__ == "__main__":
         parser.print_help()
         exit()
 
-    global conn  = psycopg2.connect("dbname=vineeta user=ben")
-    global cur = conn.cursor()
+    global conn, curr
+    conn = psycopg2.connect("dbname=vineeta user=ben")
+    cur = conn.cursor()
     
     if args.delete:
         delete_trgm_tables(args.table)
