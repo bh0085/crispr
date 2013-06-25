@@ -82,7 +82,7 @@ def index_trgm_table(table):
     global cur
     cur.execute("CREATE INDEX ON {0}_gist_idx USING GIST(seq gist_trgm_ops);".format(table))
 
-def delete_trgm_table(table):
+def drop_trgm_table(table):
     global cur
     cur.executes("DROP TABLE {0};".format(table))
 
@@ -132,8 +132,8 @@ if __name__ == "__main__":
     conn = psycopg2.connect("dbname=vineeta user=ben")
     cur = conn.cursor()
     
-    if args.delete:
-        delete_trgm_table(args.table)
+    if args.drop:
+        drop_trgm_table(args.table)
     if args.reset:
         populate_trgm_table(args.table,args.nlines)
     if args.make_index:
