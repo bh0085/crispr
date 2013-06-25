@@ -6,6 +6,8 @@ and builds an index on that distribution
 '''
 
 import os, argparse, psycopg2
+global conn
+global cur
 
 
 DATAPATH=os.path.join(os.environ['HOME'],'data/zlab/vineeta')
@@ -16,8 +18,7 @@ def populate_range_tables():
     '''
     Populates tables indexed by letter distribution for a range query.
     '''
-    conn  = psycopg2.connect("dbname=vineeta user=ben")
-    cur = conn.cursor()
+
     init_table = """
     CREATE TABLE loci10m (
         id        int PRIMARY KEY,
@@ -34,6 +35,7 @@ def populate_range_tables():
     """
     CREATE INDEX loci_trgm_idx on loci10m using gist (seq extensions.gist_trgm_ops);
     """
+    global cur
     cur.execute(init_table)
     # Pass data to fill a query placeholders and let Psycopg perform
     # the correct conversion (no more SQL injections!)
@@ -41,16 +43,15 @@ def populate_range_tables():
     for r in rows:
             generic_insert = """INSERT INTO loci10m (""" + ", ".join(r.keys())+ """) VALUES ( %s, %s, %s, %s, %s, %s)"""
             cur.execute(generic_insert,r.values()) 
-    conn.commit()
-    conn.close()
+
 
 
 def populate_trgm_tables(table,nlines):
     '''
     Populates tables indexed by GIST for a trigram query.
     '''
-    conn  = psycopg2.connect("dbname=vineeta user=ben")
-    cur = conn.cursor()
+    
+    global cur
     tablename = table
     init_table = """
     CREATE TABLE {0} (
@@ -76,22 +77,25 @@ def populate_trgm_tables(table,nlines):
             cur.execute(generic_insert,[row[c] for c in cols])
             if i %100000 == 0:
                 print "{0:2} ({1} / {2})".format( float(i) / nlines, i, nlines)
-    conn.commit()
-    conn.close()
 
+def index_trgm_tables(table):
+    global cur
+    cur.execute("CREATE INDEX ON {0}_gist_idx USING GIST(seq gist_trgm_ops);".format(table))
 
-
+def delete_trgm_tables(table):
+    global cur
+    cur.executes("DROP TABLE {0};".format(table))
 
 def query_trgm_tables(table):
     query = """
 SET search_path TO "$user",public, extensions;
-SELECT seq, seq <-> 'GAAAACTTGGTCTCTAAATG'
+EXPLAIN ANALYZE SELECT seq, seq <-> 'GAAAACTTGGTCTCTAAATG'
 FROM {0}
 ORDER BY seq <-> 'GAAAACTTGGTCTCTAAATG'
 LIMIT 10;
 """.format(table)
-    conn  = psycopg2.connect("dbname=vineeta user=ben")
-    cur = conn.cursor()
+
+    global curr
     cur.execute(query)
     print cur.fetchall()
     
@@ -110,10 +114,31 @@ if __name__ == "__main__":
     parser.add_argument('--nlines','-n',dest="nlines",
                         default=10000,type=int,
                         help="number of lines to enter into db")
+    parser.add_argument('--make-index','i',dest="make_index",
+                        default=False, const=True, action="store_const",
+                        help="create a gist index on TABLE")
+    parser.add_argument('--delete', 'd', dest = 'delete_table',
+                        default=False, const=True, action="store_const",
+                        help="deletes the table TABLE before running")
     args = parser.parse_args()
-    
 
+
+    if not args.delete or args.reset or\
+       args.make_index or args.args.query:
+        parser.print_help()
+        exit()
+
+    global conn  = psycopg2.connect("dbname=vineeta user=ben")
+    global cur = conn.cursor()
+    
+    if args.delete:
+        delete_trgm_tables(args.table)
     if args.reset:
         populate_trgm_tables(args.table,args.nlines)
+    if args.make_index:
+        index_trgm_tables(args.table)
     if args.query:
         query_trgm_tables(args.table)
+
+    conn.commit()
+    conn.close()
