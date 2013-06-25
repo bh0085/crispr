@@ -117,9 +117,9 @@ if __name__ == "__main__":
     parser.add_argument('--make-index','-i',dest="make_index",
                         default=False, const=True, action="store_const",
                         help="create a gist index on TABLE")
-    parser.add_argument('--delete', '-d', dest = 'delete_table',
+    parser.add_argument('--drop', '-d', dest = 'drop',
                         default=False, const=True, action="store_const",
-                        help="deletes the table TABLE before running")
+                        help="drops the table TABLE before running")
     args = parser.parse_args()
 
 
