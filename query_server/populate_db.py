@@ -12,10 +12,6 @@ DATAPATH=os.path.join(os.environ['HOME'],'data/zlab/vineeta')
 locs1k = os.path.join(DATAPATH,'locs1k.txt')
 locsall = os.path.join(DATAPATH,'all_loci.txt')
 
-bytes_10k = 10000000 #273,000 lines
-bytes_1m =  1000000000 #27M lines
-
-
 def populate_range_tables():
     '''
     Populates tables indexed by letter distribution for a range query.
