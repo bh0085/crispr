@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 '''
 Submits a single query to the psql server from a file, "input"
-Waits for a response and prints to a file, "output"
+Waits for a response and print to stdout
 '''
 
 import psycopg2,os, argparse, sys
@@ -55,10 +55,6 @@ def main():
     parser.add_argument('--input', '-i', dest="input",
                         required="true", type=str,
                         help="input file")
-
-    parser.add_argument('--output', '-o', dest="output",
-                        required="true", type=str,
-                        help="output file")
     parser.add_argument('--limit','-l',dest="limit",
                         default=.8,type=float,
                         help="query similarity limit (default .8 == 16 bases in common)")
