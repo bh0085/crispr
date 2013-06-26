@@ -13,7 +13,7 @@ if not os.path.isdir(JOBSPATH):
     os.makedirs(JOBSPATH)
 
 def write_sample():
-    '''writes a sample (single sequence) input to sample-input.txt''')
+    '''writes a sample (single sequence) input to sample-input.txt'''
 
     input_file = "sample_input.txt"
     sample_seq = "GAAAACTTGGTCTCTAAATG"
