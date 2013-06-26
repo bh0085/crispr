@@ -77,8 +77,8 @@ def main():
     cur = conn.cursor()
 
     limit = args.limit
+    table = args.table
     query_seq = input_seq
-    table = "loci1kt"
     job_number = len(os.listdir(JOBSPATH))
     job_path = os.path.join(JOBSPATH,"job_{0:06}".format(job_number))
     os.makedirs(job_path)
