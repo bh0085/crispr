@@ -4,3 +4,4 @@ function cfront
     cd ${HOME}/crispr/frontend
     source venv/bin/activate
 }
+
