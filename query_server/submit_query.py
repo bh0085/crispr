@@ -41,6 +41,12 @@ def main():
     parser.add_argument('--output', '-o', dest="output",
                         required="true", type=str,
                         help="output file")
+    parser.add_argument('--limit','-l',dest="limit",
+                        default=.8,type=float,
+                        help="query similarity limit (default .8 == 16 bases in common)")
+    parser.add_argument('--table','-t',dest="table",
+                        default="loci10mt",type=str,
+                        help="table name to store, query")
     args = parser.parse_args()
     
     with open(args.input) as f:
@@ -53,18 +59,17 @@ def main():
     conn = psycopg2.connect("dbname=vineeta user=ben")
     cur = conn.cursor()
 
-    limit = .75
+    limit = args.limit
     query_seq = input_seq
-    table = "loci10mt"
+    table = "loci1kt"
     job_number = len(os.listdir(JOBSPATH))
     job_path = os.path.join(JOBSPATH,"job_{0:06}".format(job_number))
-
-
+    os.makedirs(job_path)
 
     query=  """
     SET search_path TO "$user",public, extensions;
     SELECT set_limit({2}), show_limit();
-    EXPLAIN ANALYZE SELECT seq, seq <-> '{1}'
+    SELECT seq, seq <-> '{1}'
     FROM {0}
     WHERE seq % '{1}'
     ORDER BY seq <-> '{1}'
@@ -74,7 +79,7 @@ def main():
     rows = cur.fetchall()
     for r in rows: print r
     
-    with open(os.path.join(job_path, "summary.txt"),w) as f:
+    with open(os.path.join(job_path, "summary.txt"),'w') as f:
         f.writelines(["number of rows\t{0}\n".format(len(rows))])
     
     
