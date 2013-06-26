@@ -89,17 +89,16 @@ def drop_trgm_table(table):
     global cur
     cur.execute("DROP TABLE {0};".format(table))
 
-def query_trgm_table(table):
+def query_trgm_table(table,limit):
     query_seq = "GAAAACTTGGTCTCTAAATG"
     query_sql = """
 SET search_path TO "$user",public, extensions;
-SELECT set_limit(.1), show_limit();  
+SELECT set_limit({2}), show_limit();  
 EXPLAIN ANALYZE SELECT seq, seq <-> '{1}'
 FROM {0}
 WHERE seq % '{1}'
-ORDER BY seq <-> '{1}'
 LIMIT 10;
-""".format(table, query_seq)
+""".format(table, query_seq, limit)
 
     global cur
     cur.execute(query_sql)
@@ -129,6 +128,9 @@ if __name__ == "__main__":
     parser.add_argument('--table','-t',dest="table",
                         default="loci1kt",type=str,
                         help="table name to store, query")
+    parser.add_argument('--limit','-l',dest="limit",
+                        default=.75,type=float,
+                        help="query similarity limit (default .8 == 16 bases in common)")
     parser.add_argument('--nlines','-n',dest="nlines",
                         default=10000,type=int,
                         help="number of lines to enter into db")
@@ -160,7 +162,7 @@ if __name__ == "__main__":
     if args.make_index:
         index_trgm_table(args.table)
     if args.query:
-        query_trgm_table(args.table)
+        query_trgm_table(args.table, args.limit)
     if args.size:
         get_index_size(args.table)
 
