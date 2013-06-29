@@ -1,0 +1,22 @@
+setuptools
+Chameleon >= 1.2.3
+Mako >= 0.3.6
+WebOb >= 1.2b3
+repoze.lru >= 0.4
+zope.interface >= 3.8.0
+zope.deprecation >= 3.5.0
+venusian >= 1.0a3
+translationstring >= 0.4
+PasteDeploy >= 1.5.0
+
+[docs]
+Sphinx
+docutils
+repoze.sphinx.autointerface
+
+[testing]
+WebTest >= 1.3.1
+zope.component>=3.11.0
+nose
+coverage
+virtualenv

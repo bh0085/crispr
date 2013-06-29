@@ -1,0 +1,6 @@
+# INSTALL NOTES
+#needs a few environment variables to work properly... right now, set by hand in bashrc
+CFRONTROOT=${HOME}/crispr/cfront
+CFRONTBIN=${CFRONTROOT}/cfront/bin
+CFRONTDATA=${HOME}/data/cfront
+PATH=${PATH}:${CFRONTBIN}

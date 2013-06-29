@@ -1,0 +1,104 @@
+.footer{
+    margin-top:2em;
+    border-top: 1px solid #efefef;
+    padding-top:1em;
+    text-align:center;
+}
+
+
+.unselectable {
+   -moz-user-select: -moz-none;
+   -khtml-user-select: none;
+   -webkit-user-select: none;
+   user-select: none;
+}
+
+body{
+    .float-left{
+    }
+    .navbar{
+        li>a, .brand{
+            color:black;
+        }
+    }
+    .scrolly-column{
+	.scrolly-section{
+	    &:first-child{
+		.header-back{
+		    display:none;
+		}
+	    }
+	    min-height:300px;
+	    margin-left:20px;
+	    margin-bottom:100px;
+	    .header-oneword{
+		display:inline;
+	    }
+	    .header-description{
+		display:inline;
+		vertical-align:bottom;
+		margin-left:1em;
+	    }
+	}
+    }
+}
+.inactive{
+    opacity: .25;
+    pointer-events:none;
+}
+
+#navparent{
+    width:0px;
+    height:0px;
+    display:inline-block;
+    position:fixed;
+    left:0px;
+    top:50%;
+    margin-top:-56px;
+}
+.bs-docs-sidenav {
+    width: 128px;
+    margin: 0px 0 0;
+    padding: 0;
+    background-color: #fff;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
+    -webkit-box-shadow: 0 1px 4px rgba(0,0,0,.065);
+    -moz-box-shadow: 0 1px 4px rgba(0,0,0,.065);
+    box-shadow: 0 1px 4px rgba(0,0,0,.065);
+}
+
+.bs-docs-sidenav > li > a {
+    display: block;
+    width: 90px 9;
+    margin: 0 0 -1px;
+    padding: 8px 14px;
+    border: 1px solid #e5e5e5;
+}
+
+.bs-docs-sidenav .icon-chevron-right {
+    float: right;
+    margin-top: 2px;
+    margin-right: -6px;
+    opacity: .25;
+}
+.bs-docs-sidenav .active .icon-chevron-right, .bs-docs-sidenav .active a:hover .icon-chevron-right {
+    background-image: url(../img/glyphicons-halflings-white.png);
+    opacity: 1;
+}
+
+.bs-docs-sidenav > .active > a {
+    position: relative;
+    z-index: 2;
+    padding: 9px 15px;
+    border: 0;
+    text-shadow: 0 1px 0 rgba(0,0,0,.15);
+    -webkit-box-shadow: inset 1px 0 0 rgba(0,0,0,.1), inset -1px 0 0 rgba(0,0,0,.1);
+    -moz-box-shadow: inset 1px 0 0 rgba(0,0,0,.1), inset -1px 0 0 rgba(0,0,0,.1);
+    box-shadow: inset 1px 0 0 rgba(0,0,0,.1), inset -1px 0 0 rgba(0,0,0,.1);
+}
+
+a{
+    cursor:pointer;
+}

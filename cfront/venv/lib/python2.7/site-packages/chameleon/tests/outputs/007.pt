@@ -1,0 +1,15 @@
+<html>
+  <body>
+    Hello world!
+    <div>Hello world!</div>
+    <div>Hello world!</div>
+    &lt;type 'str'&gt;
+    &&
+
+    Hello world
+    $leftalone
+    <div></div>
+    <div>Hello world</div>
+    <div>${} is ignored.</div>
+  </body>
+</html>

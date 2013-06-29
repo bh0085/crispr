@@ -1,0 +1,10 @@
+
+
+[docs]
+Sphinx
+repoze.sphinx.autointerface
+
+[testing]
+nose
+nose-exclude
+coverage
