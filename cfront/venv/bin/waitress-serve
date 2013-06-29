@@ -1,9 +1,0 @@
-#!/Users/ben/crispr/cfront/venv/bin/python
-# EASY-INSTALL-ENTRY-SCRIPT: 'waitress==0.8.5','console_scripts','waitress-serve'
-__requires__ = 'waitress==0.8.5'
-import sys
-from pkg_resources import load_entry_point
-
-sys.exit(
-   load_entry_point('waitress==0.8.5', 'console_scripts', 'waitress-serve')()
-)

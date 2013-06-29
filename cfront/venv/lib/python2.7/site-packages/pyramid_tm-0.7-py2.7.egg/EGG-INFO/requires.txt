@@ -1,9 +1,0 @@
-pyramid>=1.2dev
-transaction
-
-[docs]
-Sphinx
-
-[testing]
-nose
-coverage

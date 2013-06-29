@@ -1,9 +1,0 @@
-#!/Users/ben/crispr/cfront/venv/bin/python
-# EASY-INSTALL-ENTRY-SCRIPT: 'pyramid==1.4.2','console_scripts','proutes'
-__requires__ = 'pyramid==1.4.2'
-import sys
-from pkg_resources import load_entry_point
-
-sys.exit(
-   load_entry_point('pyramid==1.4.2', 'console_scripts', 'proutes')()
-)
