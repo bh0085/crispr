@@ -2,10 +2,14 @@
 
 var find_statuses = null
 var find_current_id = 0
+var find_polling_delay = null;
 
 function find_initialize(){
     
-    queries =["GAAAACTTGGTCTCTAAATG", "GAAGACTTGTTCTCTAAATT"]
+    queries = _.map(identify_data.spacers,function(e){return e.seq});
+    if (queries.length == 0){throw exceptions.nospacers.messages}
+    
+    
     _.each(queries,function(s,i){
 	$.getJSON("/find/submit/"+s,
 		  {},
@@ -23,7 +27,9 @@ function find_reset(){
     find_statuses = {}
     //offsets the current_id so that outdated asynch calls will be ignored
     find_current_id += 1
+    find_polling_delay = 250
 }
+
 
 function find_check_job(){
     //outdated async process

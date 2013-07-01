@@ -35,7 +35,7 @@
     <div class="control-group">
       <span class="control-label">sequence</span>
       <div class="controls">
-	<textarea id="sequence_submission_area" rows=10></textarea>
+	<textarea id="sequence_submission_area" rows=10>AGAGAGGGAGATGTGATCGCTAGCATGCATCGACTAGCATCAGCTACGACTACGATCAGCTATTTATTATTATTAGAGAGCGCGCGCGACTACGACTAGAGAGATCGCATAGAGAGAGAGAGAGAGAGAGGAGAGAATGCATGCGATGAGGAGATGATGATGGATTCGGGCGCTAGCCGATGCTAGCTAG</textarea>
       </div>
     </div>
     <div class="control-group">

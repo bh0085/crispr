@@ -16,6 +16,11 @@ find_data_proto = {
     hits:null /** list -- each hit includes a query id, a hitid, a sequence (from DB) **/
 }
 
+
+exceptions = {
+    nospacers:{"message":"no spacers in input sequence"}
+}
+
 //instances
 find_data = _.extend(find_data_proto)
 
