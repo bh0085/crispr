@@ -16,6 +16,9 @@
   -webkit-user-select: none;
   user-select: none; }
 
+.sequence {
+  font-family: courier; }
+
 body .navbar li > a, body .navbar .brand {
   color: black; }
 body .scrolly-column .scrolly-section {

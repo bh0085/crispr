@@ -81,6 +81,7 @@ function focus_scrolly_section(name){
     for (var i = index + 1 ; i < section_names.length ; i++){
 	reset_scrolly_section(section_names[i])
     }
+    console.log("focusing " + name);
     initialize_scrolly_section(name)
     $(".scrolly-section").addClass("inactive");
     $("#"+name).removeClass("inactive");
@@ -102,6 +103,8 @@ $(function(){
 	focus_scrolly_section("identify");	
     });
     $("#identify .next").click(function(event){
+	console.log(this,event);
+	console.log("clicked next")
 	focus_scrolly_section("find");
     });
     //previous clickhandlers
@@ -109,6 +112,7 @@ $(function(){
 	focus_scrolly_section("submit");
     });
     $("#find .previous").click(function(event){
+	console.log("WENT BACK")
 	focus_scrolly_section("identify");
     });
 })

@@ -11,5 +11,5 @@
 <script id="identify-section-template" type="unknown">
   <div class="spacers-svg-container"></div>
   <div class="spacers"></div>
-  <div class="next"><h4><a class="next">next...</a></h4></div>
+  <div class=""><h4><a class="next">next...</a></h4></div>
 </script>

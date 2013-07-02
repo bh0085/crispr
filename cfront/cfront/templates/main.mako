@@ -1,14 +1,7 @@
 <%inherit file="base.mako"/>
 <%block name="content_html">
 <span class="row content-row">
-  <span class="float-left" id="navparent">
-    <ul class="nav nav-list affix-top bs-docs-sidenav">
-      <li class="submit-container"><a href="#submit">Submit<i class=" active icon-chevron-right"></i></a></li>
-      <li class="identify-container inactive"><a href="#identify">Identify<i class="icon-chevron-right"></i></a></li>
-      <li class="find-container inactive"><a href="#find">Find<i class="icon-chevron-right"></i></a></li>
-    </ul>
-  </span>
-  <span id="scrolling-content" class="span8 offset2 scrolly-column">
+  <span id="scrolling-content" class="span8 offset1 scrolly-column">
     <%include file="submit.mako"/>
     <%include file="identify.mako"/>
     <%include file="find.mako"/>

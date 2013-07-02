@@ -10,16 +10,14 @@ def submit_find_query_demo(query):
     return {"status":"RUN","job_id":job_id}
 
 def submit_find_query(query):
-    prc = spc.Popen("submit_query.py -l .5 -t loci10mt",
+    prc = spc.Popen("submit_query.py -l .5 -t loci1kt",
                     stdin = spc.PIPE,
                     stdout= spc.PIPE,
                     shell=True)
     formatted_query = "{0}".format(query)
     prc.stdin.write(formatted_query)
     prc.stdin.close()
-    print "READING PIPE"
     job_id=prc.stdout.readline()
-    print "READ PIPE"
     return {"status":"RUN", "job_id":job_id}
 
 def check_find_query(job_id):
@@ -35,7 +33,8 @@ def check_find_query(job_id):
 
 def retrieve_find_query(job_id):
     p = os.path.join(get_job_path(job_id),"matches.txt")
+    cols = ["sequence", "similarity"]
     with open(p) as f:
-        hits = [r.strip().split("\t") for r in f.readlines()]
+        hits = [dict([[ cols[i], e] for i,e in enumerate(r.strip().split("\t"))]) for r in f.readlines()]
     return hits
     
