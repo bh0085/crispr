@@ -158,7 +158,7 @@ def main():
     cur = conn.cursor()
     
     if args.file:
-        locsfile=os.path.join(DATAPATH,args.locsfile)
+        locsfile=os.path.join(DATAPATH,args.file)
     if args.drop:
         drop_trgm_table(args.table)
     if args.reset:
