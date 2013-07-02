@@ -8,11 +8,10 @@ and builds an index on that distribution
 import os, argparse, psycopg2
 global conn
 global cur
+global locsfile
 
 
 DATAPATH=os.path.join(os.environ['HOME'],'data/zlab/vineeta')
-locs1k = os.path.join(DATAPATH,'locs1k.txt')
-locsall = os.path.join(DATAPATH,'all_loci.txt')
 
 def populate_range_tables():
     '''
@@ -69,7 +68,7 @@ def populate_trgm_table(table,nlines):
     cols = ["id", "seq"]
     generic_insert = ("""INSERT INTO {0} (""" + ", ".join(cols)+ """) VALUES ( %s, %s)""").format(tablename)
 
-    with open(locsall) as f:
+    with open(locsfile) as f:
         for i,l in enumerate(f):
             if i > nlines:
                 break
@@ -143,6 +142,9 @@ def main():
     parser.add_argument('--size', '-s', dest = 'size',
                         default=False, const=True, action="store_const",
                         help="prints the size of TABLE and associated indexes")
+    parser.add_argument('--file','-f',dest="file",
+                        default="all_loci.txt",type=str,
+                        help="file storing loci to enter into DB")
     args = parser.parse_args()
 
 
@@ -151,10 +153,12 @@ def main():
         parser.print_help()
         exit()
 
-    global conn, cur
+    global conn, cur, locsfile
     conn = psycopg2.connect("dbname=vineeta user=ben")
     cur = conn.cursor()
     
+    if args.file:
+        locsfile=os.path.join(DATAPATH,args.locsfile)
     if args.drop:
         drop_trgm_table(args.table)
     if args.reset:
