@@ -13,13 +13,13 @@ global locsfile
 
 DATAPATH=os.path.join(os.environ['HOME'],'data/zlab/vineeta')
 
-def populate_range_tables():
+def populate_range_tables(table, nlines):
     '''
     Populates tables indexed by letter distribution for a range query.
     '''
 
     init_table = """
-    CREATE TABLE loci10m (
+    CREATE TABLE {0} (
         id        int PRIMARY KEY,
         seq       char(20) NOT NULL,
         A         smallint,
@@ -27,21 +27,47 @@ def populate_range_tables():
         G         smallint,
         C         smallint
     );
-    
-    
+    """.format(table)
 
-    """
-    """
-    CREATE INDEX loci_trgm_idx on loci10m using gist (seq extensions.gist_trgm_ops);
-    """
     global cur
     cur.execute(init_table)
     # Pass data to fill a query placeholders and let Psycopg perform
     # the correct conversion (no more SQL injections!)
-    rows = fetch_data()
-    for r in rows:
-            generic_insert = """INSERT INTO loci10m (""" + ", ".join(r.keys())+ """) VALUES ( %s, %s, %s, %s, %s, %s)"""
-            cur.execute(generic_insert,r.values()) 
+    #rows = fetch_data()
+    #for r in rows:
+    #        generic_insert = """INSERT INTO {0} (""" + ", ".join(r.keys())+ """) VALUES ( %s, %s, %s, %s, %s, %s)"""
+    #        cur.execute(generic_insert,r.values()) 
+    
+    #nts = "ATGC"
+    #strs = [a+b+c+d for a in nts for b in nts for c in nts for d in nts]
+    #bytes_dictionary = dict([(s,i) for s,i in enumerate(strs)])
+
+    with open(locsfile) as f:
+        for i,l in enumerate(f):
+            if i > nlines:
+                break
+
+    #        seq = l.split("\t")[3].strip()[:-3]
+    #        for j in range(5):
+    #            letters =seq[4*j:4*(j+1)]
+                
+    #        row = dict(id=i, seq=packed_seq)
+
+            cur.execute(generic_insert,[row[c] for c in cols])
+            seq = l.split("\t")[3].strip()[:-3]
+            d = {"A":seq.count("A"),
+                 "T":seq.count("T"),
+                 "G":seq.count("G"),
+                 "C":seq.count("C"),
+                 seq:seq,
+                 id:i}
+            insert_statement = """INSERT INTO {0} (""" + ", ".join(d.keys())+ """) VALUES ( %s, %s, %s, %s, %s, %s)"""
+            
+
+            
+            if i %100000 == 0:
+                print "{0:2} ({1} / {2})".format( float(i) / nlines, i, nlines)
+
 
 
 
@@ -145,6 +171,9 @@ def main():
     parser.add_argument('--file','-f',dest="file",
                         default="all_loci.txt",type=str,
                         help="file storing loci to enter into DB")
+    parser.add_argument('--distribution','-d',dest='distribution',
+                        default=False, const=True, action="store_const",
+                        help="use a table storing base distributions to scan a cluster idx (no trgm)")
     args = parser.parse_args()
 
 
@@ -161,12 +190,21 @@ def main():
         locsfile=os.path.join(DATAPATH,args.file)
     if args.drop:
         drop_trgm_table(args.table)
-    if args.reset:
-        populate_trgm_table(args.table,args.nlines)
-    if args.make_index:
-        index_trgm_table(args.table)
-    if args.query:
-        query_trgm_table(args.table, args.limit)
+    if args.distribution:
+        if args.reset:
+            populate_dst_table(args.table,args.nlines)
+        if args.make_index:
+            index_dst_table(args.table)
+        if args.query:
+            query_dst_table(args.table, args.limit)
+    else:
+        if args.reset:
+            populate_trgm_table(args.table,args.nlines)
+        if args.make_index:
+            index_trgm_table(args.table)
+        if args.query:
+            query_trgm_table(args.table, args.limit)
+            
     if args.size:
         get_index_size(args.table)
 
