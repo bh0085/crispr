@@ -6,6 +6,7 @@ and builds an index on that distribution
 '''
 
 import os, argparse, psycopg2
+import StringIO
 global conn
 global cur
 global locsfile
@@ -20,45 +21,91 @@ def populate_trgm_table(table,nlines):
     '''
     
     global cur
-    tablename = table
+    locus_table = "{0}_locus".format(table)
+    seq_table = "{0}_sequence".format(table)
     init_table = """
+
     CREATE TABLE {0} (
+    id INT PRIMARY KEY,
+    chr SMALLINT NOT NULL,
+    start INT NOT NULL,
+    strand SMALLINT NOT NULL,
+    nrg CHARACTER[3]
+    );
+    CREATE TABLE {1} (
         id        int PRIMARY KEY,
         seq       varchar(20) NOT NULL
     );
     
-    """.format(tablename)
+    """.format(locus_table, seq_table)
     make_index =  """
     CREATE INDEX loci_trgm_idx on loci10m using gist (seq extensions.gist_trgm_ops);
    """
     cur.execute(init_table)
-    # Pass data to fill a query placeholders and let Psycopg perform
-    # the correct conversion (no more SQL injections!)
-    cols = ["id", "seq"]
-    generic_insert = ("""INSERT INTO {0} (""" + ", ".join(cols)+ """) VALUES ( %s, %s)""").format(tablename)
+
+    cols = ["chr","start","strand","seq23"]
+
+    #buffers for storing sequences, loci for db entry
+    global lbuf, sbuf
+    lbuf = None
+    sbuf = None
+
+    def copy_buffers():
+        global lbuf,sbuf
+        cur.copy_from(lbuf,locus_table)
+        cur.copy_from(sbuf,seq_table)
+        lbuf.close()
+        sbuf.close()
+        lbuf = None
+        sbuf = None
+    def init_buffers():
+        global lbuf,sbuf
+        lbuf = StringIO.StringIO()
+        sbuf = StringIO.StringIO()
+    
 
     with open(locsfile) as f:
         for i,l in enumerate(f):
             if i > nlines:
                 break
-            row = dict(id=i, seq= l.split("\t")[3].strip()[:-3])
-            cur.execute(generic_insert,[row[c] for c in cols])
-            if i %100000 == 0:
+            if lbuf == None:
+                init_buffers()
+                
+            pkey = i+1
+            row = dict( zip( ["id"] + cols, [pkey] + l.strip().split("\t") )) 
+            sbuf.write("\n"+"\t".join([str(e) for e in [row["id"],row["chr"],row["start"],\
+                                                        1 if row["strand"] == "+" else -1,\
+                                                        row["seq23"][-3:]]]))
+            lbuf.write("\n"+"\t".join([str(e) for e in [row["id"],row["seq23"][:-3]]]))
+            if i % 100000 == 0:
+                copy_buffers()
                 print "{0:2} ({1} / {2})".format( float(i) / nlines, i, nlines)
+    if lbuf != None:
+        copy_buffers()
+    
 
 def index_trgm_table(table):
+
+    locus_table = "{0}_locus".format(table)
+    seq_table = "{0}_sequence".format(table)
+
     global cur
     cur.execute("""
 SET search_path TO "$user",public, extensions;
-CREATE INDEX ON {0} USING GIST(seq gist_trgm_ops);""".format(table))
+CREATE INDEX ON {0} USING GIST(seq gist_trgm_ops);""".format(seq_table))
 
 
 def drop_trgm_table(table):
     global cur
-    cur.execute("DROP TABLE {0};".format(table))
+    locus_table = "{0}_locus".format(table)
+    seq_table = "{0}_sequence".format(table)
+    cur.execute("DROP TABLE {0};".format(locus_table))
+    cur.execute("DROP TABLE {0};".format(seq_table))
 
-def query_trgm_table(table,limit):
-    query_seq = "GAAAACTTGGTCTCTAAATG"
+def query_trgm_table(table,limit,query_seq):
+    global cur
+    locus_table = "{0}_locus".format(table)
+    seq_table = "{0}_sequence".format(table)
     query_sql = """
 SET search_path TO "$user",public, extensions;
 SELECT set_limit({2}), show_limit();  
@@ -67,18 +114,21 @@ FROM {0}
 WHERE seq % '{1}'
 ORDER BY seq <-> '{1}'
 LIMIT 10;
-""".format(table, query_seq, limit)
+""".format(seq_table, query_seq, limit)
 
-    global cur
     cur.execute(query_sql)
     for r in cur.fetchall():
         print r
 
 def get_index_size(table):
     global cur
-    cur.execute("select pg_size_pretty(pg_total_relation_size('{0}') - pg_relation_size('{0}'));".format(table))
+
+    locus_table = "{0}_locus".format(table)
+    seq_table = "{0}_sequence".format(table)
+
+    cur.execute("select pg_size_pretty(pg_total_relation_size('{0}') - pg_relation_size('{0}'));".format(seq_table))
     for r in cur.fetchall(): print r
-    cur.execute( "select pg_size_pretty(pg_relation_size('{0}'));".format(table))
+    cur.execute( "select pg_size_pretty(pg_relation_size('{0}'));".format(seq_table))
     for r in cur.fetchall(): print r
     
 
@@ -114,9 +164,6 @@ def main():
     parser.add_argument('--file','-f',dest="file",
                         default="all_loci.txt",type=str,
                         help="file storing loci to enter into DB")
-    parser.add_argument('--distribution','-d',dest='distribution',
-                        default=False, const=True, action="store_const",
-                        help="use a table storing base distributions to scan a cluster idx (no trgm)")
     args = parser.parse_args()
 
 
@@ -139,7 +186,7 @@ def main():
     if args.make_index:
         index_trgm_table(args.table)
     if args.query:
-        query_trgm_table(args.table, args.limit)
+        query_trgm_table(args.table, args.limit,"GAAAACTTGGTCTCTAAATG")
             
     if args.size:
         get_index_size(args.table)
