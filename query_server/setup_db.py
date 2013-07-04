@@ -27,7 +27,7 @@ def populate_trgm_table(table,nlines):
 
     CREATE TABLE {0} (
     id INT PRIMARY KEY,
-    chr SMALLINT NOT NULL,
+    chr varchar(3) NOT NULL,
     start INT NOT NULL,
     strand SMALLINT NOT NULL,
     nrg varchar(3)
