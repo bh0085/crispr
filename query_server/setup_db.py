@@ -30,7 +30,7 @@ def populate_trgm_table(table,nlines):
     chr SMALLINT NOT NULL,
     start INT NOT NULL,
     strand SMALLINT NOT NULL,
-    nrg CHARACTER[3]
+    nrg varchar(3)
     );
     CREATE TABLE {1} (
         id        int PRIMARY KEY,
@@ -38,12 +38,11 @@ def populate_trgm_table(table,nlines):
     );
     
     """.format(locus_table, seq_table)
-    make_index =  """
-    CREATE INDEX loci_trgm_idx on loci10m using gist (seq extensions.gist_trgm_ops);
-   """
     cur.execute(init_table)
 
     cols = ["chr","start","strand","seq23"]
+    lcols = ["id","chr","start","strand","nrg"]
+    scols = ["id","seq"]
 
     #buffers for storing sequences, loci for db entry
     global lbuf, sbuf
@@ -52,8 +51,12 @@ def populate_trgm_table(table,nlines):
 
     def copy_buffers():
         global lbuf,sbuf
+        lbuf.seek(0)
+        sbuf.seek(0)
+        
         cur.copy_from(lbuf,locus_table)
         cur.copy_from(sbuf,seq_table)
+
         lbuf.close()
         sbuf.close()
         lbuf = None
@@ -73,11 +76,11 @@ def populate_trgm_table(table,nlines):
                 
             pkey = i+1
             row = dict( zip( ["id"] + cols, [pkey] + l.strip().split("\t") )) 
-            sbuf.write("\n"+"\t".join([str(e) for e in [row["id"],row["chr"],row["start"],\
+            lbuf.write("\t".join([str(e) for e in [row["id"],row["chr"],row["start"],\
                                                         1 if row["strand"] == "+" else -1,\
-                                                        row["seq23"][-3:]]]))
-            lbuf.write("\n"+"\t".join([str(e) for e in [row["id"],row["seq23"][:-3]]]))
-            if i % 100000 == 0:
+                                                        row["seq23"][-3:]]])+"\n")
+            sbuf.write("\t".join([str(e) for e in [row["id"],row["seq23"][:-3]]])+"\n")
+            if i % 1000000 == 0:
                 copy_buffers()
                 print "{0:2} ({1} / {2})".format( float(i) / nlines, i, nlines)
     if lbuf != None:
