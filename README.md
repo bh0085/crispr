@@ -4,11 +4,8 @@
 ### ./query_server ##
 python code handling CRISPR spacer queries
 
-### ./frontend ##
-frontend mockups and soon a completed website for the CRISPR region submission endpoint
-
-css, html, javascript
-
+### ./cfront ##
+version 0 website for crispr frontend, "cfront"
 
 ## Misc 
 ### Modifications to .bashrc
