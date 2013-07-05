@@ -1,5 +1,12 @@
 /** backbone model for a job */
 var JobM = Backbone.Model.extend({
+    sequence:null,
+    id:null,
+    genome:null,
+    name:null,
+    email:null,
+    date_submitted:null,
+    date_completed:null,
     relations:[
 	{
 	    key:"spacers",
@@ -7,34 +14,17 @@ var JobM = Backbone.Model.extend({
 	    relatedModel:"SpacerM",
 	    includeInJSON:false,
 	    reverseRelation:{
-		key:job,
+		key:"job",
 		keySource:"jobid",
 		includeInJSON:"id",
 		type:Backbone.HasOne
 	    }
 	}
-    ]
-})
-
-/** backbone model for a spacer */
-var SpacerM = Backbone.RelationalModel.extend({
-    relations:[
-	{
-	    key:"hits",
-	    type:Backbone.HasMany,
-	    relatedModel:"HitM",
-	    includeInJSON:false,
-	    reverseRelation:{
-		key:job,
-		keySource:"spacerid",
-		includeInJSON:"id",
-		type:Backbone.HasOne
-	    }
-	}
-    ]
-})
-
-/** backbone model for a hit */
-var HitM = Backbone.RelationalModel.extend({
-
+    ],
+    /** Rest URL for a Job */
+    url: function () {
+        var id = this.id ? this.id : -1;
+        var url = '/r/job/' + id;
+        return url;
+    },
 })

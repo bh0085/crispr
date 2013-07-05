@@ -1,57 +1,37 @@
 //basic setup for the crispr app
 
+Backbone.emulateHTTP = true;
+
 _.templateSettings = {
   interpolate : /\{\{(.+?)\}\}/g
 };
-
-//data structures for app state
-submit_data_proto = {
-    input_sequence:null
-}
-identify_data_proto = {
-    spacers:null, /** list -- each query include an "id", "seq", "strand", "offset" **/
-    collisions:null /** obj -- stores collisions of spacers sorted along strand **/
-}
-find_data_proto = {
-    hits:null /** list -- each hit includes a query id, a hitid, a sequence (from DB) **/
-}
 
 
 exceptions = {
     nospacers:{"message":"no spacers in input sequence"}
 }
 
-//instances
-find_data = _.extend(find_data_proto)
-
-section_names=["submit","identify","find"]
+section_names=["submit","readout"]
 
 
 //fills in a section when THE previous section is passed 
 function initialize_scrolly_section(name){
     if (name == "submit"){
 	//no intialization required
-    } else if( name == "identify"){
+    } else if( name == "readout"){
 	//assumes we have a submitted sequence
 	submit_read_input();
 	//reads the sequence
-	identify_sequence();
-    } else {
-	//finds the sequence by submitting jobs to db
-	find_initialize();
-
-	
-    }
+	initialize_readout();
+    } 
 }
 
 //resets a section when a _previous_ section is focused
 function reset_scrolly_section(name){
-    params = {"find":{"name":"Find",
-		      "description":"off-target binding sites in the genome."},
-	      "identify":{"name":"Identify",
-			  "description":"candidate spacers within the input sequence."},
-	      "submit":{"name":"Submit",
-			"description":"a query sequence to ID and characterize spacers."}
+    params = {"submit":{"name":"Submit",
+			"description":"A sequence for CRISPR design and analysis."},
+	      "readout":{"name":"Readout",
+			 "description":"Best possible guide sequences."}
 	     }
     $("#" + name).html(
 	_.template($("#scrolly-section-template").html(),
@@ -59,18 +39,13 @@ function reset_scrolly_section(name){
 
     if (name == "submit"){
 	$('#submit>.scrolly-content').html($("#submit-section-template").html())
-	submit_data = null;
-	submit_data = _.extend(submit_data_proto)
-    } else if(name=="identify"){
-	$('#identify>.scrolly-content').html($("#identify-section-template").html())
-	identify_data = null;
-	identify_data = _.extend(identify_data_proto)
-    } else if(name =="find"){
-	$('#focus>.scrolly-content').html($("#focus-section-template").html())
-	find_reset();
-	find_data = null;
-	find_data = _.extend(find_data_proto);
-    }
+	submit = null;
+    } else if(name=="readout"){
+	$('#readout>.scrolly-content').html($("#readout-section-template").html())
+	//console.log("no more data readout objects");
+	//readout_data = null;
+	//readout_data = _.extend(readout_data_proto)
+    } 
 }
 
 
@@ -81,7 +56,6 @@ function focus_scrolly_section(name){
     for (var i = index + 1 ; i < section_names.length ; i++){
 	reset_scrolly_section(section_names[i])
     }
-    console.log("focusing " + name);
     initialize_scrolly_section(name)
     $(".scrolly-section").addClass("inactive");
     $("#"+name).removeClass("inactive");
@@ -99,21 +73,12 @@ $(function(){
 //defines clickhandlers
 $(function(){
     //next clickhandlers
-    $("#submit .next").click(function(event){
-	focus_scrolly_section("identify");	
-    });
-    $("#identify .next").click(function(event){
-	console.log(this,event);
-	console.log("clicked next")
-	focus_scrolly_section("find");
+    $(document).on("click", "#submit .next",{},function(event){
+	focus_scrolly_section("readout");	
     });
     //previous clickhandlers
-    $("#identify .previous").click(function(event){
+    $(document).on("click","#readout .previous",{},function(event){
 	focus_scrolly_section("submit");
-    });
-    $("#find .previous").click(function(event){
-	console.log("WENT BACK")
-	focus_scrolly_section("identify");
     });
 })
 

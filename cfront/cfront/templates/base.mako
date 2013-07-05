@@ -20,10 +20,18 @@
 
     <%include file="models.html"/>
     <script type="text/javascript" src="/js/pages/base.js"></script>
-    <script type="text/javascript" src="/js/pages/identify.js"></script>
     <script type="text/javascript" src="/js/pages/submit.js"></script>
+    <script type="text/javascript" src="/js/pages/readout.js"></script>
+
+    <script type="text/javascript" src="/js/models/job_m.js"></script>
+    <script type="text/javascript" src="/js/models/spacer_m.js"></script>
+    <script type="text/javascript" src="/js/models/hit_m.js"></script>
+
+    <!--
+    <script type="text/javascript" src="/js/pages/identify.js"></script>
     <script type="text/javascript" src="/js/pages/find.js"></script>
     <script type="text/javascript" src="/js/pages/find_bb.js"></script>
+    -->
     
   </head>
   <body class="${request.matched_route.name}" data-target="#navparent" data-spy="scroll" >
