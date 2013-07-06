@@ -90,7 +90,6 @@ def main():
     sel = ""
     
     query=  """
-    SET search_path TO "$user",public, extensions;
     SELECT set_limit({3}), show_limit();
     SELECT  st.id, st.seq, lt.chr, lt.start, lt.strand
     FROM {0} as st, {1} as lt
