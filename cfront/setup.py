@@ -14,7 +14,8 @@ requires = [
     'pyramid_debugtoolbar',
     'zope.sqlalchemy',
     'waitress',
-    'psycopg2'
+    'psycopg2',
+    'numpy',
     ]
 
 setup(name='cfront',

@@ -20,3 +20,15 @@ var SpacerM = Backbone.RelationalModel.extend({
 	}
     ]
 })
+
+
+var SpacerC = Backbone.Collection.extend({
+    model:SpacerM,
+    url:function(a , b){
+	console.log(this)
+	console.log(this.id)
+	console.log(a)
+	console.log(b)
+	throw hi
+    }
+})

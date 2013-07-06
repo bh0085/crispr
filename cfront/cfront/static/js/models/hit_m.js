@@ -6,3 +6,11 @@ var HitM = Backbone.RelationalModel.extend({
     chr:null,
     start:null,
 })
+
+
+var HitC = Backbone.Collection.extend({
+    model:HitM,
+    url:function(a,b){
+	throw "not yet implemented"
+    }
+})

@@ -18,3 +18,5 @@ class Hit(Base):
     start = Column(Integer, nullable = False)
     strand = Column(Integer, nullable = False)
     
+    def jsonAttributes(self):
+        return ["id", "spacerid", "ontarget", "similarity", "chr", "start", "strand"]

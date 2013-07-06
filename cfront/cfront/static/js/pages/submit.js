@@ -5,6 +5,7 @@ function submit_read_input(){
     });
     submit.save(null,
 		{success:$.proxy(function(e){
-		    this.compute_spacers();
+		    this.await_hits()
+		    this.await_spacers()
 		},submit)})
 };

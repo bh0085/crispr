@@ -87,20 +87,22 @@ def main():
 
     query_orstring = " OR ".join([" st.seq % '{0}'".format(e) for e in query_seqs])
         
-    sel = "lt.id, lt.chr, lt.start, lt.strand,"
+    sel = ""
     
     query=  """
     SET search_path TO "$user",public, extensions;
     SELECT set_limit({3}), show_limit();
-    SELECT  st.id, st.seq
-    FROM {0} as st
-    WHERE {2}
+    SELECT  st.id, st.seq, lt.chr, lt.start, lt.strand
+    FROM {0} as st, {1} as lt
+    WHERE ({2}) 
+    AND st.id = lt.id
+    ORDER BY st.id;
     """.format(sequence_table,locus_table, query_orstring, limit)
 
     print query
 
     global conn, curr
-    conn = psycopg2.connect("dbname=vineeta user=ben")
+    conn = psycopg2.connect("dbname=vineeta user=ben password=random12345")
     cur = conn.cursor()
     cur.execute(query)
     rows = cur.fetchall()

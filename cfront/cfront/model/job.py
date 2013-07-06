@@ -23,10 +23,18 @@ class Job(Base):
 
     computing_spacers = Column(Boolean, nullable = False, default = False)
     computed_spacers = Column(Boolean, nullable = False, default = False)
+    computing_hits = Column(Boolean, nullable = False, default = False)
+    computed_hits = Column(Boolean, nullable = False, default = False)
 
+    #fake enum type for genomes
     GENOMES={
         "HUMAN":1
     }
+
+    #exceptions
+    NOSPACERS = "spacers not yet computed"
+    NOHITS = "hits not yet computed"
+    
 
     @property
     def submitted_ms(self):
@@ -40,16 +48,6 @@ class Job(Base):
     @completed_ms.setter
     def completed_ms(self, value):
         self.date_completed = datetime.utcfromtimestamp(value//1000) if value is not None else None
-    @property
-    def computing_hits(self):
-        #computing if any spacer is computing hits
-        if not self.computed_spacers: return False
-        return True if True in [e.computing_hits for e in self.spacers] else False
-    @property
-    def computed_hits(self):
-        #done if all spacers have computed hits
-        if not self.computed_spacers: return False
-        return False if False in [e.computed_hits for e in self.spacers] else True
         
     def jsonAttributes(self):
         return ["id", "sequence", 
