@@ -13,7 +13,7 @@ def queue_loop():
     while True:
         process_queue()
         print "processing"
-        time.sleep(10)
+        time.sleep(1)
         
 
 def process_queue():
