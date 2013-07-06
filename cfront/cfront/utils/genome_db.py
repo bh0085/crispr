@@ -8,6 +8,9 @@ import genome_io as gio
 
 
 def compute_hits(job_id):
+    '''
+    computes off and on-target hits for all guide sequences of JOB
+    '''
     job = Session.query(Job).get(job_id)
     if job.computing_hits:
         raise Exception("already computing hits")
@@ -15,21 +18,18 @@ def compute_hits(job_id):
     print "check to make sure computing hits works without session.add()"
 
     table_prefix = "loci1mt"
-        if not job.computed_spacers:
+    if not job.computed_spacers:
         raise Exception("no spacers yet computed")
         
-    query_file = write_query_file(job_id)
+
+    jp = gio.get_job_path(job_id)
+    query_file = os.path.join(jp,"query.txt")
+    with open(query_file,'w') as qf:
+        qf.write("\n".join([e.guide for e in job.spacers]))
     cmd =  "submit_query.py -l .5 -t {2} -q {0} -i {1}".format( query_file, job_id, table_prefix)
     prc = spc.Popen(cmd, shell=True)
     return False
 
-def write_query_file(job_id)
-    jp = gio.get_job_path(job_id)
-    job = Session.query(Job).get(job_id)
-    query_file = os.path.join(jp,"query.txt")
-    with open(query_file,'w') as qf:
-        qf.write("\n".join([e.guide for e in job.spacers]))
-    return query_file
 
 def check_hits(job_id):
     '''

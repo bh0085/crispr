@@ -18,32 +18,29 @@ def queue_loop():
 
 def process_queue():
     with transaction.manager:
-         unspacered = Session.query(Job).filter(Job.computed_spacers == False).all()
-         for j in unspacered:
+        unspacered = Session.query(Job).filter(Job.computed_spacers == False).all()
+        for j in unspacered:
              Session.add(j)
              webserver_db.compute_spacers(j.id)
-             genome_io.write_f1(j.id)
          
-         unstarted = Session.query(Job).filter(Job.computing_hits == False).all()
-         for j in unstarted:
+        unstarted = Session.query(Job).filter(Job.computing_hits == False).all()
+        for j in unstarted:
              Session.add(j)
              genome_db.compute_hits(j.id)
          
-         unfinished = Session.query(Job).filter(Job.computed_hits == False).all()
-         for j in unfinished:
+        unfinished = Session.query(Job).filter(Job.computed_hits == False).all()
+        for j in unfinished:
              Session.add(j)
              ready = genome_db.check_hits(j.id)
              if ready:
                  genome_db.enter_hits(j.id)
-                 genome_io.write_f2(j.id)
                  print "entering hits for {0}".format(j.id)
-         
-         print "Number of jobs unspacered: {0}".format(len(unspacered))
-         print "Number of jobs unstarted (unfinished): {0} ({1})"\
+        
+        print "Number of jobs unspacered: {0}".format(len(unspacered))
+        print "Number of jobs unstarted (unfinished): {0} ({1})"\
              .format(len(unstarted),len(unfinished))
          
-         #transaction.commit()
-
+         
     
 
 if __name__ == "__main__":

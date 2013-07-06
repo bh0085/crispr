@@ -17,6 +17,7 @@ class Hit(Base):
     chr = Column(VARCHAR(3), nullable = False)
     start = Column(Integer, nullable = False)
     strand = Column(Integer, nullable = False)
-    
+    sequence = Column(VARCHAR(23), nullable = False)
+
     def jsonAttributes(self):
-        return ["id", "spacerid", "ontarget", "similarity", "chr", "start", "strand"]
+        return ["id", "spacerid", "ontarget", "similarity", "chr", "start", "strand", "sequence"]
