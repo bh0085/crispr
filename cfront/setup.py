@@ -15,7 +15,6 @@ requires = [
     'zope.sqlalchemy',
     'waitress',
     'psycopg2',
-    'numpy',
     ]
 
 setup(name='cfront',
