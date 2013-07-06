@@ -40,4 +40,12 @@ def job_rest(request):
                   
     Session.add(job)
     Session.flush()
-    return job.toJSON()
+    json = job.toJSON()
+    json["spacers"] = [s.toJSON() for s in job.spacers]
+
+    print job.id
+    print len(job.spacers)
+    print "returning rest"
+    print "JCOMP? " +str( job.computed_spacers)
+
+    return json

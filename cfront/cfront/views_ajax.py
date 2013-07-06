@@ -1,4 +1,5 @@
 from pyramid.view import view_config
+from .utils import webserver_db, genome_db
 
 @view_config(route_name='job_compute_spacers', renderer='json')
 def job_compute_spacers(request):

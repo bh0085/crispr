@@ -26,7 +26,7 @@ def write_sample():
 
 global summary_template
 summary_template =  """
-SUMMARY of job: {2:06}
+SUMMARY of job: {2}
 INPUT SEQUENCE {1}
 SIMILARITY LIMIT: {3}
 DATABASE NAME: {4}
@@ -35,11 +35,13 @@ NUMBER ROWS RETURNED {0}
 
 def create_summary(nrows = None,
                    input_seq = None,
-                   job_number = None,
-                   table = None,
+                   job_id = None,
+                   table_prefix = None,
                    limit = None):
     global summary_template
-    return summary_template.format(nrows,input_seq,job_number,limit,table)
+    print summary_template
+    print job_id
+    return summary_template.format(nrows,input_seq,job_id,limit,table_prefix)
                   
        
 def main():
@@ -57,31 +59,45 @@ def main():
     parser.add_argument('--limit','-l',dest="limit",
                         default=.8,type=float,
                         help="query similarity limit (default .8 == 16 bases in common)")
-    parser.add_argument('--table','-t',dest="table",
+    parser.add_argument('--table','-t',dest="table_prefix",
                         default="loci10mt",type=str,
                         help="table name to store, query")
+    parser.add_argument('--id','-i',dest="job_id",
+                        default="1",type=str,
+                        help="job_id for this job")
+    parser.add_argument('--query','-q',dest="query",
+                        type=str, required=True,
+                        help="query input file")
     args = parser.parse_args()
     
     #input and output with stdout
-    input_seq = sys.stdin.read().strip()
-    limit = args.limit
-    table = args.table
-    query_seq = input_seq
-    job_number = len(os.listdir(JOBSPATH))
-    job_id = "job_{0:06}".format(job_number)
-    job_path = os.path.join(JOBSPATH,job_id)
-    os.makedirs(job_path)
-    sys.stdout.write(job_id + "\n")
-    sys.stdout.close()
+    input_file  = args.query
+    with open(input_file) as qs:
+        query_seqs = [l.strip() for l in qs.readlines()]
 
+    limit = args.limit
+    table_prefix = args.table_prefix
+    locus_table = "{0}_locus".format(table_prefix)
+    sequence_table = "{0}_sequence".format(table_prefix)
+
+    job_id =args.job_id
+    job_path = os.path.join(JOBSPATH,job_id)
+    if not os.path.isdir(job_path):
+        os.makedirs(job_path)
+
+    query_orstring = " OR ".join([" st.seq % '{0}'".format(e) for e in query_seqs])
+        
+    sel = "lt.id, lt.chr, lt.start, lt.strand,"
+    
     query=  """
     SET search_path TO "$user",public, extensions;
-    SELECT set_limit({2}), show_limit();
-    SELECT seq, seq <-> '{1}'
-    FROM {0}
-    WHERE seq % '{1}'
-    ORDER BY seq <-> '{1}'
-    """.format(table, query_seq, limit)
+    SELECT set_limit({3}), show_limit();
+    SELECT  st.id, st.seq
+    FROM {0} as st
+    WHERE {2}
+    """.format(sequence_table,locus_table, query_orstring, limit)
+
+    print query
 
     global conn, curr
     conn = psycopg2.connect("dbname=vineeta user=ben")
@@ -91,10 +107,10 @@ def main():
     
     job_params = dict(
         nrows = len(rows),
-        input_seq = query_seq,
-        job_number = job_number,
+        input_seq = "\n".join(query_seqs),
+        job_id = job_id,
         limit = limit,
-        table = table)
+        table_prefix = table_prefix)
 
     with open(os.path.join(job_path, "summary.txt"),'w') as f:
         f.write(create_summary(**job_params))

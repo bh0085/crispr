@@ -20,7 +20,9 @@ class Job(Base):
     name = Column(Unicode, nullable = True)
     email = Column(Unicode, nullable = True)
     date_completed = Column(DateTime, nullable = True)
-    spacers_computed = Column(Boolean, nullable = False, default = False)
+
+    computing_spacers = Column(Boolean, nullable = False, default = False)
+    computed_spacers = Column(Boolean, nullable = False, default = False)
 
     GENOMES={
         "HUMAN":1
@@ -38,7 +40,24 @@ class Job(Base):
     @completed_ms.setter
     def completed_ms(self, value):
         self.date_completed = datetime.utcfromtimestamp(value//1000) if value is not None else None
+    @property
+    def computing_hits(self):
+        #computing if any spacer is computing hits
+        if not self.computed_spacers: return False
+        return True if True in [e.computing_hits for e in self.spacers] else False
+    @property
+    def computed_hits(self):
+        #done if all spacers have computed hits
+        if not self.computed_spacers: return False
+        return False if False in [e.computed_hits for e in self.spacers] else True
+        
     def jsonAttributes(self):
-        return ["id", "sequence", "submitted_ms", "completed_ms", "genome", "name", "email"]
+        return ["id", "sequence", 
+                "submitted_ms", "completed_ms", 
+                "genome", "name", "email",
+                "computing_spacers",
+                "computed_spacers",
+                "computed_hits",
+                "computing_hits"]
 
     
