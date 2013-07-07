@@ -26,7 +26,7 @@ def compute_hits(job_id):
     query_file = os.path.join(jp,"query.txt")
     with open(query_file,'w') as qf:
         qf.write("\n".join([e.guide for e in job.spacers]))
-    cmd =  "submit_query.py -l .5 -t {2} -q {0} -i {1}".format( query_file, job_id, table_prefix)
+    cmd =  "submit_query.py -l .7 -t {2} -q {0} -i {1}".format( query_file, job_id, table_prefix)
     prc = spc.Popen(cmd, shell=True)
     return False
 
