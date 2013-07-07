@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+q#!/usr/bin/env python
 '''
 populates a postgres database with CRISPR loci
 computes the distribution of letters in each locus
@@ -176,7 +176,7 @@ def main():
         exit()
 
     global conn, cur, locsfile
-    conn = psycopg2.connect("dbname=vineeta user=ben")
+    conn = psycopg2.connect("dbname=vineeta user=ben password=random12345")
     cur = conn.cursor()
     
     if args.file:
