@@ -15,7 +15,13 @@ def compute_similarities(table, nlines):
 
     RD_PATH = os.path.join(RD_DATAROOT,"{0}_{1}.pickle".format(table,nlines))
 
-    cur.execute("select * from {0}_sequence  order by id limit {1} ;".format(table, nlines))
+    cmd = "select * from {0}_sequence limit {1} ;".format(table, nlines)
+    print "executing: "
+    print cmd
+    print  
+    cur.execute(cmd)
+
+    print "executed"
     lines = cur.fetchall()
     translation = {"A":0,
                    "G":1,
