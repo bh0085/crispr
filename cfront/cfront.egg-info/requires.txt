@@ -5,3 +5,5 @@ pyramid_tm
 pyramid_debugtoolbar
 zope.sqlalchemy
 waitress
+psycopg2
+numpy
