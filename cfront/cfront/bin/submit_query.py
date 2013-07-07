@@ -99,6 +99,8 @@ def main():
     """.format(sequence_table,locus_table, query_orstring, limit)
 
     print query
+    with open(os.path.join(job_path, "sql.txt"),"w") as f:
+        f.write(query)
 
     global conn, curr
     # password=random12345 no password for current production server
