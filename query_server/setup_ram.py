@@ -35,7 +35,7 @@ def main():
                         default=10000,type=int,
                         help="number of lines to enter into a sparse similarity matrix")
     parser.add_argument('--table','-t',dest="table",
-                        default="loci10mt",type=str,
+                        default="all_ram",type=str,
                         help="table name to query")
     args = parser.parse_args()
     global conn, cur, locsfile
