@@ -17,7 +17,7 @@ def compute_hits(job_id):
     job.computing_hits = True
     print "check to make sure computing hits works without session.add()"
 
-    table_prefix = "loci10mt"
+    table_prefix = "locs10mt_ram"
     if not job.computed_spacers:
         raise Exception("no spacers yet computed")
         
