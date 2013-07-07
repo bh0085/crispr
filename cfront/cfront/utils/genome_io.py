@@ -112,9 +112,9 @@ from pyramid.paster import bootstrap
 if __name__ == "__main__":
     env = bootstrap(sys.argv[1])
     with transaction.manager:
-        alljobs = Session.query(Job).order_by(desc(Job.id)).first()
-        for j in alljobs:
-            if needs_file_io(j.id):
+        j = Session.query(Job).order_by(desc(Job.id)).first()
+        #for j in alljobs:
+        if needs_file_io(j.id):
                 print "performing file IO sequence on job id: {0}".format(j.id)
                 commence_file_io(j.id)
                 break
