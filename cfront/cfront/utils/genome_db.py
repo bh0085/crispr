@@ -69,26 +69,27 @@ def enter_hits(job_id):
                    "C":3}
     all_hits = np.array([[translation[let] for let in e["sequence"]] for e in hits])
     all_spacers = np.array([[translation[let] for let in e.guide] for e in spacers])
-    hit_length = 20;
-    min_matches = 10;
-    print all_spacers, all_hits
-    sims_array = np.sum(np.equal(all_spacers[:,np.newaxis,:] - all_hits[np.newaxis,:,:], 0),2)
 
-    #generates a similarity matrix of spacers, hits
-    hits_by_spacer = np.nonzero(np.greater_equal(sims_array,min_matches))
+    if len(all_hits) > 0 and len(all_spacers) > 0:
+       hit_length = 20;
+       min_matches = 10;
+       print all_spacers, all_hits
+       sims_array = np.sum(np.equal(all_spacers[:,np.newaxis,:] - all_hits[np.newaxis,:,:], 0),2)
+       
+       #generates a similarity matrix of spacers, hits
+       hits_by_spacer = np.nonzero(np.greater_equal(sims_array,min_matches))
     
-
-    #creates hits for every spacer
-    for idx_s, idx_h in zip(*hits_by_spacer):
-        spacer = spacers[idx_s]
-        hit = hits[idx_h]
-        Session.add(Hit(spacer = spacer,
-                        chr = hit["chr"],
-                        sequence = hit["sequence"],
-                        similarity = float(sims_array[idx_s,idx_h]) / hit_length,
-                        start = hit["start"],
-                        strand = hit["strand"],
-                        ontarget = False
+       #creates hits for every spacer
+       for idx_s, idx_h in zip(*hits_by_spacer):
+           spacer = spacers[idx_s]
+           hit = hits[idx_h]
+           Session.add(Hit(spacer = spacer,
+                           chr = hit["chr"],
+                           sequence = hit["sequence"],
+                           similarity = float(sims_array[idx_s,idx_h]) / hit_length,
+                           start = hit["start"],
+                           strand = hit["strand"],
+                           ontarget = False
                     ))
     job.computed_hits = True
     Session.add(job)
