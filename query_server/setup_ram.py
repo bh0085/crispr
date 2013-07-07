@@ -24,7 +24,7 @@ def compute_similarities(table, nlines):
     all_seqs = np.array( [[translation[let] for let in e[1]] for e in lines])
     min_matches = 15
     lil_sparse = sparse.lil.lil_matrix( len(all_seqs), len(all_seqs) )
-    for i in range(len(all_seqs)):
+    for i in range(1): #len(all_seqs)):
         sims_array = np.sum(np.equal(all_seqs[i][np.newaxis,:] - all_seqs[:,:], 0),1)
         hits_by_spacer = np.nonzero(np.greater_equal(sims_array,min_matches))
     print len(hits_by_spacer)
