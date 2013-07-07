@@ -117,4 +117,4 @@ if __name__ == "__main__":
         if needs_file_io(j.id):
                 print "performing file IO sequence on job id: {0}".format(j.id)
                 commence_file_io(j.id)
-                break
+                #break
