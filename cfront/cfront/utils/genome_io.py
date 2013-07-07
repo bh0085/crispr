@@ -55,7 +55,7 @@ spacer3 ATGGTCGCTACAGCATCTCT CGG +
 '''
     jp = get_job_path(job_id)
     job = Session.query(Job).get(job_id)
-    if not job.computed_hits: raise Exception(Job.NOSPACERS)
+    if not job.computed_spacers: raise Exception(Job.NOSPACERS)
     with open(os.path.join(jp,"f1.txt"), 'w') as f:
         f.write("\n".join(["\t".join([str(s.id),
                                       s.guide, 
