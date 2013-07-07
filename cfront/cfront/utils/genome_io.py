@@ -115,6 +115,8 @@ if __name__ == "__main__":
         j = Session.query(Job).order_by(desc(Job.id)).first()
         #for j in alljobs:
         if needs_file_io(j.id):
-                print "performing file IO sequence on job id: {0}".format(j.id)
-                commence_file_io(j.id)
-                #break
+            print j.id
+            print j.computed_spacers
+            print "performing file IO sequence on job id: {0}".format(j.id)
+            commence_file_io(j.id)
+            #break
