@@ -3,6 +3,10 @@
 import os, sys
 from cfront.models import Session, Job, Spacer, Hit
 
+CDHOME=os.environ["CDHOME"]
+CDSCRIPTS=os.path.join(CDHOME,"scripts")
+CDREF=os.path.join(CDHOME,"reference")
+
 def get_job_path(job_id):
     path =   os.path.join(os.environ["CFRONTDATA"],"jobs/{0}").format(job_id)
     if not os.path.isdir(path):
@@ -33,7 +37,7 @@ def commence_file_io(job_id):
 
     write_f1(job_id)
     write_f2(job_id)
-    #write_f3(job_id)
+    write_f3(job_id)
     #write_f4(job_id)
     #write_f5(job_id)
     #write_f6(job_id)
@@ -76,7 +80,18 @@ spacer9 1       62767   -       ATGGACAAAGCTGTGCTCAGAGG
                                       h.sequence])
                            for s in job.spacers for h in s.hits ]))
 def write_f3(job_id):
-    raise Exception("not implemented")
+    jp = get_job_path(job_id)
+    f1p = os.path.join(jp,"f1.txt")
+    f2p = os.path.join(jp,"f2.txt")
+    f3p = os.path.join(jp,"f3.txt")
+
+    cmd = "perl {0}/annotate_offtarget_sites.pl {1} {2} {3}/RefSeq_hg19.txt {4}".\
+          format(CDSCRIPTS,f1p,f2p,CDREF,f3p)
+    prc = spc.Popen(cmd, shell=True)
+    prc.communicate()
+    print f3p
+    return f3p
+
 def write_f4(job_id):
     raise Exception("not implemented")
 def write_f5(job_id):
