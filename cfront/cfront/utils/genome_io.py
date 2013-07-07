@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 ''' tools that interact with the file io for genome dbv''' 
-import os, sys
+import os, sys, subprocess as spc
 from cfront.models import Session, Job, Spacer, Hit
 
 CDHOME=os.environ["CDHOME"]
