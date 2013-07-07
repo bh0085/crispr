@@ -101,8 +101,8 @@ def main():
     print query
 
     global conn, curr
-
-    conn = psycopg2.connect("dbname=vineeta user=ben password=random12345")
+    # password=random12345 no password for current production server
+    conn = psycopg2.connect("dbname=vineeta user=ben")
     cur = conn.cursor()
     cur.execute(query)
     rows = cur.fetchall()
