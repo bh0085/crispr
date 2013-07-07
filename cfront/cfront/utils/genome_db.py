@@ -71,6 +71,7 @@ def enter_hits(job_id):
     all_spacers = np.array([[translation[let] for let in e.guide] for e in spacers])
     hit_length = 20;
     min_matches = 10;
+    print all_spacers, all_hits
     sims_array = np.sum(np.equal(all_spacers[:,np.newaxis,:] - all_hits[np.newaxis,:,:], 0),2)
 
     #generates a similarity matrix of spacers, hits
