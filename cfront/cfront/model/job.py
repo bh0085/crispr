@@ -59,7 +59,7 @@ class Job(Base):
         if not self.computed_spacers: 
             return False
         for s in self.spacers:
-            if(!s.computed_hits):
+            if(not s.computed_hits):
                 return False
         return True
 
