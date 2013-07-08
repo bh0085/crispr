@@ -22,7 +22,8 @@ function initialize_scrolly_section(name){
 	//assumes we have a submitted sequence
 	submit_read_input();
 	//reads the sequence
-	initialize_readout();
+	var rview = new ReadoutV({job:submit})
+	rview.render().$el.appendTo($("#readout>.scrolly-content"))
     } 
 }
 
@@ -41,10 +42,7 @@ function reset_scrolly_section(name){
 	$('#submit>.scrolly-content').html($("#submit-section-template").html())
 	submit = null;
     } else if(name=="readout"){
-	$('#readout>.scrolly-content').html($("#readout-section-template").html())
-	//console.log("no more data readout objects");
-	//readout_data = null;
-	//readout_data = _.extend(readout_data_proto)
+	$("#readout>.scrolly-content").empty()
     } 
 }
 

@@ -23,8 +23,6 @@ class Job(Base):
 
     computing_spacers = Column(Boolean, nullable = False, default = False)
     computed_spacers = Column(Boolean, nullable = False, default = False)
-    computing_hits = Column(Boolean, nullable = False, default = False)
-    computed_hits = Column(Boolean, nullable = False, default = False)
 
     #fake enum type for genomes
     GENOMES={
@@ -48,7 +46,23 @@ class Job(Base):
     @completed_ms.setter
     def completed_ms(self, value):
         self.date_completed = datetime.utcfromtimestamp(value//1000) if value is not None else None
-        
+    @property
+    def computing_hits(self):
+        if not self.computed_spacers:
+            return False
+        for s in self.spacers:
+            if(s.computing_hits):
+                return True
+        return False
+    @property
+    def computed_hits(self):
+        if not self.computed_spacers: 
+            return False
+        for s in self.spacers:
+            if(!s.computed_hits):
+                return False
+        return True
+
     def jsonAttributes(self):
         return ["id", "sequence", 
                 "submitted_ms", "completed_ms", 
@@ -57,5 +71,6 @@ class Job(Base):
                 "computed_spacers",
                 "computed_hits",
                 "computing_hits"]
+
 
     

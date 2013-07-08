@@ -7,6 +7,11 @@ var JobM = Backbone.RelationalModel.extend({
     email:null,
     date_submitted:null,
     date_completed:null,
+    
+    computing_spacers:false,
+    computed_spacers:false,
+    computed_hits:false,
+    computing_hits:false,
     poll_timeout:250,
     relations:[
 	{

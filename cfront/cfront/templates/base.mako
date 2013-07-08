@@ -19,6 +19,7 @@
     <script type="text/javascript" src="/js/deps/jquery-svg/jquery.svg.min.js"></script>
 
     <%include file="models.html"/>
+    <%include file="backbone.mako"/>
     <script type="text/javascript" src="/js/pages/base.js"></script>
     <script type="text/javascript" src="/js/pages/submit.js"></script>
     <script type="text/javascript" src="/js/pages/readout.js"></script>

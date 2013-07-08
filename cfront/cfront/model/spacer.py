@@ -18,5 +18,9 @@ class Spacer(Base):
     strand = Column(Integer, nullable = False)
     position = Column(Integer, nullable = False)
     
+    computing_hits = Column(Boolean, nullable = False, default = False)
+    computed_hits = Column(Boolean, nullable = False, default = False)
+
     def jsonAttributes(self):
-        return ["jobid", "sequence", "guide", "nrg", "strand", "position"]
+        return ["jobid", "sequence", "guide", "nrg", "strand", "position",
+                "computing_hits", "computed_hits"]

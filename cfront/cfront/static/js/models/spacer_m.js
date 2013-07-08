@@ -5,6 +5,10 @@ var SpacerM = Backbone.RelationalModel.extend({
     guide:null,
     strand:null,
     position:null,
+
+    computed_hits:false,
+    computing_hits:false,
+
     relations:[
 	{
 	    key:"hits",
