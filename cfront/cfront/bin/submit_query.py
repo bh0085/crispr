@@ -62,9 +62,12 @@ def main():
     parser.add_argument('--table','-t',dest="table_prefix",
                         default="loci10mt",type=str,
                         help="table name to store, query")
-    parser.add_argument('--id','-i',dest="job_id",
+    parser.add_argument('--jobid','-j',dest="job_id",
                         default="1",type=str,
                         help="job_id for this job")
+    parser.add_argument('--spacerid','-s',dest="spacer_id",
+                        default="1",type=str,
+                        help="spacer_id for this job")
     parser.add_argument('--query','-q',dest="query",
                         type=str, required=True,
                         help="query input file")
@@ -81,14 +84,17 @@ def main():
     sequence_table = "{0}_sequence".format(table_prefix)
 
     job_id =args.job_id
+    spacer_id =args.spacer_id
     job_path = os.path.join(JOBSPATH,job_id)
     if not os.path.isdir(job_path):
         os.makedirs(job_path)
 
+
+    print query_seqs
+    if len(query_seqs) > 1:
+        raise Exception ("now expects single queries")
     query_orstring = " OR ".join([" st.seq % '{0}'".format(e) for e in query_seqs])
         
-    sel = ""
-    
     query=  """
     SELECT set_limit({3}), show_limit();
     SELECT  st.id, st.seq, lt.chr, lt.start, lt.strand
@@ -103,8 +109,7 @@ def main():
         f.write(query)
 
     global conn, curr
-    # password=random12345 no password for current production server
-    conn = psycopg2.connect("dbname=vineeta user=ben")
+    conn = psycopg2.connect("dbname=vineeta user=ben password=random12345")
     cur = conn.cursor()
     cur.execute(query)
     rows = cur.fetchall()
@@ -116,9 +121,9 @@ def main():
         limit = limit,
         table_prefix = table_prefix)
 
-    with open(os.path.join(job_path, "summary.txt"),'w') as f:
+    with open(os.path.join(job_path, "summary_s{0}.txt".format(spacer_id)),'w') as f:
         f.write(create_summary(**job_params))
-    with open(os.path.join(job_path, "matches.txt"),'w') as f:
+    with open(os.path.join(job_path, "matches_s{0}.txt".format(spacer_id)),'w') as f:
         f.write("\n".join("\t".join(["{0}".format(e) for e in r]) for r in rows  ))
     
 

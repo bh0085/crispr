@@ -12,12 +12,42 @@ RD_DATAROOT = "/tmp/ramdisk/crispr"
 if not os.path.isdir(RD_DATAROOT):
     os.makedirs(RD_DATAROOT)
 
+def save_flatfile(table, nlines):
+    global cur
+    RD_PATH = os.path.join(RD_DATAROOT,"{0}_{1}.npy".format(table,nlines))
+    
+    translation = {"A":0,
+                   "G":1,
+                   "T":2,
+                   "C":3,
+                   "N":4}
+    letters = 20
+    all_seqs = np.zeros((nlines, letters), np.int8)
+
+    #enter only some lines... change later
+    for i,l in enumerate(open("/tmp/ramdisk/crispr/alllocs.txt")):
+        if i >= nlines:
+            break
+        row = l.split("\t")
+        all_seqs[i] = [translation.get(let,4) for let in row[3].strip()[:-3]]
+        if i %1e6 == 0:
+            print "millions: {0}".format(i/1e6)
+
+
+    with open(RD_PATH, 'w') as f:
+        np.save(f,all_seqs)
+    print "saved {0} lines".format(len(all_seqs))
+
+
+def load_flatfile(table, nlines):
+    pass
+
 def compute_similarities(table, nlines):
     global cur
 
     RD_PATH = os.path.join(RD_DATAROOT,"{0}_{1}.pickle".format(table,nlines))
-
     cmd = "select * from {0}_sequence order by id limit {1};".format(table, nlines)
+
     print "executing: "
     print cmd
     print  
@@ -87,9 +117,13 @@ def compute_similarities(table, nlines):
 
 def main():
     parser = argparse.ArgumentParser()
+
+    parser.add_argument('--program', '-p', dest="program",
+                        default='save', type=str,
+                        help="program to run -- default, save, allowed: [save,load,sim]")
     parser.add_argument('--nlines','-n',dest="nlines",
                         default=1000,type=int,
-                        help="number of lines to enter into a sparse similarity matrix")
+                        help="number of lines")
     parser.add_argument('--table','-t',dest="table",
                         default="locs10mt_ram",type=str,
                         help="table name to query")
@@ -98,7 +132,12 @@ def main():
     conn = psycopg2.connect("dbname=vineeta user=ben password=random12345")
     cur = conn.cursor()
 
-    compute_similarities(args.table, args.nlines)
+    if args.program == "sim":
+        compute_similarities(args.table, args.nlines)
+    elif args.program == "save":
+        save_flatfile(args.table, args.nlines)
+    elif args.program == "load":
+        load_flatfile(args.table, args.nlines)
 
 if __name__ == "__main__":
     main()

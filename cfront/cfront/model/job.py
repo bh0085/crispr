@@ -63,6 +63,10 @@ class Job(Base):
                 return False
         return True
 
+    @property
+    def computed_n_hits(self):
+        return sum([len(s.hits) for s in self.spacers])
+
     def jsonAttributes(self):
         return ["id", "sequence", 
                 "submitted_ms", "completed_ms", 
@@ -70,7 +74,8 @@ class Job(Base):
                 "computing_spacers",
                 "computed_spacers",
                 "computed_hits",
-                "computing_hits"]
+                "computing_hits",
+                "computed_n_hits"]
 
 
     

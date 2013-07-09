@@ -19,5 +19,8 @@ class Hit(Base):
     strand = Column(Integer, nullable = False)
     sequence = Column(VARCHAR(23), nullable = False)
 
+    @property
+    def jobid(self):
+        return self.spacer.job.id
     def jsonAttributes(self):
-        return ["id", "spacerid", "ontarget", "similarity", "chr", "start", "strand", "sequence"]
+        return ["id","jobid", "spacerid", "ontarget", "similarity", "chr", "start", "strand", "sequence"]

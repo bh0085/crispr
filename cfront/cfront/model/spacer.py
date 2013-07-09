@@ -17,10 +17,25 @@ class Spacer(Base):
     nrg = Column(VARCHAR(3),nullable = False)
     strand = Column(Integer, nullable = False)
     position = Column(Integer, nullable = False)
-    
+
+    score = Column(Float,nullable = True)
+    mismatch = Column(Integer,nullable = True)
+    mismatch_pos = Column(String,nullable = True)
+    gene = Column(String, nullable = True)
+
     computing_hits = Column(Boolean, nullable = False, default = False)
     computed_hits = Column(Boolean, nullable = False, default = False)
+    
+    @property
+    def start(self):
+        return self.position
 
     def jsonAttributes(self):
         return ["jobid", "sequence", "guide", "nrg", "strand", "position",
-                "computing_hits", "computed_hits"]
+                "computing_hits", "computed_hits", "id", "start",
+                "score", "mismatch", "mismatch_pos", "gene"]
+
+    
+
+
+

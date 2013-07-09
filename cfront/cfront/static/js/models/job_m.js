@@ -1,18 +1,25 @@
 /** backbone model for a job */
 var JobM = Backbone.RelationalModel.extend({
-    sequence:null,
-    id:null,
-    genome:null,
-    name:null,
-    email:null,
-    date_submitted:null,
-    date_completed:null,
+    defaults:{
+	sequence:null,
+	id:null,
+	genome:null,
+	name:null,
+	email:null,
+	date_submitted:null,
+	date_completed:null,
     
-    computing_spacers:false,
-    computed_spacers:false,
-    computed_hits:false,
-    computing_hits:false,
-    poll_timeout:250,
+	computing_spacers:false,
+	computed_spacers:false,
+	computed_hits:false,
+	computing_hits:false,
+
+	n_hits_computed:0,
+	n_hits_ready:0,
+	computed_n_hits:0,
+	
+	poll_timeout:250
+    },
     relations:[
 	{
 	    key:"spacers",
@@ -40,7 +47,9 @@ var JobM = Backbone.RelationalModel.extend({
 	}
     ],
     initialize:function(){
-	this.set("poll_timeout",250)
+	this.on("change:computed_spacers",this.on_all_spacers_ready,this)
+	this.on("change:computed_n_hits",this.on_one_hit_ready,this)
+	this.on("add:spacers",this.on_spacer_added, this)
     },
     /** Rest URL for a Job */
     url: function () {
@@ -48,36 +57,77 @@ var JobM = Backbone.RelationalModel.extend({
         var url = '/r/job/' + id;
         return url;
     },
+    //waiting for hits, polls. true when done.
     await_hits:function(){
 	$.getJSON("/j/check_hits/"+this.id,{},
 		  $.proxy(function(val){
-		      if(val){$.getJSON("/j/retrieve_hits/"+this.id,
-				       {},
-				       $.proxy(
-					   function(data){
-					       this.set("hits",data)
-					   }
-					   ,this))
-			     } else {
-				 this.set("poll_timeout",this.get("poll_timeout") *1.25);
-				 window.setTimeout($.proxy(this.await_hits,this), 
-						   this.get("poll_timeout"));
-			     }},this))
+		      this.fetch()
+
+		      if(!val){
+			  this.set("poll_timeout",this.get("poll_timeout") + 100);
+			  window.setTimeout($.proxy(this.await_hits,this), 
+					    this.get("poll_timeout"));
+		      }},this))
     },
+    //waiting for spacers, polls. true when done
     await_spacers:function(){
 	$.getJSON("/j/check_spacers/"+this.id,{},
 		  $.proxy(function(val){
-		      if(val){$.getJSON("/j/retrieve_spacers/"+this.id,
-				       {},
-				       $.proxy(
-					   function(data){
-					       this.set("spacers",data)
-					   }
-					   ,this))
-			     } else {
-				 this.set("poll_timeout",this.get("poll_timeout") *1.25);
-				 window.setTimeout($.proxy(this.await_spacers,this), 
-						   this.get("poll_timeout"));
-			     }},this))
+		      this.fetch()
+		      if(!val){
+			  this.set("poll_timeout",this.get("poll_timeout") + 100);
+			  window.setTimeout($.proxy(this.await_spacers,this), 
+					    this.get("poll_timeout"));
+		      }},this))
     },
+
+    //fires a change to n_hits
+    on_one_hit_ready:function(){
+	$.getJSON("/j/retrieve_hits/"+this.id,
+		  {},
+		  $.proxy(
+		      function(data){
+			  for (var i = 0 ; i < data.length ; i++){
+			      var h = data[i]
+			      if (! this.get("hits").get(h.id)){
+				  h = new HitM(h)
+			      }
+			      _.each(this.get("spacers").models,
+				     $.proxy(function(e,i){
+					 if(e.get("hits").length >0){
+					     if (! e.get("computed_hits")){
+						 e.set("computed_hits",true)
+					     }
+					 }
+				     },this)
+				    )
+				  this.trigger("some_hits_ready")
+			  }},this))
+    },
+    //fires a trigger "all_spacers_ready
+    on_all_spacers_ready:function(){
+	$.getJSON("/j/retrieve_spacers/"+this.id,
+		  {},
+		  $.proxy(
+		      function(data){
+			  for (var i = 0; i < data.length ; i++){
+			      var s = data[i]
+			      if (! this.get("spacers").get(s.id)){
+				  model = new SpacerM(s)
+			      }
+			  }
+			  this.trigger("all_spacers_ready")
+		      }
+		      ,this))
+    },
+    on_spacer_added:function(spacer,collection){
+	if(spacer.get("computed_hits")){
+	    this.trigger("computed_one",spacer)
+	} else {
+	    spacer.on("change:computed_hits",
+		      function(){
+			  this.trigger("computed_one",spacer)
+		      });
+	}
+    }
 })

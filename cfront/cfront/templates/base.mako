@@ -27,6 +27,7 @@
     <script type="text/javascript" src="/js/models/job_m.js"></script>
     <script type="text/javascript" src="/js/models/spacer_m.js"></script>
     <script type="text/javascript" src="/js/models/hit_m.js"></script>
+    <script type="text/javascript" src="/js/views/job_v.js"></script>
 
     <!--
     <script type="text/javascript" src="/js/pages/identify.js"></script>
