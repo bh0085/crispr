@@ -13,7 +13,7 @@ def compute_spacers(job_id):
     fwd = sequence
     rev = reverse_complement(sequence)
     
-    expression = re.compile(".{20}[ATGC][GA][T]")
+    expression = re.compile(".{20}[ATGC][GA][G]")
     for m in re.finditer(expression, fwd):
         Session.add(Spacer(job = job,
                            sequence = m.group(),

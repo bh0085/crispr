@@ -35,7 +35,8 @@ body .scrolly-column .scrolly-section {
     margin-left: 1em; }
 
 .section {
-  padding: .5em; }
+  padding: .5em;
+  margin: 1em; }
 
 .section.bad {
   border: 1px solid rgba(255, 0, 0, 0.3); }
