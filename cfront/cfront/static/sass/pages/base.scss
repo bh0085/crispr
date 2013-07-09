@@ -46,6 +46,21 @@ body{
 	}
     }
 }
+
+.section.bad{
+    .header{
+	color:red;
+	border:1px solid rgba(255, 0 , 0, .3);
+	padding:.5em;
+    }
+}
+.section.good{
+    .header{
+	color:green;
+	border:1px solid rgba(0, 255, 0, .3);
+	padding:.5em;
+    }
+}
 .inactive{
     opacity: .25;
     pointer-events:none;
