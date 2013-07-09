@@ -3,7 +3,7 @@ import subprocess as spc, os
 from ..models import Session, Job, Spacer, Hit
 import numpy as np
 import genome_io as gio
-
+import random
 
 
 
@@ -96,10 +96,14 @@ def enter_hits(spacer_id):
                            sequence = hit["sequence"],
                            similarity = float(sims_array[idx_h]) / hit_length,
                            start = hit["start"],
-                           strand = hit["strand"],
+                           strand = 1 if hit["strand"] == "+" else -1,
                            ontarget = is_ontarget
                        ))
-    
+           
+    if(len(spacer.hits) > 0):
+        spacer.score = min([1,  (1 - max([h.similarity for h in spacer.hits])) *4  ])
+    else:
+        spacer_score = 1
     spacer.computed_hits = True
     return True
 

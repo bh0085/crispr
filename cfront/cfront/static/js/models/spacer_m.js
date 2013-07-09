@@ -22,6 +22,16 @@ var SpacerM = Backbone.RelationalModel.extend({
 		type:Backbone.HasOne
 	    }
 	}
-    ]
+    ],
+    /** Rest URL for a Job */
+    url: function () {
+        var id = this.id ? this.id : -1;
+        var url = '/r/spacer/' + id;
+        return url;
+    },
+    initialize:function(){
+	this.on("change:computed_hits",function(){this.fetch();console.log("fetching "+this.id)},this)
+    }
 })
+
 
