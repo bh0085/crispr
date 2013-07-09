@@ -19,7 +19,7 @@ def main():
     
     args = parser.parse_args()
     
-    cmd = "bowtie -n 3 -l 15 -c hg19 {0} --quiet -a".format(args.query)
+    cmd = "bowtie -n 2 -l 15 -c hg19 {0} --quiet -a".format(args.query)
     spc.Popen(cmd, shell=True, cwd="/tmp/ramdrive/bowtie-indexes/hg19.ebwt",
               stdout = spc.PIPE)
     outs = spc.stdout.read()
