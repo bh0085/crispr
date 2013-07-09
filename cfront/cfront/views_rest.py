@@ -1,6 +1,6 @@
 from pyramid.response import Response
 from pyramid.view import view_config
-from .models import Job, Session
+from .models import Job, Session, Spacer, Hit
 import datetime
 
 @view_config(route_name="job_rest", renderer="json")
@@ -43,9 +43,29 @@ def job_rest(request):
     json = job.toJSON()
     json["spacers"] = [s.toJSON() for s in job.spacers]
 
-    print job.id
-    print len(job.spacers)
-    print "returning rest"
-    print "JCOMP? " +str( job.computed_spacers)
+    return json
+
+
+@view_config(route_name="spacer_rest", renderer="json")
+def spacer_rest(request):
+
+    # fakes the resource factory
+    spacer_id = int(request.matchdict['spacer_id'])
+    if  spacer_id == -1:
+        spacer = None
+    else:
+        spacer = Session.query(Spacer).get(spacer_id)
+        if not spacer:
+            raise Exception("Spacer not found")
+
+    method = request.method
+
+    if method == 'GET':
+        pass
+    else:
+        raise Exception("unsupported method: {0}".format(method))
+                  
+    print spacer.score
+    json = spacer.toJSON()
 
     return json

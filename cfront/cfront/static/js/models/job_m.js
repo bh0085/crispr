@@ -90,18 +90,18 @@ var JobM = Backbone.RelationalModel.extend({
 			  for (var i = 0 ; i < data.length ; i++){
 			      var h = data[i]
 			      if (! this.get("hits").get(h.id)){
-				  h = new HitM(h)
+				  h = new HitM(h);
 			      }
 			      _.each(this.get("spacers").models,
 				     $.proxy(function(e,i){
 					 if(e.get("hits").length >0){
 					     if (! e.get("computed_hits")){
-						 e.set("computed_hits",true)
+						 e.fetch();
+						 console.log("fetching")
 					     }
 					 }
 				     },this)
 				    )
-				  this.trigger("some_hits_ready")
 			  }},this))
     },
     //fires a trigger "all_spacers_ready
@@ -119,15 +119,5 @@ var JobM = Backbone.RelationalModel.extend({
 			  this.trigger("all_spacers_ready")
 		      }
 		      ,this))
-    },
-    on_spacer_added:function(spacer,collection){
-	if(spacer.get("computed_hits")){
-	    this.trigger("computed_one",spacer)
-	} else {
-	    spacer.on("change:computed_hits",
-		      function(){
-			  this.trigger("computed_one",spacer)
-		      });
-	}
     }
 })

@@ -28,6 +28,7 @@ def main(global_config, **settings):
 
     #rest routes
     config.add_route('job_rest', '/r/job/{job_id}')
+    config.add_route('spacer_rest', '/r/spacer/{spacer_id}')
     
     config.scan()
     return config.make_wsgi_app()

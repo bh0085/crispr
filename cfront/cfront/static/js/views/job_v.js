@@ -115,12 +115,10 @@ JobV = Backbone.View.extend({
 	opts = {stroke:this.spacer_color,strokeWidth:this.spacer_width};
 	this.rendered_spacers[spacer.id] = this.svg.path(p,opts);
     },
-    update_query_spacer:function(spacer){
-	hits = spacer.get("hits")
-	
-	max_sim = _.max(hits.pluck("similarity"))
+    update_query_spacer:function(spacer){	
+	//max_sim = _.max(hits.pluck("similarity"))
 	qthreshold = score_threshold
-	score = max_sim
+	score = spacer.get("score")
 	color = "rgba("+ [score < score_threshold ? 255: 0 , 
 			  score >= qthreshold ? Math.floor(score * 255):0,
 			  0,
@@ -143,12 +141,6 @@ JobSV = Backbone.View.extend({
     initialize:function(options){
 	jsv = this;
 	this.views_by_id = {}
-	this.model.on("computed_one",
-		      function(e){
-			  console.log("computed one")
-			  this.spacers.remove(e)
-			  this.spacers.add(e)
-		      }, this)
 	this.spacers = new SpacersDisplayC()
 	this.spacers.on("add", this.add_one, this)
 	this.spacers.on("remove", this.remove_one, this)
@@ -156,7 +148,13 @@ JobSV = Backbone.View.extend({
     render:function(){
 	this.$el.html(_.template(this.template,{}))
 	_.each(this.model.get("spacers").models,
-	       $.proxy(function(e){this.spacers.add(e)},this))
+	       $.proxy(function(e){
+		   this.spacers.add(e)
+		   e.on("change:score",function(e){
+		       this.spacers.remove(e);
+		       this.spacers.add(e);
+		   },this)
+	       },this))
 	return this
     },
     add_one:function(spacer){

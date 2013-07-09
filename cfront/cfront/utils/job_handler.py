@@ -16,6 +16,7 @@ def queue_loop():
         time.sleep(1)
         
 
+
 def process_queue():
     with transaction.manager:
         unspacered = Session.query(Job).filter(Job.computed_spacers == False).all()
@@ -24,7 +25,7 @@ def process_queue():
              webserver_db.compute_spacers(j.id)
          
         unstarted = Session.query(Spacer).filter(Spacer.computing_hits == False).all()
-        for s in unstarted:
+        for s in unstarted[:3]:
              genome_db.compute_hits(s.id)
          
         unfinished = Session.query(Spacer).filter(Spacer.computed_hits == False).all()
