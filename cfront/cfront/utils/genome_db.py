@@ -20,7 +20,7 @@ def compute_hits(spacer_id):
 
     print "check to make sure computing hits works without session.add()"
 
-    table_prefix = "locs10mt_ram"
+    table_prefix = "loci1mt"
 
         
 
@@ -28,9 +28,14 @@ def compute_hits(spacer_id):
     query_file = os.path.join(jp,"query_s{0}.txt".format(spacer_id))
     with open(query_file,'w') as qf:
         qf.write(spacer.guide)
-    cmd =  "submit_query.py -l .5 -t {3} -q {0} -j {1} -s {2}".format( query_file, job.id, spacer_id, table_prefix)
+        
+    cmd = "bowtie.py -q {0} -j {1} -s {2}".format(spacer.guide[5:],job.id,spacer_id)
+    #cmd =  "submit_query.py -l .4 -t {3} -q {0} -j {1} -s {2}".format( query_file, job.id, spacer_id, table_prefix)
     prc = spc.Popen(cmd, shell=True)
     return False
+
+
+
 
 
 def check_hits(spacer_id):
@@ -40,7 +45,7 @@ def check_hits(spacer_id):
     spacer = Session.query(Spacer).get(spacer_id)
     job = spacer.job
     p = gio.get_job_path(job.id)
-    done = "summary_s{0}.txt".format(spacer_id) in os.listdir(p)
+    done = "matches_s{0}.txt".format(spacer_id) in os.listdir(p)
     failed = "failed_s{0}" in os.listdir(p)
     if done:
         return True
@@ -59,7 +64,7 @@ def enter_hits(spacer_id):
         raise Exception("already computed hits")
 
     p = os.path.join(gio.get_job_path(job.id),"matches_s{0}.txt".format(spacer_id))
-    cols = ["id", "sequence", "chr", "start", "strand"]    
+    cols = ["sequence", "chr", "start", "strand","nrg"]    
 
     #parse file IO from DB query
     with open(p) as f:
