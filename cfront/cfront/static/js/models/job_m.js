@@ -92,17 +92,18 @@ var JobM = Backbone.RelationalModel.extend({
 			      if (! this.get("hits").get(h.id)){
 				  h = new HitM(h);
 			      }
-			      _.each(this.get("spacers").models,
-				     $.proxy(function(e,i){
-					 if(e.get("hits").length >0){
-					     if (! e.get("computed_hits")){
-						 e.fetch();
-						 console.log("fetching")
-					     }
+			  }
+			  
+			  _.each(this.get("spacers").models,
+				 $.proxy(function(e,i){
+				     if(e.get("hits").length >0){
+					 if (! e.get("computed_hits")){
+					     e.fetch();
 					 }
-				     },this)
-				    )
-			  }},this))
+				     }
+				 },this)
+				)
+			      },this))
     },
     //fires a trigger "all_spacers_ready
     on_all_spacers_ready:function(){
