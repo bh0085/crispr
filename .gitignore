@@ -5,3 +5,4 @@
 cfront/venv
 #*
 .#*
+.sass-cache
