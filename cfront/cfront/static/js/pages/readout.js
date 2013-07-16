@@ -44,12 +44,12 @@ ReadoutV = Backbone.View.extend({
 	this.$(".status").empty().append($("<p>").text("aligning spacers, ("+_.filter(this.job.get("spacers").models,function(e){return e.get("computed_hits")}).length + " of " + this.job.get("spacers").length+")"))
 	if (val == false){throw "spacers should never be changed to false"}
 	this.jobview = new JobV({model:this.job})
-	this.jobview.$el.appendTo(this.$el)
+	this.jobview.$el.appendTo(this.$(".job-svg-view"))
 	this.jobview.render()
 	this.jobview.compute_collisions()
 	this.jobview.draw_spacers()
 	this.job_spacers_view = new JobSV({model:this.job})
-	this.job_spacers_view.render().$el.appendTo(this.$el)
+	this.job_spacers_view.render().$el.appendTo(this.$(".spacers-container"))
 	this.draw_hits()
     },
     draw_hits:function(model){
@@ -71,4 +71,39 @@ ReadoutV = Backbone.View.extend({
 	    }
 	}
     }
+    show_spacer:function(spacer_m){
+	if(this.spacer_h_view){
+	    this.spacer_h_view.destroy()
+	}
+	
+    }
 })
+
+
+HVcols =["sequence","chr", "start", "strand", "ontarget", "similarity", "score", "gene"]
+
+var SpaceHV = Backbone.View.extend({
+    template:$("#spacer-h-v-template").html(),
+    destroy:function(){
+	_.each(this.viewsByCID,
+	       function(e,i){
+		   e.destroy();
+	       });
+	this.$el.removeData().remove();
+    },
+    render:function(){
+	
+	data ={header_row_html:_.map(HVcols,
+				     function(e,i){
+					 return 
+				     })}
+	this.$el.html(_.template(this.template,data))
+    }
+});
+
+var HitV = Backbone.View.extend({
+    template:$("#hit-v-template").html(),
+    destroy:function(){
+	this.$el.removeData().remove();
+    }
+});

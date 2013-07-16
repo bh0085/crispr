@@ -14,6 +14,7 @@
     <script type="text/javascript" src="/js/cdn/mustache.min.js" ></script>
     <script type="text/javascript" src="/js/deps/backbone.eventbinder.js" ></script>
     <script type="text/javascript" src="/js/deps/backbone-relational/backbone-relational.js" ></script>
+    <script type="text/javascript" src="/js/deps/jquery-tablesorter/jquery.tablesorter.min.js" ></script>
 
     <script src="/js/deps/bootstrap/bootstrap.min.js"></script>
     <script type="text/javascript" src="/js/deps/jquery-svg/jquery.svg.min.js"></script>
