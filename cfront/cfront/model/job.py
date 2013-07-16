@@ -3,10 +3,11 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, BigInteger, String, Unicode, DateTime, ForeignKey, Index, Boolean, Float
 from cfront.models import Session, Base
 import calendar
+from sqlalchemy.types import VARCHAR
+
 
 class Job(Base):
     __tablename__ = 'job'
-    
     
     #pkey
     id = Column(Integer, primary_key = True)
@@ -20,6 +21,11 @@ class Job(Base):
     name = Column(Unicode, nullable = True)
     email = Column(Unicode, nullable = True)
     date_completed = Column(DateTime, nullable = True)
+
+    #v0 maps to exactly one site on the genome
+    chr = Column(VARCHAR(6), nullable = False)
+    start = Column(Integer, nullable = False)
+    strand = Column(Integer, nullable = False)
 
     computing_spacers = Column(Boolean, nullable = False, default = False)
     computed_spacers = Column(Boolean, nullable = False, default = False)
@@ -75,7 +81,8 @@ class Job(Base):
                 "computed_spacers",
                 "computed_hits",
                 "computing_hits",
-                "computed_n_hits"]
+                "computed_n_hits",
+                "chr", "start", "strand"]
 
 
     

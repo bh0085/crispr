@@ -9,8 +9,8 @@ if not os.path.isdir(TMPPATH):
     os.makedirs(TMPPATH)
 def check_genome(sequence):
     record = sr.SeqRecord(seq.Seq(sequence),id="seqA",description="")
-    tmpfile_in = os.path.join(TMPPATH,"tmpfile_{0}.fa".format(int(random.random() * 10000000)))
-    tmpfile_out = os.path.join(TMPPATH,"tmpfile_{0}.psl".format(int(random.random() * 10000000)))
+    tmpfile_in = os.path.join(TMPPATH,"tmpfile_{0}.fa".format(int(random.random() * 1e10)))
+    tmpfile_out = os.path.join(TMPPATH,"tmpfile_{0}.psl".format(int(random.random() * 1e10)))
     with open(tmpfile_in,'w') as f:
         f.write(record.format("fasta"))
 
@@ -18,21 +18,17 @@ def check_genome(sequence):
     #more than one will generate an error
     cmd = "gfClient localhost 8000 /data/genomes/ {0} {1} -minScore={2} -minIdentity=100".format(tmpfile_in, tmpfile_out, len(sequence))
     
-    print cmd
-    print "submitting"
     prc = spc.Popen(cmd,shell = True, stdout = spc.PIPE)
     prc.communicate()
     with open(tmpfile_out) as f:
         content = f.read()
         
-    #os.remove(tmpfile_in)
-    #os.remove(tmpfile_out)
+    os.remove(tmpfile_in)
+    os.remove(tmpfile_out)
     
     lines = content.splitlines()
     headers, content = lines[:5],lines[5:]
     
-    print headers
-    print content
 
     cols = ['matches',
             'misMatches',
@@ -64,10 +60,6 @@ def check_genome(sequence):
     for l in content:
         possible = dict([(cols[i],e.strip()) for i,e in enumerate(re.compile("\s+").split(l))])
         eligible = True if int(possible["misMatches"]) == 0 else False
-        
-        print possible
-        print eligible
-        print "HI"
         if eligible:
             matches.append(possible)
         

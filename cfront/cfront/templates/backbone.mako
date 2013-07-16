@@ -42,7 +42,6 @@
 
 <script id="submit-section-template" type="unknown">
   <div class="header page-header">
-    <h4 class="header-back"><a class="previous">...back</a></h4>
     <h1 class="header-oneword">{{name}}</h1>
     <span class="header-description">{{description}}</span>
   </div>

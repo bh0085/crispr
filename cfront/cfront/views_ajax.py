@@ -52,26 +52,29 @@ def job_post_new(request):
                 "matches":matches,
                 "job_id":None}
     else:
-            job = Job(date_submitted = datetime.datetime.utcnow(),
+        job = Job(date_submitted = datetime.datetime.utcnow(),
                   sequence = request.params["sequence"],
                   genome = Job.GENOMES["HUMAN"],
                   name = request.params["name"],
                   email = request.params["email"],
-                  date_completed = None
+                  date_completed = None,
+                  chr=matches[0]["tName"],
+                  start=matches[0]["tStart"],
+                  strand=1 if matches[0]["strand"] == "+" else -1
                   )
 
-            Session.add(job)
-            for spacer_info in infos:
-                Session.add(Spacer(job = job,**spacer_info))
+        Session.add(job)
+        for spacer_info in infos:
+            Session.add(Spacer(job = job,**spacer_info))
+            
+        job.computed_spacers = True
+        Session.flush()
+        print job.id
 
-            job.computed_spacers = True
-            Session.flush()
-            print job.id
-
-            return {"status":"success",
-                    "message":None,
-                    "matches":matches,
-                    "job_id":job.id}
+        return {"status":"success",
+                "message":None,
+                "matches":matches,
+                "job_id":job.id}
                     
             
         

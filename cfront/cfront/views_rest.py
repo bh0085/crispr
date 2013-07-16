@@ -34,7 +34,7 @@ def job_rest(request):
                   name = request.params["name"],
                   email = request.params["email"],
                   date_completed = None
-              )
+        )
 
         
 

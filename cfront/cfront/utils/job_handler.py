@@ -12,7 +12,6 @@ def init_env(p):
 def queue_loop():
     while True:
         process_queue()
-        print "processing"
         time.sleep(1)
         
 
@@ -29,13 +28,6 @@ def process_queue():
              ready = genome_db.check_hits(s.id)
              if ready:
                  genome_db.enter_hits(s.id)
-                 print "entering hits for {0}".format(s.id)
-        
-        print "Number of jobs unstarted (unfinished): {0} ({1})"\
-             .format(len(unstarted),len(unfinished))
-         
-         
-    
 
 if __name__ == "__main__":
     init_env(sys.argv[1])

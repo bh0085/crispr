@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 import argparse, subprocess as spc, os, StringIO
-from Bio import SeqIO as sio
+from Bio import SeqIO as sio, Seq, SeqRecord
+import random
+import twobitreader
 
 #ROOT = os.environ["HOME"]
 DATAPATH = os.environ["CFRONTDATA"]
@@ -8,6 +10,89 @@ JOBSPATH = os.path.join(DATAPATH,"jobs")
 if not os.path.isdir(JOBSPATH):
     os.makedirs(JOBSPATH)
 
+TMPPATH = "/tmp/ramdisk/cfront/bowtie"
+if not os.path.isdir(TMPPATH):
+    os.makedirs(TMPPATH)
+GENOMEPATH = "/tmp/ramdisk/genomes/"
+GENOME2BIT = os.path.join(GENOMEPATH,"hg19.2bit")
+
+def run_queries(queries):
+
+    tmpfile_in = os.path.join(TMPPATH,"tmpfile_{0}.fa".format(int(random.random() * 1e10)))
+    tmpfile_out = os.path.join(TMPPATH,"tmpfile_{0}.out".format(int(random.random() * 1e10)))
+        
+    records = []
+    for i,q in enumerate(queries):
+        if len(q) != 20:
+            raise Exception("demands queries of length 20")
+        
+        records.extend([SeqRecord.SeqRecord(Seq.Seq( q[5:] + n + r + "G"), 
+                                            id="query_{0}".format(i),
+                                            description="")  
+                        for n in "ATGC" for r in "GA"])
+
+    with open(tmpfile_in,'w') as f:
+        f.writelines([r.format("fasta") for r in records])
+
+        
+
+    #cmd = "bowtie -n 2 -l 18 hg19 -f {0} --quiet -a {1}".format(tmpfile_in,tmpfile_out)
+    cmd = "bowtie -n 3 -l 18 hg19 -f {0} --quiet -a {1}".format(tmpfile_in,tmpfile_out)
+    prc = spc.Popen(cmd, shell=True, cwd="/tmp/ramdisk/bowtie-indexes")
+    prc.communicate()
+
+    with open(tmpfile_out) as f:
+        lines = f.readlines()
+        
+    os.remove(tmpfile_in)
+    os.remove(tmpfile_out)
+
+    rows = [dict(zip(["query_id","strand","chr","position","sequence","alignment","mismatch","mistmatch_pos"] , l.split("\t") )) for l in lines]
+
+
+    tbf = twobitreader.TwoBitFile(GENOME2BIT)
+
+
+    out,regions = [],set()
+    for i,r in enumerate(rows):
+    
+        if r["strand"] == "+":
+            start =int( r["position"])  - 5
+            end =int( r["position"]) + 23 - 5
+            context = tbf[r["chr"]][start:end]
+        else:
+            start = (int(r["position"]) )
+            end = (int(r["position"]) + 23 )
+            context = reverse_complement(tbf[r["chr"]][start:end])
+                                    
+        region = "{0}:{1}-{2}{3}".format(r["chr"],
+                                         start,
+                                         end,
+                                         r["strand"])
+        if region in regions:
+            continue
+        regions.add(region)
+        
+        r["sequence"] = context[:-3].upper()
+        r["nrg"] = context[-3:].upper()
+        r["context"] = context.upper()
+        r["chr"] = r["chr"]
+        
+        if r["nrg"][-2:] == "AG" or r["nrg"][-2:] == "GG":
+            out.append(r)
+
+    print len(rows)
+    print len(out)
+     
+    return out
+
+def reverse_complement(seq):
+    comp = {"A":"T",
+            "G":"C",
+            "C":"G",
+            "T":"A",
+            "N":"N"}
+    return "".join(comp[l.upper()] for l in seq[::-1])
 
 def main():
     '''
@@ -27,48 +112,18 @@ def main():
                         help="query input sequence")
     
     args = parser.parse_args()
-    
-    cmd = "bowtie -n 2 -l 15 -c hg19 {0} --quiet -a".format(args.query)
+    query =args.query
 
-    prc = spc.Popen(cmd, shell=True, cwd="/tmp/ramdisk/bowtie-indexes",
-              stdout = spc.PIPE)
-    outs = prc.stdout.readlines()
-    rows = [dict(zip(["query_id","strand","chr","position","sequence","alignment","mismatch","mistmatch_pos"] , l.split("\t") )) for l in outs]
-
-
-    contexts = []
-    regions =["{0}:{1}-{2}".format(r["chr"],int(r["position"])+1-5,int(r["position"])+23-5) for r in rows]
-    for i in range(1+ (len(regions)/50) ):
-        regions_str = " ".join(regions[50*i:50*(i+1)])
-        if regions_str != "":
-            regions_cmd = "samtools faidx hg19.fa {0}".format(regions_str)
-            prc = spc.Popen(regions_cmd,shell=True,cwd="/tmp/ramdisk/bowtie-indexes",
-                            stdout=spc.PIPE)
-            contexts += [ str(e.seq) for e in sio.parse(StringIO.StringIO(prc.stdout.read()),"fasta")]
-    
-
-    for i,r in enumerate(rows):
-        r["sequence"] = contexts[i][:-3].upper()
-        r["nrg"] = contexts[i][-3:].upper()
-        r["context"] = contexts[i].upper()
-        r["chr"] = r["chr"][3:]
-
-    print len(rows[0]["sequence"])
-        
-    rows = [r for r in rows if r["nrg"][-2:] == "AG" or r["nrg"][-2:] == "GG"]
-
-        
-    cols = ["sequence","chr", "position", "strand","nrg"]
     job_path = os.path.join(JOBSPATH,args.job_id)
     if not os.path.isdir(job_path):
         os.makedirs(job_path)
         
-    
-
-    with open(os.path.join(job_path, "matches_s{0}.txt".format(args.spacer_id)),'w') as f:
+    match_file = os.path.join(job_path, "matches_s{0}.txt".format(args.spacer_id))
+    rows = run_queries([query])
+    cols = ["sequence","chr", "position", "strand","nrg"]
+    with open(match_file,'w') as f:
         f.write("\n".join(["\t".join([o[c] for c in cols]) for o in rows]))
         
-
 
 if __name__ == "__main__":
     main()
