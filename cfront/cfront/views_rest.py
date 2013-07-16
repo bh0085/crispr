@@ -2,6 +2,7 @@ from pyramid.response import Response
 from pyramid.view import view_config
 from .models import Job, Session, Spacer, Hit
 import datetime
+from .utils import webserver_db as wdb
 
 @view_config(route_name="job_rest", renderer="json")
 def job_rest(request):
@@ -26,13 +27,17 @@ def job_rest(request):
         raise Exception("post request for persisted job")
 
     if method == 'POST':
+        raise Exception("please post jobs through the ajax gateway")
         job = Job(date_submitted = datetime.datetime.utcnow(),
-                  sequence = request.json_body["sequence"],
+                  sequence = request.params["sequence"],
                   genome = Job.GENOMES["HUMAN"],
-                  name = request.get("name", None),
-                  email = request.get("email", None),
+                  name = request.params["name"],
+                  email = request.params["email"],
                   date_completed = None
-        )
+              )
+
+        
+
     elif method == 'GET':
         pass
     else:

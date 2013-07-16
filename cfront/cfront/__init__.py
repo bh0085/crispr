@@ -18,13 +18,15 @@ def main(global_config, **settings):
     config.add_static_view('/pages', 'static/pages', cache_max_age=3600)
 
     #page routes
-    config.add_route('main', '/')
+    config.add_route('submit', '/')
+    config.add_route('readout', '/job/{jobid}')
 
     #ajax routes
     config.add_route('job_check_spacers', '/j/check_spacers/{job_id}')
     config.add_route('job_check_hits', '/j/check_hits/{job_id}')
     config.add_route('job_retrieve_spacers', '/j/retrieve_spacers/{job_id}')
     config.add_route('job_retrieve_hits', '/j/retrieve_hits/{job_id}')
+    config.add_route('job_post_new', '/j/post_new')
 
     #rest routes
     config.add_route('job_rest', '/r/job/{job_id}')

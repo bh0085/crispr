@@ -22,14 +22,12 @@ def compute_hits(spacer_id):
 
     table_prefix = "loci1mt"
 
-        
-
     jp = gio.get_job_path(job.id)
     query_file = os.path.join(jp,"query_s{0}.txt".format(spacer_id))
     with open(query_file,'w') as qf:
         qf.write(spacer.guide)
         
-    cmd = "bowtie.py -q {0} -j {1} -y -s {2}".format(spacer.guide[5:],job.id,spacer_id)
+    cmd = "bowtie.py -q {0} -j {1} -s {2}".format(spacer.guide[5:],job.id,spacer_id)
     #cmd =  "submit_query.py -l .4 -t {3} -q {0} -j {1} -s {2}".format( query_file, job.id, spacer_id, table_prefix)
     prc = spc.Popen(cmd, shell=True)
     return False

@@ -21,19 +21,17 @@
     <%include file="models.html"/>
     <%include file="backbone.mako"/>
     <script type="text/javascript" src="/js/pages/base.js"></script>
+
+    %if request.matched_route.name == "submit":
     <script type="text/javascript" src="/js/pages/submit.js"></script>
+    %elif request.matched_route.name == "readout":
     <script type="text/javascript" src="/js/pages/readout.js"></script>
+    %endif
 
     <script type="text/javascript" src="/js/models/job_m.js"></script>
     <script type="text/javascript" src="/js/models/spacer_m.js"></script>
     <script type="text/javascript" src="/js/models/hit_m.js"></script>
     <script type="text/javascript" src="/js/views/job_v.js"></script>
-
-    <!--
-    <script type="text/javascript" src="/js/pages/identify.js"></script>
-    <script type="text/javascript" src="/js/pages/find.js"></script>
-    <script type="text/javascript" src="/js/pages/find_bb.js"></script>
-    -->
     
   </head>
   <body class="${request.matched_route.name}" data-target="#navparent" data-spy="scroll" >

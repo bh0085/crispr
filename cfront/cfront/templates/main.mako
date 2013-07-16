@@ -2,12 +2,7 @@
 <%block name="content_html">
 <span class="row content-row">
   <span id="scrolling-content" class="span8 offset1 scrolly-column">
-    <%include file="submit.mako"/>
-    <%include file="readout.mako"/>
-    <!--
-    <%include file="identify.mako"/>
-    <%include file="find.mako"/>
-    -->
+   
     </div>
   </span>
 </span>

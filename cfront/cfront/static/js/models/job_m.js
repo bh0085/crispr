@@ -51,6 +51,12 @@ var JobM = Backbone.RelationalModel.extend({
 	this.on("change:computed_n_hits",this.on_one_hit_ready,this)
 	this.on("add:spacers",this.on_spacer_added, this)
     },
+    fetched:function(){
+	this.await_hits()
+	this.await_spacers()
+	var rview = new ReadoutV({job:this})
+	rview.render().$el.appendTo($("#readout>.scrolly-content"))
+    },
     /** Rest URL for a Job */
     url: function () {
         var id = this.id ? this.id : -1;

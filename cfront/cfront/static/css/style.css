@@ -16,6 +16,10 @@
   -webkit-user-select: none;
   user-select: none; }
 
+.disabled {
+  color: lightgray;
+  cursor: not-allowed; }
+
 .sequence {
   font-family: courier; }
 

@@ -1,3 +1,30 @@
+$(function(){
+    init();
+})
+
+current_job = null;
+function init(){
+
+    params ={"name":"Readout",
+	     "description":"Best possible guide sequences."}
+    $("#readout").html(
+	_.template($("#scrolly-section-template").html(),
+		   params))
+    
+    host = location.host;
+    pathname = location.pathname;
+    jobid_string = location.pathname.split("/")[2];
+   
+    //if we have a subdomain prefix in the pathname, this will cause problems.
+    jobid = parseInt(jobid_string);
+    if (isNaN(jobid)){throw "bad jobid : "+jobid_string;}
+    current_job = new JobM({id:jobid})
+    current_job.fetch({success:$.proxy(current_job.fetched,current_job)})
+}
+
+
+
+
 /* readout view initialized with a single job rendering pieces parts complete */
 ReadoutV = Backbone.View.extend({
     template:$("#readout-section-template").html(),
@@ -6,7 +33,6 @@ ReadoutV = Backbone.View.extend({
 	this.job = options.job;
 	this.job.on("all_spacers_ready",this.draw_job, this);
 	this.job.on("change:computed_n_hits", this.draw_hits, this);
-	//job.on("change:computed_hits",this.draw_hits, this)
     },
     render:function(){
 	
@@ -24,6 +50,7 @@ ReadoutV = Backbone.View.extend({
 	this.jobview.draw_spacers()
 	this.job_spacers_view = new JobSV({model:this.job})
 	this.job_spacers_view.render().$el.appendTo(this.$el)
+	this.draw_hits()
     },
     draw_hits:function(model){
 

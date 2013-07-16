@@ -19,11 +19,7 @@ def queue_loop():
 
 def process_queue():
     with transaction.manager:
-        unspacered = Session.query(Job).filter(Job.computed_spacers == False).all()
-        for j in unspacered:
-             Session.add(j)
-             webserver_db.compute_spacers(j.id)
-         
+
         unstarted = Session.query(Spacer).filter(Spacer.computing_hits == False).all()
         for s in unstarted[:3]:
              genome_db.compute_hits(s.id)
@@ -35,7 +31,6 @@ def process_queue():
                  genome_db.enter_hits(s.id)
                  print "entering hits for {0}".format(s.id)
         
-        print "Number of jobs unspacered: {0}".format(len(unspacered))
         print "Number of jobs unstarted (unfinished): {0} ({1})"\
              .format(len(unstarted),len(unfinished))
          
