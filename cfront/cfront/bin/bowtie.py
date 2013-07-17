@@ -36,8 +36,8 @@ def run_queries(queries):
 
         
 
-    #cmd = "bowtie -n 2 -l 18 hg19 -f {0} --quiet -a {1}".format(tmpfile_in,tmpfile_out)
-    cmd = "bowtie -n 3 -l 18 hg19 -f {0} --quiet -a {1}".format(tmpfile_in,tmpfile_out)
+    #cmd = "bowtie -n 3 -l 18 hg19 -f {0} --quiet -a {1}".format(tmpfile_in,tmpfile_out)
+    cmd = "bowtie -n 2 -l 18 hg19 -f {0} --quiet -a {1}".format(tmpfile_in,tmpfile_out)
     prc = spc.Popen(cmd, shell=True, cwd="/tmp/ramdisk/bowtie-indexes")
     prc.communicate()
 
@@ -61,8 +61,8 @@ def run_queries(queries):
             end =int( r["position"]) + 23 - 5
             context = tbf[r["chr"]][start:end]
         else:
-            start = (int(r["position"]) )
-            end = (int(r["position"]) + 23 )
+            start = int(r["position"]) 
+            end = int(r["position"]) + 23 
             context = reverse_complement(tbf[r["chr"]][start:end])
                                     
         region = "{0}:{1}-{2}{3}".format(r["chr"],
@@ -73,6 +73,7 @@ def run_queries(queries):
             continue
         regions.add(region)
         
+        r["position"] = start + 1 # converts back to zero basis
         r["sequence"] = context[:-3].upper()
         r["nrg"] = context[-3:].upper()
         r["context"] = context.upper()
@@ -81,9 +82,6 @@ def run_queries(queries):
         if r["nrg"][-2:] == "AG" or r["nrg"][-2:] == "GG":
             out.append(r)
 
-    print len(rows)
-    print len(out)
-     
     return out
 
 def reverse_complement(seq):
@@ -120,10 +118,10 @@ def main():
         
     match_file = os.path.join(job_path, "matches_s{0}.txt".format(args.spacer_id))
     rows = run_queries([query])
-    cols = ["sequence","chr", "position", "strand","nrg"]
+    cols = [ "sequence","chr", "position", "strand","nrg"]
     with open(match_file,'w') as f:
-        f.write("\n".join(["\t".join([o[c] for c in cols]) for o in rows]))
-        
+        f.write("\n".join(["\t".join(["{0}".format(args.spacer_id)] + [str(o[c]) for c in cols]) for o in rows]))
+    print "writing " + match_file
 
 if __name__ == "__main__":
     main()

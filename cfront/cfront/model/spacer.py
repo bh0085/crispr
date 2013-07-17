@@ -18,14 +18,13 @@ class Spacer(Base):
     strand = Column(Integer, nullable = False)
     position = Column(Integer, nullable = False)
 
-    score = Column(Float,nullable = True)
-    mismatch = Column(Integer,nullable = True)
-    mismatch_pos = Column(String,nullable = True)
-    gene = Column(String, nullable = True)
-
+    score = Column(Float,nullable = True, index = True)
+    gene = Column(String, nullable = True, index = True)
     computing_hits = Column(Boolean, nullable = False, default = False)
-    computed_hits = Column(Boolean, nullable = False, default = False)
     
+    @property
+    def computed_hits(self):
+        return False if self.score == None else True
     @property
     def start(self):
         return self.position
@@ -33,7 +32,7 @@ class Spacer(Base):
     def jsonAttributes(self):
         return ["jobid", "sequence", "guide", "nrg", "strand", "position",
                 "computing_hits", "computed_hits", "id", "start",
-                "score", "mismatch", "mismatch_pos", "gene"]
+                "score", "gene"]
 
     
 

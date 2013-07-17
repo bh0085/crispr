@@ -102,18 +102,18 @@ def compute_spacers(sequence):
     infos = []
     for m in re.finditer(expression, fwd):
         infos.append(dict(sequence = m.group(),
-                      guide = m.group()[:-3],
-                      nrg = m.group()[-3:],
-                      strand = 1,
+                          guide = m.group()[:-3],
+                          nrg = m.group()[-3:],
+                          strand = 1,
                           position = m.start()))
 
 
     for m in re.finditer(expression,rev):
         infos.append(dict(sequence = m.group(),
-                           guide = m.group()[:-3],
-                           nrg = m.group()[-3:],
-                           strand = -1,
-                           position = m.start()))
+                          guide = m.group()[:-3],
+                          nrg = m.group()[-3:],
+                          strand = -1,
+                          position = m.start()))
 
     
     #marks job complete, returns status

@@ -1,10 +1,32 @@
-<script type="unknown" id="spacer-h-v-template">
-  <table class="spacer-hits">
 
-  </table>
+
+<!-- HVcols =["sequence","chr", "start", "strand", "ontarget", "similarity", "score", "gene"] -->
+
+<script type="unknown" id="spacer-h-v-template">
+    <thead>
+      <tr>
+	<th>sequence</th>
+	<th>chr</th>
+	<th>start</th>
+	<th>strand</th>
+	<th>ontarget</th>
+	<th>similarity</th>
+	<th>score</th>
+	<th>gene</th>
+      </tr>
+    </thead>
+    <tbody> 
+    </tbody>
 </script>
 <script type="unknown" id="hit-v-template">
-
+    <td class="sequence">{{sequence}}</td>
+    <td class="chr">{{chr}}</td>
+    <td class="start">{{start}}</td>
+    <td class="strand">{{strand}}</td>
+    <td class="ontarget">{{ontarget}}</td>
+    <td class="similarity">{{similarity}}</td>
+    <td class="score">{{score}}</td>
+    <td class="gene">{{gene}}</td>
 </script>
 
 
@@ -31,7 +53,7 @@
     <ul class="views">
     </ul>
   </div>
-  <div class="uncategorized section">
+  <div class="uncategorized2 section">
     <p class="header">guides not yet aligned to the genome</p>
     <ul class="views">
     </ul>

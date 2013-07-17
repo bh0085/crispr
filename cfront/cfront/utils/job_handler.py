@@ -23,10 +23,11 @@ def process_queue():
         for s in unstarted[:3]:
              genome_db.compute_hits(s.id)
          
-        unfinished = Session.query(Spacer).filter(Spacer.computed_hits == False).all()
+        unfinished = Session.query(Spacer).filter(Spacer.score == None).all()
         for s in unfinished:
              ready = genome_db.check_hits(s.id)
              if ready:
+                 print "entering spacer: {0}".format(s.id)
                  genome_db.enter_hits(s.id)
 
 if __name__ == "__main__":

@@ -55,7 +55,7 @@ var JobM = Backbone.RelationalModel.extend({
 	this.await_hits()
 	this.await_spacers()
 	var rview = new ReadoutV({job:this})
-	rview.render().$el.appendTo($("#readout>.scrolly-content"))
+	rview.render().$el.appendTo($("#readout .readout-v-container"))
     },
     /** Rest URL for a Job */
     url: function () {

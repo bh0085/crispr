@@ -35,10 +35,12 @@ class Job(Base):
         "HUMAN":1
     }
 
+    
     #exceptions
     NOSPACERS = "spacers not yet computed"
     NOHITS = "hits not yet computed"
-    
+    ERR_TOOMANY = "too many spacers in a single alignment"
+    ERR_MISSING = "no spacers in bowtie alignment"
 
     @property
     def submitted_ms(self):

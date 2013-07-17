@@ -1,0 +1,23 @@
+.status{
+    font-family:courier;
+    font-color:#CCC;
+    text-align:center;
+
+    overflow:hidden;
+    
+    &.done{
+	.progress{
+	    height:0px;
+	    opacity:0;
+	    transition:height 1s, opacity .5s;
+	}
+    }
+    //background-color:#EEEEFF;
+    
+}
+
+.spacer-h-view{
+    th{
+	min-width:70px;
+    }
+}

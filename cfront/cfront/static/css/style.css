@@ -106,3 +106,16 @@ body .scrolly-column .scrolly-section {
 
 a {
   cursor: pointer; }
+
+.status {
+  font-family: courier;
+  font-color: #CCC;
+  text-align: center;
+  overflow: hidden; }
+  .status.done .progress {
+    height: 0px;
+    opacity: 0;
+    transition: height 1s, opacity 0.5s; }
+
+.spacer-h-view th {
+  min-width: 70px; }

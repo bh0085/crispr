@@ -3,6 +3,7 @@ from ..models import metadata
 from job import Job
 from spacer import Spacer
 from hit import Hit
+from bad_job import BadJob
 
-Spacer.job = relation(Job, backref = "spacers", lazy = 'joined')
-Hit.spacer = relation(Spacer, backref = "hits", lazy = 'joined')
+Spacer.job = relation(Job,backref=backref("spacers", cascade="all,delete"))
+Hit.spacer = relation(Spacer,backref=backref("hits", cascade="all,delete"))

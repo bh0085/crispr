@@ -1,7 +1,8 @@
 from pyramid.view import view_config
-from .utils import webserver_db, genome_db
+from .utils import webserver_db, genome_db, mail
 from .models import Session, Job, Hit, Spacer
 import datetime
+
 
 @view_config(route_name='job_check_spacers', renderer='json')
 def job_check_spacers(request):
@@ -25,7 +26,7 @@ def job_retrieve_spacers(request):
 def job_retrieve_hits(request):
     job_id = request.matchdict['job_id']
     job = Session.query(Job).get(job_id)
-    return [h.toJSON() for s in job.spacers for h in s.hits]
+    return [h.toJSON() for s in job.spacers for h in s.hits[:20]]
 
 @view_config(route_name="job_post_new",renderer='json')
 def job_post_new(request):
@@ -69,8 +70,8 @@ def job_post_new(request):
             
         job.computed_spacers = True
         Session.flush()
-        print job.id
-
+        mail.mail_new_job(request,job)
+        
         return {"status":"success",
                 "message":None,
                 "matches":matches,

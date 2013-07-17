@@ -27,10 +27,10 @@ JobV = Backbone.View.extend({
                 .html($("#job-v-svg-container-template").html()));
         var selt = this.$(".selection-svg");  
 
-	this.canvas_w = 400 
-	this.canvas_h = 200
+	this.canvas_w = 620
+	this.canvas_h = 150
 
-	this.svg = selt.svg(null, 0, 0, this.canvas_w,this.canvas_h,0,0,this.canvas_w,this.canvas_h).svg('get');
+	this.svg = selt.svg(null, 0, 0,this.canvas_w,this.canvas_h,0,0,this.canvas_w,this.canvas_h).svg('get');
 	$(this.svg._svg).attr("height",""+ this.canvas_h + "px");
 	$(this.svg._svg).attr("width", ""+ this.canvas_w + "px");
         return this;
@@ -186,6 +186,10 @@ SpacerListV = Backbone.View.extend({
 	model_json = this.model.toJSON()
 	model_json["rank"] = 1
 	this.$el.html(_.template(this.template,model_json))
+	$(this.el).on("mouseover",
+		      $.proxy(function(e){
+			  rv.show_spacer(this.model);
+		      },this))
 	return this
     }
 })

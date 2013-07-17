@@ -5,11 +5,9 @@ $(function(){
 current_job = null;
 function init(){
 
-    params ={"name":"Readout",
-	     "description":"Best possible guide sequences."}
+
     $("#readout").html(
-	_.template($("#scrolly-section-template").html(),
-		   params))
+	_.template($("#scrolly-section-template").html(),{}))
     
     host = location.host;
     pathname = location.pathname;
@@ -29,20 +27,36 @@ function init(){
 ReadoutV = Backbone.View.extend({
     template:$("#readout-section-template").html(),
     initialize:function(options){
+	$("#readout .header.row").html(
+	    _.template($("#job-h-template").html(),options.job.toJSON()))
 	rv = this
 	this.job = options.job;
 	this.job.on("all_spacers_ready",this.draw_job, this);
 	this.job.on("change:computed_n_hits", this.draw_hits, this);
     },
     render:function(){
-	
 	this.$el.html(_.template(this.template,{jobid:this.job.id}))
 	return this
     },
+    update_status:function(){
+	
+	var done_count = _.filter(this.job.get("spacers").models,function(e){return e.get("computed_hits")}).length
+	var total_count = this.job.get("spacers").length
+	
+	if(done_count < total_count){
+	    console.log(this.$(".status .text"))
+	    this.$(".status .text").empty().append($("<p>").text("aligning spacers, ("+ done_count + " of " + total_count +")"))
+	}  else {
+	    this.$(".status").addClass("done");
+	    this.$(".status .text").empty().append($("<p>").text("done aligning spacers"))
+	}
+	this.$(".status .progress .bar").css("width"," "+ (done_count/total_count * 100)+"%")
+
+    },
     /** fired when spacers are market complete */
     draw_job:function(model,val){
-	this.$(".status").empty().append($("<p>").text("aligning spacers, ("+_.filter(this.job.get("spacers").models,function(e){return e.get("computed_hits")}).length + " of " + this.job.get("spacers").length+")"))
 	if (val == false){throw "spacers should never be changed to false"}
+	this.update_status()
 	this.jobview = new JobV({model:this.job})
 	this.jobview.$el.appendTo(this.$(".job-svg-view"))
 	this.jobview.render()
@@ -53,57 +67,26 @@ ReadoutV = Backbone.View.extend({
 	this.draw_hits()
     },
     draw_hits:function(model){
-
-	var done_count = _.filter(this.job.get("spacers").models,function(e){return e.get("computed_hits")}).length
-	var total_count = this.job.get("spacers").length
-	if(done_count != total_count){
-	    this.$(".status").empty().append($("<p>").text("aligning spacers, ("+ done_count + " of " + total_count +")"))
-	}  else {
-	    this.$(".status").empty().append($("<p>").text("done aligning spacers"))
-	}
-
+	this.update_status()
 	spacers = this.job.get("spacers").models
 	for (var i = 0 ; i < spacers.length ; i++){
-	    console.log("SPACE",i, spacers[i])
 	    //spacers[i].on("change:score",this.jobview.update_query_spacer,this.jobview)
 	    if(spacers[i].get("score") != null){
 		this.jobview.update_query_spacer(spacers[i])
 	    }
 	}
-    }
+	this.show_spacer(current_job.get("spacers").models[0])
+
+    },
     show_spacer:function(spacer_m){
 	if(this.spacer_h_view){
 	    this.spacer_h_view.destroy()
 	}
 	
+	this.spacer_h_view = new SpacerHV({model:spacer_m})
+	this.spacer_h_view.render().$el.appendTo(this.$(".hits-container"))
+	this.spacer_h_view.$el.tablesorter(); 
+	
     }
 })
 
-
-HVcols =["sequence","chr", "start", "strand", "ontarget", "similarity", "score", "gene"]
-
-var SpaceHV = Backbone.View.extend({
-    template:$("#spacer-h-v-template").html(),
-    destroy:function(){
-	_.each(this.viewsByCID,
-	       function(e,i){
-		   e.destroy();
-	       });
-	this.$el.removeData().remove();
-    },
-    render:function(){
-	
-	data ={header_row_html:_.map(HVcols,
-				     function(e,i){
-					 return 
-				     })}
-	this.$el.html(_.template(this.template,data))
-    }
-});
-
-var HitV = Backbone.View.extend({
-    template:$("#hit-v-template").html(),
-    destroy:function(){
-	this.$el.removeData().remove();
-    }
-});

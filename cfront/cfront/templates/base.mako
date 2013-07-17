@@ -3,6 +3,8 @@
   <head>
     <link href="/css/bootstrap/bootstrap.min.css" rel="stylesheet">
     <link href="/css/style.css" rel="stylesheet"/>
+    <link href="/js/deps/jquery-tablesorter/themes/blue/style.css" rel="stylesheet"/>
+
     <meta HTTP-EQUIV="CONTENT-LANGUAGE" CONTENT="en-US">
     <meta charset="utf-8">   
     <meta name="description" content="CRISPR design portal">
@@ -21,6 +23,7 @@
 
     <%include file="models.html"/>
     <%include file="backbone.mako"/>
+    <%include file="bb_templates/spacers.mako"/>
     <script type="text/javascript" src="/js/pages/base.js"></script>
 
     %if request.matched_route.name == "submit":

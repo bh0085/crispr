@@ -1,4 +1,14 @@
 <script type="unknown" id="job-v-template">
+
+</script>
+
+<script type="unknown" id="job-h-template">
+  <div class="row">
+    <div class="span8 offset1">
+      <h1>CRISPR guide candidates</h1>
+      <h4>for job {{name}} ({{email}})</h4>
+    </div>
+  </div>
 </script>
 
 <script type="unknown" id="job-v-svg-container-template">
@@ -7,14 +17,23 @@
 </script>
 
 <script id="readout-section-template" type="unknown">
-  <div class="status">
-    <p>locating spacers... should take a couple of seconds</p>
+  <div class="row page-header">
+    <div class="span8 offset1 job-svg-view"></div>
   </div>
-  <div class="job-svg-view"></div>
-  <div class="spacers-area row">
-    <div class="span6 col left spacers-container">
+  <div class="row status page-header">
+    <div class="span6 offset2">
+      <div class="text">
+	<p>locating spacers... should take a couple of seconds</p>
+      </div>
+      <div class="progress progress-striped active">
+	<div class="bar" style="width: 0%;"></div>
+      </div>
     </div>
-    <div class="span6 col right hits-container">
+  </div>
+  <div class="spacers-area row">
+    <div class="span3 col left spacers-container">
+    </div>
+    <div class="span4 col right hits-container">
     </div>
   </div>
 </script>
@@ -36,7 +55,7 @@
       <div class="control-group">
 	<span class="control-label">email address *</span>
 	<div class="controls">
-	  <input name="email" id="email-address" type="email" required="true" placeholder="email" value="bh0085@gmail.com">
+	  <input name="email" id="email-address" type="email" required="true" placeholder="email" value="crispr.scan@gmail.com">
 	</div>
       </div>
       <div class="control-group">
