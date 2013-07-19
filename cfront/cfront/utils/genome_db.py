@@ -88,6 +88,8 @@ def enter_hits(spacer_id):
             hit = hits_rows[idx]
             mismatches = mismatches_by_hit.get(idx,array([]))
             
+            if len(mismatches) > 5:
+                continue
             if len(mismatches) == 0:
                 if found_ontarget: raise Exception("no multiple ontargets")
                 else: found_ontarget = True  

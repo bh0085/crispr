@@ -19,14 +19,15 @@ def main(global_config, **settings):
 
     #page routes
     config.add_route('submit', '/')
-    config.add_route('readout', '/job/{jobid}')
+    config.add_route('readout', '/job/{job_id}')
 
     #ajax routes
     config.add_route('job_check_spacers', '/j/check_spacers/{job_id}')
-    config.add_route('job_check_hits', '/j/check_hits/{job_id}')
-    config.add_route('job_retrieve_spacers', '/j/retrieve_spacers/{job_id}')
-    config.add_route('job_retrieve_hits', '/j/retrieve_hits/{job_id}')
     config.add_route('job_post_new', '/j/post_new')
+    config.add_route('job_retrieve_spacers', '/j/retrieve_spacers/{job_id}')
+
+    config.add_route('spacer_retrieve_hits', '/s/retrieve_hits/{spacer_id}')
+    config.add_route('spacer_check_hits', '/s/check_hits/{spacer_id}')
 
     #rest routes
     config.add_route('job_rest', '/r/job/{job_id}')

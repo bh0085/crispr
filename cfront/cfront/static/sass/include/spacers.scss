@@ -1,0 +1,43 @@
+// spacer colorings and legend
+$high-green:green;
+$medium-yellow:yellow;
+$low-red:red;
+$annotation-text-color:rgba(0, 0, 0, .3);
+
+.high-quality{
+    border-left:5px solid $high-green;
+    &.color-text{
+	//color:$high-green;
+	color:$annotation-text-color;
+    }
+}
+.medium-quality{
+    border-left:5px solid $medium-yellow;
+    &.color-text{
+	//color:$medium-yellow;
+	color:$annotation-text-color;
+
+    }
+}
+.low-quality{
+    border-left:5px solid $low-red;
+    &.color-text{
+	//color:$low-red;
+	color:$annotation-text-color;
+
+    }
+}
+.guide-quality{
+    border:1px solid lightgray;
+    margin-left:10px;
+    //margin-right:auto;
+    width:200px;
+    padding:20px;
+    margin-top:20px;
+    >div{
+	padding-left:10px;
+    }
+}
+.annotation{
+    color:$annotation-text-color;
+}

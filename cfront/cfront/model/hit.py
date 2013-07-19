@@ -18,6 +18,7 @@ class Hit(Base):
     start = Column(Integer, nullable = False)
     strand = Column(SmallInteger, nullable = False)
     sequence = Column(VARCHAR(23), nullable = False)
+    gene = Column(String, nullable = True, index = True)
 
     @property
     def ontarget(self):
@@ -26,4 +27,4 @@ class Hit(Base):
     def jobid(self):
         return self.spacer.job.id
     def jsonAttributes(self):
-        return ["id","jobid", "spacerid", "ontarget", "chr", "start", "strand", "sequence", "n_mismatches", "score"]
+        return ["id","jobid", "spacerid", "ontarget", "chr", "start", "strand", "sequence", "n_mismatches", "score", "gene"]

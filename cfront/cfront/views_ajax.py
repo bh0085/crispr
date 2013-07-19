@@ -10,11 +10,11 @@ def job_check_spacers(request):
     job = Session.query(Job).get(job_id)
     return job.computed_spacers
 
-@view_config(route_name='job_check_hits', renderer='json')
-def job_check_hits(request):
-    job_id =  request.matchdict['job_id']
-    job = Session.query(Job).get(job_id)
-    return job.computed_hits
+@view_config(route_name='spacer_check_hits', renderer='json')
+def spacer_check_hits(request):
+    spacer_id =  request.matchdict['spacer_id']
+    spacer = Session.query(Spacer).get(spacer_id)
+    return spacer.computed_hits
 
 @view_config(route_name='job_retrieve_spacers',renderer='json')
 def job_retrieve_spacers(request):
@@ -22,20 +22,17 @@ def job_retrieve_spacers(request):
     job = Session.query(Job).get(job_id)
     return [s.toJSON() for s in job.spacers]
 
-@view_config(route_name='job_retrieve_hits',renderer='json')
-def job_retrieve_hits(request):
-    job_id = request.matchdict['job_id']
-    job = Session.query(Job).get(job_id)
-    return [h.toJSON() for s in job.spacers for h in s.hits[:20]]
+@view_config(route_name='spacer_retrieve_hits',renderer='json')
+def spacer_retrieve_hits(request):
+    spacer_id = request.matchdict['spacer_id']
+    spacer = Session.query(Spacer).get(spacer_id)
+    return {"genic":spacer.genic_hits,
+            "top":spacer.top_hits}
 
 @view_config(route_name="job_post_new",renderer='json')
 def job_post_new(request):
-    
     matches = webserver_db.check_genome(request.params["sequence"])
     infos = webserver_db.compute_spacers(request.params["sequence"])
-
-    print matches
-    print infos
 
     if matches == None:
             return {"status":"error",

@@ -5,8 +5,28 @@ var HitM = Backbone.RelationalModel.extend({
 	similarity:null,
 	chr:null,
 	start:null,
-	gene:"NA",
-	score:-1}
+	gene:null,
+	score:-1},
+    initialize:function(){
+	this.set("locus",this.locus());
+	this.set("mismatches",this.mismatches());
+    },
+    locus:function(){
+	//sprintf('%6s:%s%d',data.chr, data.strand == 1 ? "+" : "-", data.start)
+	
+	loc =  this.get("chr") +":"+ (this.get("strand") == -1?"-":"+")
+		+ (this.get("start") + (this.get("strand") == 1?-1:-4))
+	loc += Array(25- loc.length).join("&nbsp;")
+	return loc
+    },
+    mismatches:function(){
+	guide_seq = this.get("spacer").get("sequence")
+	diffs = []
+	for(var i = 0 ; i < 20 ; i++){
+	    if( guide_seq[i] != this.get("sequence")[i]){diffs.push(i)}
+	}
+	return diffs.join(":")
+    }
 })
 
 
