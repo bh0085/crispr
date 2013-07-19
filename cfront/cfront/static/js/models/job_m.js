@@ -8,7 +8,8 @@ var JobM = Backbone.RelationalModel.extend({
 	email:null,
 	date_submitted:null,
 	date_completed:null,
-    
+	
+	files_ready:true,
 	computing_spacers:false,
 	computed_spacers:false,	
 	poll_timeout:250,
@@ -25,6 +26,19 @@ var JobM = Backbone.RelationalModel.extend({
 		key:"job",
 		keySource:"jobid",
 		includeInJSON:"id",
+		type:Backbone.HasOne
+	    }
+	},
+	{
+	    key:"files",
+	    type:Backbone.HasMany,
+	    relatedModel:"FileM",
+	    collectionType:"FileCollection",
+	    includeInJSON:false,
+	    reverseRelation:{
+		key:"job",
+		keySource:"jobid",
+		includeInJSON:true,
 		type:Backbone.HasOne
 	    }
 	}

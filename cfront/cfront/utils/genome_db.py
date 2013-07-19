@@ -18,7 +18,7 @@ def compute_hits(spacer_id):
     spacer.computing_hits = True
     
     #query file IO
-    jp = gio.get_job_path(job.id)
+    jp = job.path
     query_file = os.path.join(jp,"query_s{0}.txt".format(spacer_id))
     with open(query_file,'w') as qf:qf.write(spacer.guide)
 
@@ -35,7 +35,7 @@ def check_hits(spacer_id):
     job = spacer.job
     
     #filesystem checks for completion
-    p = gio.get_job_path(job.id)
+    p = job.path
     done = "matches_s{0}.txt".format(spacer_id) in os.listdir(p)
     failed = "failed_s{0}" in os.listdir(p)
     if done:
@@ -51,7 +51,7 @@ def enter_hits(spacer_id):
     job = spacer.job
 
     #filesystem IO
-    p = os.path.join(gio.get_job_path(job.id),"matches_s{0}.txt".format(spacer_id))
+    p = os.path.join(job.path,"matches_s{0}.txt".format(spacer_id))
     cols = ["spacer_id", "sequence", "chr", "start", "strand","nrg"]    
     
     with open(p) as f: hits = [dict([[ cols[i], e] for i,e in enumerate(r.strip().split("\t"))]) for r in f]
@@ -114,9 +114,40 @@ def enter_hits(spacer_id):
                         strand = 1 if hit["strand"] == "+" else -1,
                         score = score
                     ))
+        import psycopg2
+
+        conn = psycopg2.connect("dbname=vineeta user=ben password=random12345")
+        cur = conn.cursor()
+        cmd = """
+CREATE TEMP TABLE {0} (
+        id int
+        , chr text
+        , start int);
+INSERT INTO {0} VALUES
+        {2};
+SELECT 
+        {0}.id as exon_id, 
+        {1}.gene_name as gene_name
+FROM {0}, exon_hg19
+        WHERE {1}.chr = {0}.chr
+        AND ({0}.start+20) > ({1}.exon_start -100)
+        AND ({0}.start) < ({1}.exon_end +100)
+        """\
+                    .format("hits_{0}".format(spacer.id),
+                            "exon_hg19",
+                            ",".join( ["({0},'{1}',{2})".format(h.id,h.chr,h.start) 
+                                for h in spacer.hits]
+                                  ))
+        cur.execute(cmd)
+        results = cur.fetchall()
+        conn.close()
+        for r in results:
+            Session.query(Hit).get(r[0]).gene = r[1]
 
         ot_sum = sum(h.score for h in spacer.hits if not h.ontarget)
         spacer.score =100 / (100 + sum(h.score for h in spacer.hits if not h.ontarget))
+        spacer.n_offtargets = len(spacer.hits) -1
+        spacer.n_genic_offtargets = len([h for h in spacer.hits if h.gene is not None])
         print "spacer: {1}(J{0}) -- {2}  N_OTS: {3}, TOTSCORE {4}".format(spacer.jobid, spacer.id, spacer.score, len(spacer.hits) - 1, ot_sum)
 
     return True

@@ -1,32 +1,43 @@
+<script type="unknown" id="spacer-v-template">
+</script>
 <script type="unknown" id="spacer-h-v-template">
-  
-  <div class="header">
-    <h4>guide #{{rank}} details</h4>
-  </div>
-  <div class="info">
-
+  <span class="info">
+    <h4 class="inline">guide #{{rank}}</h4>
+    <dl class="header">
+      <span class="guide dna">{{guide}}</span><span class="small-left-margin nrg dna">{{nrg}}</span>
+      <dt>quality score </dt>
+      <dd><span class="qscore">{{sprintf("%d",score*100) }}</span></dd><br/>
+    </dl><br/>
     <dl>
-      <dt>sequence</dt>
-      <dd><span class="dna">{{sequence}}</span></dd>
-      <dt>quality</dt>
-      <dd><span class="score">{{sprintf("%d",score*100) }}%</span></dd>
       <dt>locus</dt>
-      <dd><span class="description">{{locus}}</span></dd>
-      <dt>number of offtarget sites in genome</dt>
-      <dd class="n-top">{{n_offtargets}}</dd>
-      <dt>number of genic offtargets</dt>
-      <dd class="n-genic">{{gene_hits.length}}</dd>
+      <dd><span class="locus description">{{locus}}</span></dd>
+      <dt>#offtargets (#genic)</dt>
+      <dd class="offtargets"><span class="n-top">{{n_offtargets}}</span> (<span class="n-genic">{{n_genic_offtargets}}</span>)</dd>
     </dl>
-  </div>
-  <div class="hits">
-    <div class="header"><span class="table-type-selection">show genome-wide offtarget hits: <a name="top" class="current">...top 50</a> <a hname="genic">...exonic</a></span></div>
-    <table>
+  </span>
+  <span class="table-type-selection v-middle"><span class="annotation v-middle">top 20 genome-wide off-target sites</span><span class="hspace-80 dotted"></span><input class="v-middle inline " id="exonic-only" type="checkbox"><label class="v-middle inline" for="exonic-only">exonic only</label>
+  </span>
+  <div class="hits top">
+    <table class="top top-hits">
       <thead>
 	<tr>
 	  <th>sequence</th>
 	  <th>score</th>
 	  <th>mismatches</th>
-	  <th>gene</th>
+	  <th>UCSC gene</th>
+	  <th>locus</th>
+	</tr>
+      </thead>
+      <tbody> 
+      </tbody>
+    </table>
+    <table class="gene gene-hits">
+      <thead>
+	<tr>
+	  <th>sequence</th>
+	  <th>score</th>
+	  <th>mismatches</th>
+	  <th>UCSC gene</th>
 	  <th>locus</th>
 	</tr>
       </thead>
@@ -38,8 +49,8 @@
 
 <script type="unknown" id="hit-v-template">
   <td class="sequence">{{sequence}}</td>
-  <td class="score"> {{sprintf("%d",score)}}%</td>
-  <td class="mismatches">{{n_mismatches}} ({{n_mismatches > 0 ? mismatches : "ontarget"}})</td>
+  <td class="score"> {{sprintf("%.1f",score)}}</td>
+  <td class="mismatches">{{n_mismatches}} {{n_mismatches > 0 ? "["+mismatches+"]" : "ONTARGET"}}</td>
   <td class="gene">{{gene}}</td>
   <td class="locus">{{locus}}</td>
 </script>
@@ -49,15 +60,15 @@
 <script type="unknown" id="spacer-list-v-template">
 
   <td>Guide #<span class="rank">{{rank}}</span></td>
-  <td class="center"><span class="score">{{sprintf("%d",score*100)}}</span></td>
-  <td><span class="guide dna">{{guide}}</span><span class="nrg dna">{{nrg}}</span></td>
+  <td class="center"><span class="qscore">{{sprintf("%d",score*100)}}</span></td>
+  <td><span class="guide dna">{{guide}}</span><span class="nrg dna small-left-margin">{{nrg}}</span></td>
 
   <span class="hover">
     <span class="position-container">position: 
       <span class="strand">{{strand == 1? "+" : "-"}}</span>
       <span class="position">{{position}}</span><br/>
     </span>
-    <span class="guide dna">{{guide}}</span><span class="nrg dna">{{nrg}}</span>
-    <span class="score-container">score: <span class="score">{{score}}</span></span>
+    <span class="guide dna">{{guide}}</span><span class="nrg dna small-left-margin">{{nrg}}</span>
+    <span class="score-container">quality score: <span class="score"><b>{{score}}</b></span></span>
   </span>
 </script>

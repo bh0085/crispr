@@ -1,38 +1,20 @@
 #!/usr/bin/env python
 ''' tools that interact with the file io for genome dbv''' 
-import os, sys, subprocess as spc
+import os, sys, subprocess as spc, time
 from cfront.models import Session, Job, Spacer, Hit
 from sqlalchemy import desc
+from cfront.utils import mail
 
 CDHOME=os.environ["CDHOME"]
 CDSCRIPTS=os.path.join(CDHOME,"scripts")
 CDREF=os.path.join(CDHOME,"reference")
 v = True
 
-def get_job_path(job_id):
-    path =   os.path.join(os.environ["CFRONTDATA"],"jobs/{0}").format(job_id)
-    if not os.path.isdir(path):
-        os.makedirs(path)
-    return path
-
-
-def needs_file_io(job_id):
-    file_names = range(1,10)
-    job = Session.query(Job).get(job_id)
-    jp = get_job_path(job_id)
-    for f in file_names:
-        file_abspath = os.path.join(jp,"f{0}.txt".format(f))
-        if not os.path.isfile(file_abspath):
-            return True
-
-    return False
-            
 
 def commence_file_io(job_id):
     if v: print "cmmencing file io"
-    delete_file_names = range(4,10)
     job = Session.query(Job).get(job_id)
-    jp = get_job_path(job_id)
+    job.files_computing = True
     
     write_f1(job_id)
     write_f2(job_id)
@@ -51,11 +33,11 @@ spacer2 CTTTGCAGGTGTATTCCACG TGG +
 spacer3 ATGGTCGCTACAGCATCTCT CGG +
 '''
     
-    jp = get_job_path(job_id)
     job = Session.query(Job).get(job_id)
     if not job.computed_spacers: raise Exception(Job.NOSPACERS)
 
-    fpath = os.path.join(jp,"f1.txt")
+    fpath = job.f1
+
     if os.path.isfile(fpath):
         os.remove(fpath)
 
@@ -76,11 +58,10 @@ spacer33        1       13020   -       TTCTCCACCAGAGCCTTTCTTGG
 spacer3 1       40914   +       ATTTTCTCTACAGCAATTCTAGG
 spacer9 1       62767   -       ATGGACAAAGCTGTGCTCAGAGG
 '''
-    jp = get_job_path(job_id)
     job = Session.query(Job).get(job_id)
     if not job.computed_hits: raise Exception(Job.NOHITS)
-
-    fpath = os.path.join(jp,"f2.txt")
+    fpath = job.f2
+    
     if os.path.isfile(fpath):
         os.remove(fpath)
 
@@ -96,10 +77,10 @@ spacer9 1       62767   -       ATGGACAAAGCTGTGCTCAGAGG
     if v: print
 
 def write_f3(job_id):
-    jp = get_job_path(job_id)
-    f1p = os.path.join(jp,"f1.txt")
-    f2p = os.path.join(jp,"f2.txt")
-    f3p = os.path.join(jp,"f3.txt")
+    job = Session.query(Job).get(job_id)
+    f1p = job.f1;
+    f2p = job.f2; 
+    f3p = job.f3; 
 
     if os.path.isfile(f3p):
         os.remove(f3p)
@@ -117,10 +98,9 @@ def write_f3(job_id):
     return f3p
 
 def write_f4(job_id):
-    jp = get_job_path(job_id)
     job = Session.query(Job).get(job_id)
-    f3p = os.path.join(jp,"f3.txt")
-    f4p = os.path.join(jp,"f4.txt")
+    f3p = job.f3
+    f4p = job.f4
     if os.path.isfile(f4p):
         os.remove(f4p)
     
@@ -154,7 +134,7 @@ spacer1 1 spacer1 18 44589693 + GAACAGTGAGATGCGAGAATTGG 0 NA 100 KATNAL2'''
                              else ":".join( ["{0}".format(i) for i in range(20) 
                                              if spacer.sequence[i] != hit.sequence[i]])
                score = "{0:.1f}".format(hit.score)
-               gene = "NA"
+               gene = hit.gene
                row = " ".join("{0}".format(e) for e in [spacerid, ontarget, hitid, chr, pos, strand, sequence, mismatch,
                                 mismatch_pos, score, gene])
                f.write(row+"\n")
@@ -162,11 +142,10 @@ spacer1 1 spacer1 18 44589693 + GAACAGTGAGATGCGAGAATTGG 0 NA 100 KATNAL2'''
     if v: print 
             
 def write_f5_f6(job_id):
-    jp = get_job_path(job_id)
     job = Session.query(Job).get(job_id)
-    f4p = os.path.join(jp,"f4.txt")
-    f5p = os.path.join(jp,"f5.pdf")
-    f6p = os.path.join(jp,"f6.csv")
+    f4p = job.f4
+    f5p = job.f5
+    f6p = job.f6
     gene= os.path.join(job.name)
     
     if os.path.isfile(f5p):
@@ -192,10 +171,9 @@ def write_f5_f6(job_id):
     if v: print
 
 def write_f7(job_id):
-    jp = get_job_path(job_id)
     job = Session.query(Job).get(job_id)
-    f6p = os.path.join(jp,"f6.csv")
-    f7p = os.path.join(jp,"f7.in")
+    f6p = job.f6
+    f7p = job.f7
 
     cmd = ("perl {0}/scripts/make_primer3_offtarget_input.pl {1} "+\
            "{0}/reference/human_g1k_v37.fasta {2}").format(CDHOME, f6p, f7p)
@@ -213,10 +191,9 @@ def write_f7(job_id):
 
 def write_f8(job_id):
     #runs primer3
-    jp = get_job_path(job_id)
     job = Session.query(Job).get(job_id)
-    f7p = os.path.join(jp,"f7.in")
-    f8p = os.path.join(jp,"f8.out")
+    f7p = job.f7
+    f8p = job.f8
     
     cmd="primer3_core -p3_settings_file={0}/primer3/primer3-2.3.5/primer3web_v4_0_0_default_settings.txt -output={1} {2}".format(CDHOME,f8p,f7p)
     
@@ -230,11 +207,10 @@ def write_f8(job_id):
 
 def write_f9(job_id):
     #runs primer3
-    jp = get_job_path(job_id)
     job = Session.query(Job).get(job_id)
-    f6p = os.path.join(jp,"f6.csv")
-    f8p = os.path.join(jp,"f8.out")
-    f9p = os.path.join(jp,"f9.csv")
+    f6p = job.f6
+    f8p = job.f8
+    f9p = job.f9
 
     cmd = "perl {0}/parse_primer3_output.pl {1} {2} {3}".format(CDSCRIPTS, f8p, f6p,f9p)
 
@@ -245,17 +221,20 @@ def write_f9(job_id):
     
     if v: print "DONE"
     if v: print
+    job.files_ready = True
+    if job.email_complete:
+       mail.mail_completed_job(None, job)
 
 import transaction
 from pyramid.paster import bootstrap
 if __name__ == "__main__":
     env = bootstrap(sys.argv[1])
-    with transaction.manager:
-        j = Session.query(Job).order_by(desc(Job.id)).first()
-        #for j in alljobs:
-        if needs_file_io(j.id):
-            print j.id
-            print j.computed_spacers
-            print "performing file IO sequence on job id: {0}".format(j.id)
-            commence_file_io(j.id)
-            #break
+    while 1:
+        with transaction.manager:
+            jobs = Session.query(Job).filter(Job.files_computing == False).all()
+            for j in jobs:
+                if not j.computed_hits:
+                    continue
+                commence_file_io(j.id)
+
+        time.sleep(5)

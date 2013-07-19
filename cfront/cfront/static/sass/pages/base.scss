@@ -5,6 +5,9 @@
     text-align:center;
 }
 
+.inline{
+    display:inline;
+}
 
 .unselectable {
    -moz-user-select: -moz-none;
@@ -22,9 +25,16 @@
     font-family:courier;
 }
 
+.v-middle{
+    vertical-align:middle;
+}
+
+.showing-less>.more{display:none;}
+.showing-more>.less{display:none;}
+
 body{
     .float-left{
-    }
+   }
     .navbar{
         li>a, .brand{
             color:black;

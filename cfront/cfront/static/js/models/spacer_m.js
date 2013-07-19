@@ -50,7 +50,7 @@ var SpacerM = Backbone.RelationalModel.extend({
 		var hjson = genic[i]
 		if (! this.get("hits").get(hjson.id)){ h = new HitM(hjson);}
 		else { h = this.get("hits").get(hjson.id) }
-		this.gene.add(h)
+		this.genic.add(h)
 	    }
 	    
 	}
@@ -66,7 +66,7 @@ var SpacerM = Backbone.RelationalModel.extend({
     },
     locus:function(){
 	return this.get("job").get("chr") +":"
-	    + (this.get("position") + this.get("job").get("start"))
+	    +(this.get("strand") == 1?"+" : "-")+ (this.get("position") + this.get("job").get("start"))
     },
     rank:function(){
 	return current_job.get("spacers").indexOf(this) +1

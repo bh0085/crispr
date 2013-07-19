@@ -35,6 +35,7 @@
     <%include file="bb_templates/job.mako"/>
     <%include file="bb_templates/readout.mako"/>
     <%include file="bb_templates/submit.mako"/>
+    <%include file="bb_templates/file.mako"/>
     <script type="text/javascript" src="/js/pages/base.js"></script>
 
     %if request.matched_route.name == "submit":
@@ -45,13 +46,15 @@
 
 
     <script type="text/javascript" src="/js/app/constants.js"></script>
-
+    <script type="text/javascript" src="/js/app/delegates.js"></script>
     <script type="text/javascript" src="/js/models/job_m.js"></script>
     <script type="text/javascript" src="/js/models/spacer_m.js"></script>
     <script type="text/javascript" src="/js/models/hit_m.js"></script>
+    <script type="text/javascript" src="/js/models/file_m.js"></script>
     <script type="text/javascript" src="/js/views/job_v.js"></script>
     <script type="text/javascript" src="/js/views/spacer_v.js"></script>
     <script type="text/javascript" src="/js/views/hit_v.js"></script>
+    <script type="text/javascript" src="/js/views/file_v.js"></script>
     
   </head>
   <body class="${request.matched_route.name}" data-target="#navparent" data-spy="scroll" >

@@ -2,7 +2,7 @@ from datetime import datetime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, BigInteger, String, Unicode, DateTime, ForeignKey, Index, Boolean, Float
 from cfront.models import Session, Base
-import calendar
+import calendar, os, random
 from sqlalchemy.types import VARCHAR
 
 
@@ -29,6 +29,10 @@ class Job(Base):
 
     computing_spacers = Column(Boolean, nullable = False, default = False)
     computed_spacers = Column(Boolean, nullable = False, default = False)
+    files_computing =  Column(Boolean, nullable = False, default = False)
+    files_ready = Column(Boolean, nullable = False, default = False)
+    email_complete = Column(Boolean, nullable = False, default = False)
+    key = Column(String, nullable = False, index = True)
 
     #fake enum type for genomes
     GENOMES={
@@ -41,6 +45,63 @@ class Job(Base):
     NOHITS = "hits not yet computed"
     ERR_TOOMANY = "too many spacers in a single alignment"
     ERR_MISSING = "no spacers in bowtie alignment"
+
+    
+    def __init__(self, **kwargs):
+        for k,v in kwargs.iteritems():
+            self.__setattr__(k,v)
+        self.key = "{0}".format(int(random.random() * 1e10))
+        
+
+    @property
+    def path(self):
+        job_key = self.id
+        path =   os.path.join(os.environ["CFRONTDATA"],"jobs/{0}").format(job_key)
+        if not os.path.isdir(path):
+            os.makedirs(path)
+        return path
+
+    @property
+    def f1(self):
+        return os.path.join(self.path,"f1.txt")
+    @property
+    def f2(self):
+        return os.path.join(self.path,"f2.txt")
+    @property
+    def f3(self):
+        return os.path.join(self.path,"f3.txt")
+    @property
+    def f4(self):
+        return os.path.join(self.path,"f4.txt")
+    @property
+    def f5(self):
+        return os.path.join(self.path,"f5.pdf")
+    @property
+    def f6(self):
+        return os.path.join(self.path,"f6.csv")
+    @property
+    def f7(self):
+        return os.path.join(self.path,"f7.in")
+    @property
+    def f8(self):
+        return os.path.join(self.path,"f8.out")
+    @property
+    def f9(self):
+        return os.path.join(self.path,"f9.csv")
+    @property
+    def files(self):
+        return [{"name":"summary.pdf".format(self.name),
+                 "filename":"{0}-summary.pdf".format(self.name),
+                 "url":self.url(self.f5),
+                 "ready":os.path.isfile(self.f5)},
+                {"name":"offtargets.csv".format(self.name),
+                 "filename":"{0}-offtargets.csv".format(self.name),
+                 "url":self.url(self.f6),
+                 "ready":os.path.isfile(self.f6)},
+                {"name":"primers.csv".format(self.name),
+                 "filename":"{0}-primers.csv".format(self.name),
+                 "url":self.url(self.f9),
+                 "ready":os.path.isfile(self.f9)}]
 
     @property
     def submitted_ms(self):
@@ -75,6 +136,10 @@ class Job(Base):
     def computed_n_hits(self):
         return sum([len(s.hits) for s in self.spacers])
 
+    def url(self,path):
+        server_rel = path.split("/jobs")[1]
+        return "/files" + server_rel
+
     def jsonAttributes(self):
         return ["id", "sequence", 
                 "submitted_ms", "completed_ms", 
@@ -84,7 +149,12 @@ class Job(Base):
                 "computed_hits",
                 "computing_hits",
                 "computed_n_hits",
-                "chr", "start", "strand"]
-
-
+                "chr", "start", "strand",
+                "files_ready",
+                "files"]
     
+def get_job_by_key(job_key):
+    return Session.query(Job).filter(Job.key == job_key).one()
+
+
+

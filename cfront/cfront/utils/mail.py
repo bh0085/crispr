@@ -16,6 +16,12 @@ def mail_new_job(request, job):
     message = msg_tmp.format(email=job.email, job_name=job.name, job_id = job.id, host=request.host)
     send_mail(job.email, subject, message)
 
+def mail_completed_job(request, job):
+    subject = "Job Completed at CRISPR.mit.edu"
+    msg_tmp = """Your recent job -- ({job_name}) has run to completion at crispr.mit.edu. To see its output, please head over to http://crispr.mit.edu:6543/job/{job_id}."""
+    message = msg_tmp.format(email=job.email, job_name=job.name, job_id = job.id )
+    send_mail(job.email, subject, message)
+
 def send_mail(email_address, subject, message):
     #restrict_domain = pb_settings['email.restrict_domain']
     #if restrict_domain and not email_address.endswith('@pictobin.com'):

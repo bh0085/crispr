@@ -33,8 +33,6 @@ ReadoutV = Backbone.View.extend({
 	this.job = options.job;
 	this.binder = new Backbone.EventBinder()
 	this.binder.bindTo(this.job, "change:active_spacer", this.show_spacer,this)
-	//this.job.on("spacers:add",this, this);
-	//this.job.on("change:computed_n_hits", this.draw_hits, this);
     },
     render:function(){
 	this.$el.html(_.template(this.template,{jobid:this.job.id}))
@@ -43,18 +41,19 @@ ReadoutV = Backbone.View.extend({
     /** fired when spacers are market complete */
     draw_job:function(){
 	this.jobview = new JobV({model:this.job})
-	this.jobview.render().$el.appendTo(this.$(".job-header").empty())
+	this.jobview.render().$el.appendTo(this.$(".job-header-area").empty())
 	this.job_spacers_view = new JobSV({model:this.job})
 	this.job_spacers_view.render().$el.appendTo(this.$(".spacers-container"))
     },
     show_spacer:function(job,spacer_m){
 	if(this.spacer_h_view){
 	    this.spacer_h_view.destroy()
+	    this.spacer_view.destroy()
 	}	
 	this.spacer_h_view = new SpacerHV({model:spacer_m})
 	this.spacer_h_view.render().$el.appendTo(this.$(".spacer-h-v-container"))
-	this.spacer_h_view.$el.tablesorter(); 
-	
-    }
-})
 
+	this.spacer_view = new SpacerV({model:spacer_m})
+	this.spacer_view.render().$el.appendTo(this.$(".spacer-v-container"))	
+    },
+})

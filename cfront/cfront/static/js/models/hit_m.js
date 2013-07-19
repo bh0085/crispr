@@ -16,7 +16,7 @@ var HitM = Backbone.RelationalModel.extend({
 	
 	loc =  this.get("chr") +":"+ (this.get("strand") == -1?"-":"+")
 		+ (this.get("start") + (this.get("strand") == 1?-1:-4))
-	loc += Array(25- loc.length).join("&nbsp;")
+	loc += Array(18 - loc.length).join("&nbsp;")
 	return loc
     },
     mismatches:function(){

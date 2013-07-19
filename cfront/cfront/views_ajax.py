@@ -22,6 +22,13 @@ def job_retrieve_spacers(request):
     job = Session.query(Job).get(job_id)
     return [s.toJSON() for s in job.spacers]
 
+@view_config(route_name='job_email_complete',renderer='json')
+def job_email_complete(request):
+    job_id = request.matchdict['job_id']
+    job = Session.query(Job).get(job_id)
+    job.email_complete = request.params["do_email"]
+    return job.email_complete
+
 @view_config(route_name='spacer_retrieve_hits',renderer='json')
 def spacer_retrieve_hits(request):
     spacer_id = request.matchdict['spacer_id']

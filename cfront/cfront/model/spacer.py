@@ -21,6 +21,9 @@ class Spacer(Base):
 
     score = Column(Float,nullable = True, index = True)
     computing_hits = Column(Boolean, nullable = False, default = False)
+    n_offtargets = Column(Integer, nullable = True)
+    n_genic_offtargets = Column(Integer, nullable = True)
+
     
     @property
     def computed_hits(self):
@@ -30,13 +33,9 @@ class Spacer(Base):
         return self.position
 
     @property
-    def n_offtargets(self):
-        from cfront.models import Hit
-        return Session.query(Hit).join(Spacer).filter(Spacer.id==self.id).count()
-    @property
     def top_hits(self):
         from cfront.models import Hit
-        return [e.toJSON() for e in Session.query(Hit).join(Spacer).filter(Spacer.id == self.id).order_by(desc(Hit.score)).limit(50).all()]
+        return [e.toJSON() for e in Session.query(Hit).join(Spacer).filter(Hit.score < 100).filter(Spacer.id == self.id).order_by(desc(Hit.score)).limit(20).all()]
 
     @property
     def genic_hits(self):
@@ -46,7 +45,7 @@ class Spacer(Base):
     def jsonAttributes(self):
         return ["jobid", "sequence", "guide", "nrg", "strand", "position",
                 "computing_hits", "computed_hits", "id", "start",
-                "score", "n_offtargets"]
+                "score", "n_offtargets","n_genic_offtargets"]
 
     
 
