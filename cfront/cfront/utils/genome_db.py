@@ -6,7 +6,7 @@ from numpy import *
 import genome_io as gio
 import random
 import itertools as it
-
+from cfront import cfront_settings
 
 def compute_hits(spacer_id):
     spacer = Session.query(Spacer).get(spacer_id)
@@ -22,7 +22,8 @@ def compute_hits(spacer_id):
     query_file = os.path.join(jp,"query_s{0}.txt".format(spacer_id))
     with open(query_file,'w') as qf:qf.write(spacer.guide)
 
-    cmd = "bowtie.py -q {0} -j {1} -s {2}".format(spacer.guide,job.id,spacer_id)
+    jobpath = cfront_settings["jobs_directory"]
+    cmd = "bowtie.py -q {0} -j {1} -s {2} -p {3}".format(spacer.guide,job.id,spacer_id, jobpath)
     prc = spc.Popen(cmd, shell=True)
     return False
 
@@ -57,11 +58,9 @@ def enter_hits(spacer_id):
     spacer_hits =dict([(k,list(g)) for k,g in  it.groupby(sorted(hits, key = lambda x:x["spacer_id"]), key = lambda x:int(x["spacer_id"]))])
 
     if not spacer_id in spacer_hits: 
-        JobERR(job, Job.ERR_MISSING)
-        return
+        raise JobERR(Job.ERR_MISSING, job)
     if len(spacer_hits) != 1: 
-        JobERR(job,Job.ERR_TOOMANY)
-        return
+        raise JobERR(Job.ERR_TOOMANY, job)
 
     #processes hits by spacer
     for spacer_id, hits_rows in spacer_hits.items():
@@ -71,7 +70,7 @@ def enter_hits(spacer_id):
 
         #error checking... does a spacer already have a score?
         if spacer.computed_hits:
-            JobERR(job,Job.ERR_ALREADYCOMPUTED)
+            raise JobERR(Job.ERR_ALREADYCOMPUTED, job)
             return
 
         #translate spacers, hits into numbers to compute sims with numpy
@@ -94,7 +93,7 @@ def enter_hits(spacer_id):
             if len(mismatches) == 0:
                 if hit["start"] != spacer.chr_start :
                     print "ontarget at nonmatching locus {0} / {1}".format(hit["start"],spacer.chr_start)
-                    JobERR(job,Job.ERR_MULTIPLE_ONTARGETS)
+                    raise JobERR(Job.ERR_MULTIPLE_ONTARGETS, job)
                     return
                 else:
                     score = 100

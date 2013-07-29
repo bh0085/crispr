@@ -2,13 +2,14 @@
 
 from cfront.utils import genome_db, webserver_db, genome_io
 from cfront.models import Session, Job, Spacer, Hit
-import sys
+import sys, shutil
 import time
 import transaction
 from pyramid.paster import bootstrap
 from cfront.models import JobERR
 from cfront import cfront_settings
 import argparse, os
+
 
 def init_env(p):
     env = bootstrap(p)
@@ -28,20 +29,27 @@ def process_queue():
              genome_db.compute_hits(s.id)
          
         entered =0
-        unfinished = Session.query(Spacer).filter(Spacer.score == None).all()
+        unfinished = Session.query(Spacer).join(Job).filter(Job.failed == False).filter(Spacer.score == None).all()
         for s in unfinished:
              ready = genome_db.check_hits(s.id)
              if ready:
+                if s.job.failed:
+                    print "marked job failed for: {0}, SKIPPING (job {1})".format(s.id,s.job.id)S
+                    continue
+                else:
+                    print "entering spacer: {0}".format(s.id)
+                #try:
+                genome_db.enter_hits(s.id)
+                #except JobERR, e:
+                # if cfront_settings.get("debug_mode", False):
+                #  raise Exception()
+                # else:
+                #  pass
+                # raise Exception()
+                
                 entered+=1
                 if entered >3:
                      break
-                print "entering spacer: {0}".format(s.id)
-                #try:
-                genome_db.enter_hits(s.id)
-                #except Exception, e:
-                #    j = s.job
-                #    JobERR(j,Job.ERR_MISCSPACER)
-                #    return
 
 def main():
     parser = argparse.ArgumentParser()
@@ -58,7 +66,8 @@ def main():
     if args.reset:
         for d in os.listdir(jobpath):
             print "removing directory: {0}".format(d)
-            os.remove(os.path.join(jobpath,d))
+            shutil.rmtree(os.path.join(jobpath,d))
+            print os.path.join(jobpath,d)
     
     queue_loop()
 
