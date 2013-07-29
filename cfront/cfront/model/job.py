@@ -22,6 +22,12 @@ class Job(Base):
     email = Column(Unicode, nullable = True)
     date_completed = Column(DateTime, nullable = True)
 
+    #error handling
+    failed = Column(Boolean, nullable = False, default = False)
+    date_failed = Column(DateTime, nullable = True)
+    error_traceback = Column(Unicode, nullable = True)
+    error_message = Column(Unicode, nullable = True)
+
     #v0 maps to exactly one site on the genome
     chr = Column(VARCHAR(6), nullable = False)
     start = Column(BigInteger, nullable = False)
@@ -54,17 +60,6 @@ class Job(Base):
         for k,v in kwargs.iteritems():
             self.__setattr__(k,v)
         self.key = "{0}".format(int(random.random() * 1e10))
-        
-
-    @property
-    def path(self):
-        from cfront import cfront_settings
-        job_key = self.id
-        jobpath = cfront_settings["jobs_directory"]
-        path =   os.path.join(jobpath,"jobs/{0}").format(job_key)
-        if not os.path.isdir(path):
-            os.makedirs(path)
-        return path
 
     @property
     def f1(self):
@@ -141,9 +136,27 @@ class Job(Base):
     def computed_n_hits(self):
         return sum([len(s.hits) for s in self.spacers])
 
-    def url(self,path):
-        server_rel = path.split("/jobs")[1]
+    def url(self,filepath):
+        #we simlink /files to [jobs_directory]/..
+        #hence we do this the easy way:
+        # 1. extract os.path.join(os.path.split(this.path)[:-1]) from the file
+        # 2. return /files + result
+        
+        rootpath = os.path.split(self.path)[0]
+        server_rel = filepath.split(rootpath)[1]
+        print server_rel
         return "/files" + server_rel
+
+    @property
+    def path(self):
+        from cfront import cfront_settings
+        job_key = self.id
+        jobpath = cfront_settings["jobs_directory"]
+        path =   os.path.join(jobpath,"{0}").format(job_key)
+        if not os.path.isdir(path):
+            os.makedirs(path)
+        return path
+
 
     def jsonAttributes(self):
         return ["id", "sequence", 
