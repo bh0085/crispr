@@ -23,26 +23,44 @@ def toJSON(self):
 Base.__init__ = __init__
 Base.toJSON = toJSON
 
+
+class JobERR(Exception):
+    def __init__(self, message, job):
+
+        # Call the base class constructor with the parameters it needs
+        Exception.__init__(self, message)
+
+        # Now for your custom code...
+        self.job = job
+
+        
+        s = StringIO.StringIO()
+        traceback.print_stack(None, None, s)
+        s.seek(0)
+        tb_content = s.read()
+    
+        #if job.id  and Session.query(BadJob).get(job.id) is None:
+        #
+        #    #prints error message and a strack trace to the BadJob table
+        #    Session.add(BadJob(sequence = job.sequence,
+        #                       date_submitted = job.date_submitted,
+        #                       date_failed = datetime.datetime.utcnow(),
+        #                       error_message = msg,
+        #                       id = job.id,
+        #                       traceback = tb_content,
+        #                       genome=job.genome,
+        #                       name = job.name,
+        #                       email = job.email))
+        #Session.delete(job)
+        job.failed = True
+        job.error_traceback = tb_content
+        job.error_message = tb_content
+        job.date_failed = datetime.datetime.utcnow()
+        
+
+
+
 def JobERR(job, msg):
-    s = StringIO.StringIO()
-    traceback.print_stack(None, None, s)
-    s.seek(0)
-    tb_content = s.read()
-    print tb_content
-
-    if job.id  and Session.query(BadJob).get(job.id) is None:
-
-        #prints error message and a strack trace to the BadJob table
-        Session.add(BadJob(sequence = job.sequence,
-                           date_submitted = job.date_submitted,
-                           date_failed = datetime.datetime.utcnow(),
-                           error_message = msg,
-                           id = job.id,
-                           traceback = tb_content,
-                           genome=job.genome,
-                           name = job.name,
-                           email = job.email))
-    Session.delete(job)
     
 
 import model
