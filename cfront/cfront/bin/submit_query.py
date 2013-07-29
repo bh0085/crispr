@@ -5,12 +5,9 @@ Waits for a response and print to stdout
 '''
 
 import psycopg2,os, argparse, sys
-
+from cfront import cfront_settings
 #ROOT = os.environ["HOME"]
 DATAPATH = os.environ["CFRONTDATA"]
-JOBSPATH = os.path.join(DATAPATH,"jobs")
-if not os.path.isdir(JOBSPATH):
-    os.makedirs(JOBSPATH)
 
 def write_sample():
     '''writes a sample (single sequence) input to sample-input.txt'''
@@ -85,6 +82,12 @@ def main():
 
     job_id =args.job_id
     spacer_id =args.spacer_id
+
+    
+    JOBSPATH = cfront_settings["jobs_directory"]
+    if not os.path.isdir(JOBSPATH):
+        os.makedirs(JOBSPATH)
+
     job_path = os.path.join(JOBSPATH,job_id)
     if not os.path.isdir(job_path):
         os.makedirs(job_path)

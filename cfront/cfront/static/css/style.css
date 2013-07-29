@@ -117,6 +117,8 @@
     width: 100%; }
     .spacer-h-v-container .spacer-h-view .hits table th, .spacer-h-v-container .spacer-h-view .hits table td {
       padding-right: 10px; }
+      .spacer-h-v-container .spacer-h-view .hits table th:nth-child(even), .spacer-h-v-container .spacer-h-view .hits table td:nth-child(even) {
+        background-color: rgba(0, 0, 0, 0.02); }
       .spacer-h-v-container .spacer-h-view .hits table th:not(:first-child), .spacer-h-v-container .spacer-h-view .hits table td:not(:first-child) {
         padding-left: 10px; }
     .spacer-h-v-container .spacer-h-view .hits table th {
@@ -124,10 +126,6 @@
     .spacer-h-v-container .spacer-h-view .hits table td {
       font-family: courier;
       white-space: nowrap; }
-      .spacer-h-v-container .spacer-h-view .hits table td.mismatches {
-        width: 60px; }
-      .spacer-h-v-container .spacer-h-view .hits table td.gene {
-        width: 60px; }
       .spacer-h-v-container .spacer-h-view .hits table td.sequence, .spacer-h-v-container .spacer-h-view .hits table td.score, .spacer-h-v-container .spacer-h-view .hits table td.locus, .spacer-h-v-container .spacer-h-view .hits table td.gene {
         text-align: center; }
 
@@ -199,6 +197,10 @@
 .inline {
   display: inline; }
 
+.alert .content {
+  max-width: 300px;
+  margin: 0 auto; }
+
 .unselectable {
   -moz-user-select: -moz-none;
   -khtml-user-select: none;
@@ -214,6 +216,20 @@
 
 .v-middle {
   vertical-align: middle; }
+
+.valid {
+  position: fixed;
+  width: 200px;
+  right: 0px;
+  background-color: #FEFEFE;
+  border: 1px solid lightgrey;
+  padding: 20px;
+  margin: 25px;
+  bottom: 0px; }
+  .valid .dna {
+    word-break: break-all; }
+  .valid li {
+    margin-top: 10px; }
 
 .showing-less > .more {
   display: none; }

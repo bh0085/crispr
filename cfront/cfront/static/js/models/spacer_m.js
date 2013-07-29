@@ -25,9 +25,7 @@ var SpacerM = Backbone.RelationalModel.extend({
     ],
     /** Rest URL for a Job */
     url: function () {
-        var id = this.id ? this.id : -1;
-        var url = '/r/spacer/' + id;
-        return url;
+        return routes.route_path("spacer_rest",{spacer_id:this.id?this.id:-1})
     },
     initialize:function(){
 	this.genic = new HitCollection()
@@ -55,23 +53,44 @@ var SpacerM = Backbone.RelationalModel.extend({
 	    
 	}
 	if(this.get("computed_hits")){
-	    $.getJSON("/s/retrieve_hits/"+this.id,{},
+	    $.getJSON(routes.route_path("spacer_retrieve_hits",{spacer_id:this.id}),{},
 		      $.proxy(parse_hits,this))
 	} else {
 	    this.on("change:computed_hits",function(){
-		$.getJSON("/s/retrieve_hits/"+this.id,{},
+		$.getJSON(routes.route_path("spacer_retrieve_hits",{spacer_id:this.id}),{},
 			  $.proxy(parse_hits,this))
 	    },this)
 	}
+
+	this.compute_quality()
+	this.on("change:score",this.compute_quality,this);
     },
+    
     locus:function(){
 	return this.get("job").get("chr") +":"
 	    +(this.get("strand") == 1?"+" : "-")+ (this.get("position") + this.get("job").get("start"))
     },
-    rank:function(){
-	return current_job.get("spacers").indexOf(this) +1
+    compute_rank_in_job:function(job){
+	console.log("computing rank for spacer " + this.id)
+	this.set("rank",job.get("spacers").indexOf(this) +1)
+    },
+    compute_quality:function(){
+	var s = this.get("score")
+	if(s >= SpacerM.high_quality_threshold){
+	    this.set("quality","high")
+	} else if ( s>= SpacerM.low_quality_threshold){
+	    this.set("quality","medium")
+	} else if ( s>0){
+	    this.set("quality","low")
+	} else {
+	    this.set("quality","no")
+	}
     }
 })
+
+SpacerM.high_quality_threshold = .5;
+SpacerM.low_quality_threshold = .2;
+ 
 
 
 

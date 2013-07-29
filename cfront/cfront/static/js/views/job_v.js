@@ -23,10 +23,10 @@ JobV = Backbone.View.extend({
 	    this.$(".status .text").empty().append($("<span>").text("offtargets scored, compiling downloadable files ("+ndone + "/3)"))
 	    frac = .66 + .33 * ndone /3
 	} else {
-	    this.$(".status").addClass("done")
 	    frac = 1
 	} 
-	this.$(".status .progress .bar").css("width"," "+ (frac * 100)+"%")
+	this.$(".status").toggleClass("done",current_job.get("files_ready")?true:false);
+	this.$(".status .progress .bar").css("width"," "+ (frac * 100)+"%");
 
     },
     render:function(){
@@ -203,12 +203,12 @@ JobV = Backbone.View.extend({
 	left = halfint(left_f * this.canvas_w) +2;
 	right = halfint(right_f * this.canvas_w) -2;
 
-	if (spacer.rank() <= 5){
+	if (spacer.get("rank") <= 5){
 	    if(spacer.get("strand") == 1){
-		text = this.svg.text(null, left,halfint(top -8), sprintf("#%s",spacer.rank())
+		text = this.svg.text(null, left,halfint(top -8), sprintf("#%s",spacer.get("rank"))
 				    ,{fontSize:11})
 	    }else{
-		text = this.svg.text(null, right,halfint(top +15), sprintf("#%s",spacer.rank())
+		text = this.svg.text(null, right,halfint(top +15), sprintf("#%s",spacer.get("rank"))
 				    ,{fontSize:11,textAnchor:"end"})
 	    }
 	}
@@ -251,9 +251,10 @@ JobSV = Backbone.View.extend({
 	this.views_by_id = {}
 	this.binder = new Backbone.EventBinder()
 
-	this.binder.bindTo(this.model, "change:score", 
-			   function(m,v){this.spacers.remove(m);this.spacers.add(m);}
-			   , this)
+	this.binder.bindTo(this.model, "change:rank", 
+			   function(m,v){this.spacers.remove(m);
+					 this.spacers.add(m);}
+			   , this);
 
 	this.spacers = new SpacersDisplayC()
 	this.spacers.on("add", this.add_one, this)

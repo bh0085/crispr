@@ -19,7 +19,7 @@
     <!-- status display area -->
     <div class="status">
       <div style="white-space:nowrap;">
-	<control><input id="email-complete" class="inline v-middle" type="checkbox"></input><label class="med-left-margin unselectable inline v-middle" for="email-complete">email ({{email}}) on completion</label></control>
+	<control><input id="email-complete" class="inline v-middle" {{email_complete?"checked":""}} type="checkbox"></input><label class="med-left-margin unselectable inline v-middle" for="email-complete">email ({{email}}) on completion</label></control>
       </div>
       <div class="progress progress-striped active">
 	<div class="bar" style="width: 0%;"></div>

@@ -3,18 +3,20 @@
   <head>
     <link href="/css/bootstrap/bootstrap.min.css" rel="stylesheet">
     <link href="/css/style.css" rel="stylesheet"/>
-    <link href="/js/deps/jquery-tablesorter/themes/blue/style.css" rel="stylesheet"/>
 
     <meta HTTP-EQUIV="CONTENT-LANGUAGE" CONTENT="en-US">
     <meta charset="utf-8">   
     <meta name="description" content="CRISPR design portal">
-    <title>CRISPR design app</title>
+    <title>Optimized CRISPR Design</title>
     
     <% import json %>
     <script type="text/javascript">
       console.log("INITING")
       %if init_state is not UNDEFINED:
       init_state=${json.dumps(init_state) | n}
+      %endif
+      %if sessionInfo is not UNDEFINED:
+      sessionInfo = ${json.dumps(sessionInfo) | n}
       %endif
     </script>
     <script type="text/javascript" src="/js/cdn/jquery.min.js" ></script>
@@ -47,6 +49,8 @@
 
     <script type="text/javascript" src="/js/app/constants.js"></script>
     <script type="text/javascript" src="/js/app/delegates.js"></script>
+    <script type="text/javascript" src="/js/app/url.js"></script>
+    <script type="text/javascript" src="/js/app/init.js"></script>
     <script type="text/javascript" src="/js/models/job_m.js"></script>
     <script type="text/javascript" src="/js/models/spacer_m.js"></script>
     <script type="text/javascript" src="/js/models/hit_m.js"></script>

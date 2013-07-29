@@ -3,12 +3,10 @@ import argparse, subprocess as spc, os, StringIO
 from Bio import SeqIO as sio, Seq, SeqRecord
 import random
 import twobitreader
+from cfront import cfront_settings
 
 #ROOT = os.environ["HOME"]
 DATAPATH = os.environ["CFRONTDATA"]
-JOBSPATH = os.path.join(DATAPATH,"jobs")
-if not os.path.isdir(JOBSPATH):
-    os.makedirs(JOBSPATH)
 
 TMPPATH = "/tmp/ramdisk/cfront/bowtie"
 if not os.path.isdir(TMPPATH):
@@ -111,6 +109,10 @@ def main():
     
     args = parser.parse_args()
     query =args.query
+
+    JOBSPATH = cfront_settings["jobs_directory"]
+    if not os.path.isdir(JOBSPATH):
+        os.makedirs(JOBSPATH)
 
     job_path = os.path.join(JOBSPATH,args.job_id)
     if not os.path.isdir(job_path):

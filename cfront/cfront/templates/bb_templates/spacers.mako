@@ -50,7 +50,7 @@
 <script type="unknown" id="hit-v-template">
   <td class="sequence">{{sequence}}</td>
   <td class="score"> {{sprintf("%.1f",score)}}</td>
-  <td class="mismatches">{{n_mismatches}} {{n_mismatches > 0 ? "["+mismatches+"]" : "ONTARGET"}}</td>
+  <td class="mismatches">{{mm_string}}</td>
   <td class="gene">{{gene}}</td>
   <td class="locus">{{locus}}</td>
 </script>

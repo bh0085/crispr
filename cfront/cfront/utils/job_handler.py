@@ -6,6 +6,10 @@ import sys
 import time
 import transaction
 from pyramid.paster import bootstrap
+from cfront.models import JobERR
+from cfront import cfront_settings
+import argparse, os
+
 def init_env(p):
     env = bootstrap(p)
 
@@ -28,13 +32,36 @@ def process_queue():
         for s in unfinished:
              ready = genome_db.check_hits(s.id)
              if ready:
-                 entered+=1
-                 if entered >3:
+                entered+=1
+                if entered >3:
                      break
-                 print "entering spacer: {0}".format(s.id)
-                 genome_db.enter_hits(s.id)
+                print "entering spacer: {0}".format(s.id)
+                #try:
+                genome_db.enter_hits(s.id)
+                #except Exception, e:
+                #    j = s.job
+                #    JobERR(j,Job.ERR_MISCSPACER)
+                #    return
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--reset','-r',dest="reset",
+                        default=False, const = True , action="store_const",
+                        help = "Reset all jobs (deletes /jobs/*)")
+    parser.add_argument('inifile')
+    args = parser.parse_args()
+
+    init_env(args.inifile)
+    
+    print cfront_settings
+    jobpath = cfront_settings["jobs_directory"]
+    if args.reset:
+        for d in os.listdir(jobpath):
+            print "removing directory: {0}".format(d)
+            os.remove(os.path.join(jobpath,d))
+    
+    queue_loop()
+
 
 if __name__ == "__main__":
-    init_env(sys.argv[1])
-    queue_loop()
-    
+    main()

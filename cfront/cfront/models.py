@@ -30,7 +30,7 @@ def JobERR(job, msg):
     tb_content = s.read()
     print tb_content
 
-    if job.id:
+    if job.id  and Session.query(BadJob).get(job.id) is None:
 
         #prints error message and a strack trace to the BadJob table
         Session.add(BadJob(sequence = job.sequence,
@@ -43,7 +43,7 @@ def JobERR(job, msg):
                            name = job.name,
                            email = job.email))
     Session.delete(job)
-
+    
 
 import model
 from model import *

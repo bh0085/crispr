@@ -1,14 +1,8 @@
-$(function(){
+function init_page(){
     //next clickhandlers
     $(document).on("click", "#submit .next",{},function(event){
 	submit_read_input();
     });
-
-
-    init();
-});
-function init(){
-    console.log("empty init for submit.js")
     var sview = new SubmitV()
     $('#submit-container').append(sview.render().$el)
     sview.configureForm()
@@ -30,15 +24,15 @@ var SubmitV = Backbone.View.extend({
 		$.ajax({
 		    dataType:"json",
 		    data:content,
-		    url:"/j/post_new",
+		    url:routes.route_path("job_post_new"),
 		    type:"POST",
 		    success:$.proxy(function(data){
 			if (data.status == "success"){
-			    if(data.job_id == null){throw "hi"}
-			    window.location.assign("http://" + location.host + "/job/" + data.job_id)
+			    if(data.job_key == null){throw "hi"}
+			    window.location.assign("http://" + location.host + "/job/" + data.job_key)
 			} else {
-			    console.log("unhandled error:")
-			    console.log(data)
+			    console.log("failed")
+			    alert(data.message);
 			}
 			return false
 		    },this), 
@@ -60,7 +54,7 @@ var SubmitV = Backbone.View.extend({
 	return this
     },
     on_server_error:function(data){
-	throw 'unimplemented';
+	console.log("unexpected server error.")
     },
 
 

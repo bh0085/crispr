@@ -45,9 +45,7 @@ var JobM = Backbone.RelationalModel.extend({
     ],
     /** Rest URL for a Job */
     url: function () {
-        var id = this.id ? this.id : -1;
-        var url = '/r/job/' + id;
-        return url;
+        return routes.route_path("job_rest",{job_key:this.get("key")})
     },
     //waiting for hits, polls. true when done.
     poll:function(){
@@ -77,7 +75,18 @@ var JobM = Backbone.RelationalModel.extend({
 	this.binder = new Backbone.EventBinder()
 	_.each(self.get("spacers").models, function(s,i){
 	    s.on("change:active",self.activateOne,self)
-	})
+	    s.on("change:score",function(m,v){
+		self.get("spacers").sort()
+		//order is important here
+		_.each(self.get("spacers").models,
+		       function(s,i){
+			   s.compute_rank_in_job(self);
+			   console.log("done")
+		       });
+		console.log("doneall")
+	    })
+	    s.compute_rank_in_job(self);
+	});
     },
     locus:function(){
 	return this.get("chr") +":"+ (this.get("strand") == -1?"-":"+")

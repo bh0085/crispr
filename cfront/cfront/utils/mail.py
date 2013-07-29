@@ -12,14 +12,14 @@ SMTP_PASSWORD = 'crisprpassword'
 
 def mail_new_job(request, job):
     subject = "Job Submission to CRISPR.mit.edu"
-    msg_tmp = """You've successfully submitted a job -- ({job_name}) to the CRISPR/guides selection server at crispr.mit.edu. To see its output, you can head over to {host}/job/{job_id} where results from the offtarget scan will be reported as they come in."""
-    message = msg_tmp.format(email=job.email, job_name=job.name, job_id = job.id, host=request.host)
+    msg_tmp = """You've successfully submitted a job -- ({job_name}) to the CRISPR/guides selection server at crispr.mit.edu. To see its output, you can head over to {host}/job/{job_key} where results from the offtarget scan will be reported as they come in."""
+    message = msg_tmp.format(email=job.email, job_name=job.name, job_key = job.key, host=request.host)
     send_mail(job.email, subject, message)
 
 def mail_completed_job(request, job):
     subject = "Job Completed at CRISPR.mit.edu"
-    msg_tmp = """Your recent job -- ({job_name}) has run to completion at crispr.mit.edu. To see its output, please head over to http://crispr.mit.edu:6543/job/{job_id}."""
-    message = msg_tmp.format(email=job.email, job_name=job.name, job_id = job.id )
+    msg_tmp = """Your recent job -- ({job_name}) has run to completion at crispr.mit.edu. To see its output, please head over to http://crispr.mit.edu:6543/job/{job_key}."""
+    message = msg_tmp.format(email=job.email, job_name=job.name, job_key = job.key )
     send_mail(job.email, subject, message)
 
 def send_mail(email_address, subject, message):

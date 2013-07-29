@@ -1,16 +1,25 @@
 from pyramid.response import Response
 from pyramid.view import view_config
-from models import Session, Job
 from cfront.utils import genome_db, webserver_db
 
 @view_config(route_name="readout", renderer='readout.mako')
 def readout_view(request):
-    jobid = request.matchdict['job_id']
-    job = Session.query(Job).get(jobid)
-    jj = job.toJSON()
-    spacers = [s.toJSON() for s in job.spacers]
+    jj = request.job.toJSON()
+    spacers = [s.toJSON() for s in request.job.spacers]
     jj["spacers"] = spacers
-    return {"init_state":{"job":jj}}
+    return {"init_state":{"job":jj},
+            "sessionInfo":{"routes":routes_dict(request)}}
 @view_config(route_name="submit", renderer="submit.mako")
 def submit_view(request):
+    return { "sessionInfo":{"routes":routes_dict(request)}}
+
+@view_config(route_name="maintainance",renderer='maintainance.mako')
+def maintainance_view(request):
     return {}
+
+from pyramid.config import Configurator
+def routes_dict(request):
+    return dict([(k,v.path) 
+                for k,v in Configurator(request.registry).get_routes_mapper().routes.items()])
+
+

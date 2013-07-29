@@ -10,7 +10,7 @@ class Job(Base):
     __tablename__ = 'job'
     
     #pkey
-    id = Column(Integer, primary_key = True)
+    id = Column(BigInteger, primary_key = True)
 
     #nonnull
     sequence = Column(Unicode, nullable = False)
@@ -24,14 +24,14 @@ class Job(Base):
 
     #v0 maps to exactly one site on the genome
     chr = Column(VARCHAR(6), nullable = False)
-    start = Column(Integer, nullable = False)
+    start = Column(BigInteger, nullable = False)
     strand = Column(Integer, nullable = False)
 
     computing_spacers = Column(Boolean, nullable = False, default = False)
     computed_spacers = Column(Boolean, nullable = False, default = False)
     files_computing =  Column(Boolean, nullable = False, default = False)
     files_ready = Column(Boolean, nullable = False, default = False)
-    email_complete = Column(Boolean, nullable = False, default = False)
+    email_complete = Column(Boolean, nullable = False, default = True)
     key = Column(String, nullable = False, index = True)
 
     #fake enum type for genomes
@@ -43,8 +43,11 @@ class Job(Base):
     #exceptions
     NOSPACERS = "spacers not yet computed"
     NOHITS = "hits not yet computed"
-    ERR_TOOMANY = "too many spacers in a single alignment"
+    ERR_TOOMANY = "too many spacers in a single alignment. right now does 1 at a time"
     ERR_MISSING = "no spacers in bowtie alignment"
+    ERR_ALREADYCOMPUTED = "already computed hits"
+    ERR_MULTIPLE_ONTARGETS = "found multiple exact hits for a spacer"
+    ERR_MISCSPACER = "unexplained spacer processing error"
 
     
     def __init__(self, **kwargs):
@@ -55,8 +58,10 @@ class Job(Base):
 
     @property
     def path(self):
+        from cfront import cfront_settings
         job_key = self.id
-        path =   os.path.join(os.environ["CFRONTDATA"],"jobs/{0}").format(job_key)
+        jobpath = cfront_settings["jobs_directory"]
+        path =   os.path.join(jobpath,"jobs/{0}").format(job_key)
         if not os.path.isdir(path):
             os.makedirs(path)
         return path
@@ -151,10 +156,11 @@ class Job(Base):
                 "computed_n_hits",
                 "chr", "start", "strand",
                 "files_ready",
-                "files"]
-    
-def get_job_by_key(job_key):
-    return Session.query(Job).filter(Job.key == job_key).one()
+                "email_complete",
+                "files","key"]
+    @staticmethod
+    def get_job_by_key(job_key):
+        return Session.query(Job).filter(Job.key == job_key).one()
 
 
 

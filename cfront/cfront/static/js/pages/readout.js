@@ -1,9 +1,5 @@
-$(function(){
-    init();
-})
-
 current_job = null;
-function init(){
+function init_page(){
     host = location.host;
     pathname = location.pathname;
     jobid_string = location.pathname.split("/")[2];

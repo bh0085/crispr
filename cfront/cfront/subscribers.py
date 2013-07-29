@@ -1,4 +1,5 @@
 from pyramid.events import subscriber, NewRequest, NewResponse
+import pyramid.httpexceptions as exc
 
 @subscriber(NewResponse)
 def no_cache_subscriber(event):
@@ -11,3 +12,4 @@ def http_method_override_subscriber(event):
     request = event.request
     if 'HTTP_X_HTTP_METHOD_OVERRIDE' in request.keys():
         request.method = request['HTTP_X_HTTP_METHOD_OVERRIDE']
+

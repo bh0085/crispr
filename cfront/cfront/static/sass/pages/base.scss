@@ -9,6 +9,11 @@
     display:inline;
 }
 
+.alert .content{
+    max-width:300px;
+    margin: 0 auto;
+}
+
 .unselectable {
    -moz-user-select: -moz-none;
    -khtml-user-select: none;
@@ -27,6 +32,23 @@
 
 .v-middle{
     vertical-align:middle;
+}
+.valid{
+    position:fixed;
+    width:200px;
+    right:0px;
+    background-color:#FEFEFE;
+    border: 1px solid lightgray;
+    padding:20px;
+    margin:25px;
+    bottom:0px;
+    .dna{
+	word-break:break-all;
+    }
+    li{
+	margin-top:10px;
+    }
+
 }
 
 .showing-less>.more{display:none;}

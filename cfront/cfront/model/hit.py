@@ -10,19 +10,17 @@ class Hit(Base):
         UniqueConstraint('spacerid', 'chr', 'start', 'strand'),
     )
     
-    id = Column(Integer, primary_key = True)
-    spacerid = Column(Integer, ForeignKey("spacer.id"), nullable =False)
+    id = Column(BigInteger, primary_key = True)
+    spacerid = Column(BigInteger, ForeignKey("spacer.id"), nullable =False)
     n_mismatches = Column(SmallInteger, nullable = False, index = True)
     score = Column(Float, nullable = True, index = True)
     chr = Column(VARCHAR(6), nullable = False)
-    start = Column(Integer, nullable = False)
+    start = Column(BigInteger, nullable = False)
     strand = Column(SmallInteger, nullable = False)
     sequence = Column(VARCHAR(23), nullable = False)
     gene = Column(String, nullable = True, index = True)
+    ontarget = Column(Boolean, nullable = False)
 
-    @property
-    def ontarget(self):
-        return self.n_mismatches == 0
     @property
     def jobid(self):
         return self.spacer.job.id

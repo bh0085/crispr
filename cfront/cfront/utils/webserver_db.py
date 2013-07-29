@@ -113,7 +113,7 @@ def compute_spacers(sequence):
                           guide = m.group()[:-3],
                           nrg = m.group()[-3:],
                           strand = -1,
-                          position = m.start()))
+                          position = len(sequence) - m.start()+23))
 
     
     #marks job complete, returns status

@@ -169,6 +169,10 @@ $spacer-left:400px;
 	    table{
 		width:100%;
 		th,td{
+		    &:nth-child(even){
+			background-color:rgba(0, 0, 0, .02);
+		    }
+		 
 		    &:not(:first-child){padding-left:10px;}
 		    padding-right:10px;
 		}
@@ -178,12 +182,6 @@ $spacer-left:400px;
 		td{
 		    font-family:courier;
 		    white-space:nowrap;
-		    &.mismatches{
-			width:60px;
-		    }
-		    &.gene{
-			width:60px;
-		    }
 		    &.sequence,&.score,&.locus,&.gene{
 			text-align:center;
 		    }

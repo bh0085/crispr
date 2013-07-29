@@ -11,13 +11,13 @@ class Spacer(Base):
         UniqueConstraint('jobid', 'strand', 'position'),
     )
     
-    id = Column(Integer, primary_key = True)
-    jobid = Column(Integer, ForeignKey("job.id"),nullable=False)
+    id = Column(BigInteger, primary_key = True)
+    jobid = Column(BigInteger, ForeignKey("job.id"),nullable=False)
     sequence = Column(VARCHAR(23),nullable=False)
     guide = Column(VARCHAR(20), nullable = False)
     nrg = Column(VARCHAR(3),nullable = False)
     strand = Column(Integer, nullable = False)
-    position = Column(Integer, nullable = False)
+    position = Column(BigInteger, nullable = False)
 
     score = Column(Float,nullable = True, index = True)
     computing_hits = Column(Boolean, nullable = False, default = False)
@@ -31,6 +31,9 @@ class Spacer(Base):
     @property
     def start(self):
         return self.position
+
+    def chr_start(self):
+        return self.job.start + self.start
 
     @property
     def top_hits(self):

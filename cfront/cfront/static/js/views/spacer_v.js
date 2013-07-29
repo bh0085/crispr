@@ -18,8 +18,6 @@ var SpacerHV = Backbone.View.extend({
 	params.top_hits = this.top_hits.models
 	params.gene_hits = this.gene_hits.models
 
-	params["rank"] =this.model.rank()
-
 	this.$el.html(_.template(this.template,params))
 	this.$el.attr("cid", this.model.cid)
 
@@ -82,7 +80,6 @@ var SpacerV = Backbone.View.extend({
 	params.top_hits = this.top_hits.models
 	params.gene_hits = this.gene_hits.models
 
-	params["rank"] =this.model.rank()    
 	this.$el.html(_.template(this.template,params))
 	this.$el.attr("cid", this.model.cid)
 	return this;
@@ -95,23 +92,22 @@ SpacerListV = Backbone.View.extend({
     template: $("#spacer-list-v-template").html(),
     className: "spacer-list-v spacer",
     tagName: "tr",
+
     initialize:function(){
 	this.model.on("change:active",
 		      function(m,v){
 			  this.$el.toggleClass("active",v)
 		      },this);
 	this.$el.toggleClass("active",this.model.get("active"))
+	this.model.on("change:score",this.render());
     },
     render:function(){
+	console.log("rendering")
 	mjson = this.model.toJSON()
-	mjson["rank"] =this.model.rank()
 	this.$el.html(_.template(this.template,mjson))
 	this.$el.attr("cid", this.model.cid)
-	this.$el.toggleClass("high-quality",this.model.get("score") >= high_quality_threshold?true: false);
-	this.$el.toggleClass("medium-quality",(this.model.get("score") >= low_quality_threshold && this.model.get("score") < high_quality_threshold )?true: false);
-	this.$el.toggleClass("low-quality",this.model.get("score") > 0 && this.model.get("score") < low_quality_threshold?true: false);
-	this.$el.toggleClass("no-quality",this.model.get("score") == 0?true: false);
-
+	this.$el.removeClass("medium-quality high-quality low-quality no-quality")
+	this.$el.addClass(this.model.get("quality")+"-quality")
 	return this
     }
     

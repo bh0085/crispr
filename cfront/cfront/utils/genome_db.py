@@ -27,9 +27,6 @@ def compute_hits(spacer_id):
     return False
 
 
-
-
-
 def check_hits(spacer_id):
     spacer = Session.query(Spacer).get(spacer_id)
     job = spacer.job
@@ -74,7 +71,8 @@ def enter_hits(spacer_id):
 
         #error checking... does a spacer already have a score?
         if spacer.computed_hits:
-            raise Exception("already computed hits")
+            JobERR(job,Job.ERR_ALREADYCOMPUTED)
+            return
 
         #translate spacers, hits into numbers to compute sims with numpy
         spacer_array = np.array([translation.get(let,4) for let in spacer.guide])
@@ -83,17 +81,24 @@ def enter_hits(spacer_id):
                                   for k,g in \
                                   it.groupby(nz,key = lambda x:x[0])])
 
+
+        
         found_ontarget = None
         for idx,h in enumerate(hits_array):
             hit = hits_rows[idx]
             mismatches = mismatches_by_hit.get(idx,array([]))
-            
+            ontarget = False
+
             if len(mismatches) > 5:
                 continue
             if len(mismatches) == 0:
-                if found_ontarget: raise Exception("no multiple ontargets")
-                else: found_ontarget = True  
-                score = 100
+                if hit["start"] != spacer.chr_start :
+                    print "ontarget at nonmatching locus {0} / {1}".format(hit["start"],spacer.chr_start)
+                    JobERR(job,Job.ERR_MULTIPLE_ONTARGETS)
+                    return
+                else:
+                    score = 100
+                    ontarget = True
             else:
                 score = 100 * (1 - weights[mismatches]).prod()
                 if len(mismatches) > 1:
@@ -112,8 +117,22 @@ def enter_hits(spacer_id):
                         n_mismatches = len(mismatches),
                         start = hit["start"],
                         strand = 1 if hit["strand"] == "+" else -1,
-                        score = score
+                        score = score,
+                            ontarget = ontarget
                     ))
+
+        Session.flush()
+
+        updates = ",".join( ["({0},'{1}',{2})".format(h.id,h.chr,h.start) 
+                                for h in spacer.hits]
+                        )
+        print updates
+        for h in spacer.hits:
+            if h.id == None:
+                print h.toJSON()
+                raise Exception()
+
+        print "HIT? {0}".format(spacer.hits[0].id)
         import psycopg2
 
         conn = psycopg2.connect("dbname=vineeta user=ben password=random12345")
@@ -135,9 +154,8 @@ FROM {0}, exon_hg19
         """\
                     .format("hits_{0}".format(spacer.id),
                             "exon_hg19",
-                            ",".join( ["({0},'{1}',{2})".format(h.id,h.chr,h.start) 
-                                for h in spacer.hits]
-                                  ))
+                            updates
+                            )
         cur.execute(cmd)
         results = cur.fetchall()
         conn.close()

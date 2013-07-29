@@ -6,19 +6,6 @@ from .utils import webserver_db as wdb
 
 @view_config(route_name="job_rest", renderer="json")
 def job_rest(request):
-
-    # fakes the resource factory
-    job_id = int(request.matchdict['job_id'])
-    if job_id == -1:
-        job = None
-    else:
-        job = Session.query(Job)\
-              .filter(Job.id==job_id)\
-              .first()
-        if not job:
-            raise Exception("Job not found")
-    request.job = job
-
     method = request.method
     job = request.job
     if method != 'POST' and not job:
