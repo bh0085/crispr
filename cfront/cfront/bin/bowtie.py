@@ -106,13 +106,13 @@ def main():
     parser.add_argument('--query','-q',dest="query",
                         type=str, required=True,
                         help="query input sequence")
+    parser.add_argument('--jobspath','-p',dest="jobspath",
+                        type=str,required=True,
+                        help="root path for job files IO")
     
     args = parser.parse_args()
     query =args.query
-
-    JOBSPATH = cfront_settings["jobs_directory"]
-    if not os.path.isdir(JOBSPATH):
-        os.makedirs(JOBSPATH)
+    JOBSPATH = args.jobspath
 
     job_path = os.path.join(JOBSPATH,args.job_id)
     if not os.path.isdir(job_path):
