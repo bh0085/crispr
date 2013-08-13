@@ -52,7 +52,7 @@ def process_queue():
     
     #starts a transaction to compute hits for any spacer which has not
     # "computed_hits" or "computing_hits"
-    for s in Session.query(Spacer)\
+    for j in Session.query(Spacer)\
                     .filter(Spacer.computing_hits == False)\
                     .filter(Spacer.score == None)\
                     .join(Job)\
