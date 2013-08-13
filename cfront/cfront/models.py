@@ -24,6 +24,12 @@ Base.__init__ = __init__
 Base.toJSON = toJSON
 
 
+class JobNOTFOUND(Exception):
+    pass
+
+class JobFAILED(Exception):
+    pass
+
 class JobERR(Exception):
     def __init__(self, message, job):
 
@@ -32,7 +38,6 @@ class JobERR(Exception):
 
         # Now for your custom code...
         self.job = job
-
         
         s = StringIO.StringIO()
         traceback.print_stack(None, None, s)
@@ -52,15 +57,13 @@ class JobERR(Exception):
         #                       name = job.name,
         #                       email = job.email))
         #Session.delete(job)
-        job.failed = True
-        job.error_traceback = tb_content
-        job.error_message = tb_content
-        job.date_failed = datetime.datetime.utcnow()
-        
 
+        if job is not None:
+            job.failed = True
+            job.error_traceback = tb_content
+            job.error_message = tb_content
+            job.date_failed = datetime.datetime.utcnow()
 
-
-def JobERR(job, msg):
     
 
 import model

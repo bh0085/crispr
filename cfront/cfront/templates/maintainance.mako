@@ -7,10 +7,10 @@
     <link href="/css/style.css" rel="stylesheet"/>
     <div class="row med-margin-top">
       <div class="span6 offset2">
-	<h1>The CRISPR design portal is undergoing maintenance</h1>
-	<h4>We're sorting through feedback from our first alpha test and making some important updates.</h4>
-	<p>This page will be available once again by Monday July 29th.</p>
-	<p>No cause for alarm: all links to currently submitted jobs will work and you'll recieve email notifications once they've completed.</p>
+	<h1>CRISPR design will return shortly!</h1>
+	<h4>Update 8/2/2013</h4>
+	<p> We've taken your feedback into account to implement tweaks and improvements to CRISPR design. Right now, we're testing these changes and migrating your previously submitted jobs to the new system. </p>
+	<p>Stay tuned for updates.</p>
       </div>
     </div>
   </body>

@@ -37,11 +37,13 @@ var SpacerM = Backbone.RelationalModel.extend({
 	    genic = data.genic
 
 	    var h
+	    
 	    for (var i = 0 ; i < top.length ; i++){
 		var hjson = top[i]
 		if (! this.get("hits").get(hjson.id)){ h = new HitM(hjson);}
 		else { h = this.get("hits").get(hjson.id) }
 		this.top.add(h)
+		if(h.get("ontarget")){this.set("locus",this.locus())}
 	    }
 
 	    for (var i = 0 ; i < genic.length ; i++){
@@ -67,11 +69,20 @@ var SpacerM = Backbone.RelationalModel.extend({
     },
     
     locus:function(){
-	return this.get("job").get("chr") +":"
-	    +(this.get("strand") == 1?"+" : "-")+ (this.get("position") + this.get("job").get("start"))
+	if(this.get("job").get("chr")){
+	    return this.get("job").get("chr") +":"
+		+(this.get("strand") == 1?"+" : "-")+ (this.get("position") + this.get("job").get("start"))
+	} else {
+
+	    ontargets = _.filter(this.get("hits").models,function(e){return e.get("ontarget")})
+	    if(ontargets.length == 1){
+		return ontargets[0].locus()
+	    } else {
+		return "chr??:??"
+	    }
+	}
     },
     compute_rank_in_job:function(job){
-	console.log("computing rank for spacer " + this.id)
 	this.set("rank",job.get("spacers").indexOf(this) +1)
     },
     compute_quality:function(){

@@ -1,12 +1,6 @@
 current_job = null;
 function init_page(){
-    host = location.host;
-    pathname = location.pathname;
-    jobid_string = location.pathname.split("/")[2];
-   
     //if we have a subdomain prefix in the pathname, this will cause problems.
-    jobid = parseInt(jobid_string);
-    if (isNaN(jobid)){throw "bad jobid : "+jobid_string;}
     current_job = new JobM(init_state.job)
     current_job.poll()
     var rview = new ReadoutV({job:current_job})

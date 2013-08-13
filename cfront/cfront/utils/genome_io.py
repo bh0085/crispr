@@ -2,28 +2,52 @@
 ''' tools that interact with the file io for genome dbv''' 
 import os, sys, subprocess as spc, time
 from cfront.models import Session, Job, Spacer, Hit
-from sqlalchemy import desc
+from sqlalchemy import desc, func
+from sqlalchemy.sql.expression import case
 from cfront.utils import mail
+from cfront import cfront_settings
+import re, datetime
 
-CDHOME=os.environ["CDHOME"]
+CDHOME="/home/ben/v_crispr_design"
 CDSCRIPTS=os.path.join(CDHOME,"scripts")
 CDREF=os.path.join(CDHOME,"reference")
 v = True
 
 
 def commence_file_io(job_id):
-    if v: print "cmmencing file io"
-    job = Session.query(Job).get(job_id)
-    job.files_computing = True
+
+    print "DEBUG?? ", "{0}".format( cfront_settings.get("debug_mode",False))
+
+    if v: print "commencing file io"
+
+    job = Session.query(Job).get(job_id)    
+    Session.add(job)
     
+    if job.genome_name != "HUMAN" or len(job.good_spacers) == 0:
+        job.files_failed = True
+        job.date_failed = datetime.datetime.utcnow()
+    else:
+        job.files_computing = True
+
     write_f1(job_id)
     write_f2(job_id)
-    write_f3(job_id)
     write_f4(job_id)
     write_f5_f6(job_id)
-    write_f7(job_id)
-    write_f8(job_id)
-    write_f9(job_id)    
+    
+    if len([f for f in job.files if f["ready"] == False]) == 0:
+        job.files_ready = True
+        job.date_completed = datetime.datetime.utcnow()
+    else:
+        job.files_failed = True
+    job.files_computing = False
+
+    if job.email_complete:
+        if not cfront_settings.get("debug_mode",False):
+            mail.mail_completed_job(None, job)
+
+
+
+
 
 def write_f1(job_id):
     '''writes a file formatted:
@@ -47,7 +71,7 @@ spacer3 ATGGTCGCTACAGCATCTCT CGG +
                                       s.guide, 
                                       s.nrg, 
                                       "+" if s.strand ==1 else "-"])
-                           for s in job.spacers ]))
+                           for s in job.good_spacers ]))
     if v: print "DONE"
     if v: print
 
@@ -72,7 +96,7 @@ spacer9 1       62767   -       ATGGACAAAGCTGTGCTCAGAGG
                                       str(h.start), 
                                       "+" if h.strand ==1 else "-",
                                       h.sequence])
-                           for s in job.spacers for h in s.hits ]))
+                           for s in job.good_spacers for h in s.hits ]))
     if v: print "done"
     if v: print
 
@@ -114,7 +138,7 @@ spacer1 1 spacer1 18 44589693 + GAACAGTGAGATGCGAGAATTGG 0 NA 100 KATNAL2'''
 
     with open(f4p,"w") as f:
         f.write(" ".join(["SPACER","ON_TARGET", "ID", "CHR", "POS", "STRAND", "SEQUENCE", "MISMATCH", "MISMATCH_POS", "SCORE", "GENE"])+"\n")
-        for spacer in job.spacers:
+        for spacer in job.good_spacers:
            ot_count=1
            for hit in sorted(spacer.hits, key=lambda x:-1* x.score):
                spacerid = "spacer_{0}".format(spacer.id)
@@ -146,7 +170,7 @@ def write_f5_f6(job_id):
     f4p = job.f4
     f5p = job.f5
     f6p = job.f6
-    gene= os.path.join(job.name)
+    gene= os.path.join(job.safe_name)
     
     if os.path.isfile(f5p):
         os.remove(f5p)    
@@ -170,71 +194,22 @@ def write_f5_f6(job_id):
     if v: print "DONE"
     if v: print
 
-def write_f7(job_id):
-    job = Session.query(Job).get(job_id)
-    f6p = job.f6
-    f7p = job.f7
-
-    cmd = ("perl {0}/scripts/make_primer3_offtarget_input.pl {1} "+\
-           "{0}/reference/human_g1k_v37.fasta {2}").format(CDHOME, f6p, f7p)
-
-    if v: print "running cmd:"
-    if v: print "  {0}".format(cmd)
-
-        
-    prc = spc.Popen(cmd,shell=True)
-    out = prc.communicate()
-    
-    if v:print "wrote output at: {0}".format(f7p)
-    if v:print "DONE"
-    if v:print
-
-def write_f8(job_id):
-    #runs primer3
-    job = Session.query(Job).get(job_id)
-    f7p = job.f7
-    f8p = job.f8
-    
-    cmd="primer3_core -p3_settings_file={0}/primer3/primer3-2.3.5/primer3web_v4_0_0_default_settings.txt -output={1} {2}".format(CDHOME,f8p,f7p)
-    
-    if v: print "running command: {0}".format(cmd)
-    if v: print "writing: {0}".format(f8p)
-    prc = spc.Popen(cmd, shell=True)
-    out = prc.communicate()
-    
-    if v: print "DONE"
-    if v: print
-
-def write_f9(job_id):
-    #runs primer3
-    job = Session.query(Job).get(job_id)
-    f6p = job.f6
-    f8p = job.f8
-    f9p = job.f9
-
-    cmd = "perl {0}/parse_primer3_output.pl {1} {2} {3}".format(CDSCRIPTS, f8p, f6p,f9p)
-
-    if v: print "running command: {0}".format(cmd)
-    if v: print "writing: {0}".format(f9p)
-    prc = spc.Popen(cmd, shell=True)
-    out = prc.communicate()
-    
-    if v: print "DONE"
-    if v: print
-    job.files_ready = True
-    if job.email_complete:
-       mail.mail_completed_job(None, job)
 
 import transaction
 from pyramid.paster import bootstrap
 if __name__ == "__main__":
     env = bootstrap(sys.argv[1])
     while 1:
-        with transaction.manager:
-            jobs = Session.query(Job).filter(Job.files_computing == False).all()
-            for j in jobs:
-                if not j.computed_hits:
-                    continue
+        j = Session.query(Job)\
+                   .filter(Job.files_failed == False)\
+                   .filter(Job.files_ready == False)\
+                   .filter(Job.files_computing == False)\
+                   .join(Spacer)\
+                   .group_by(Job.id)\
+                   .having(func.sum(case([(Spacer.score == None,1)], else_=0)) == 0)\
+                   .order_by(Job.id.desc()).first()
+        if j:
+            with transaction.manager:
                 commence_file_io(j.id)
 
-        time.sleep(5)
+        time.sleep(2)

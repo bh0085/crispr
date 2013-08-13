@@ -2,20 +2,26 @@
 </script>
 <script type="unknown" id="spacer-h-v-template">
   <span class="info">
-    <h4 class="inline">guide #{{rank}}</h4>
+    <h4 class="inline">guide #{{rank}} {{name != null ? "("+name+")" : ""}}</h4>    
     <dl class="header">
-      <span class="guide dna">{{guide}}</span><span class="small-left-margin nrg dna">{{nrg}}</span>
-      <dt>quality score </dt>
+      <dt class="med-left-margin">quality score: </dt>
       <dd><span class="qscore">{{sprintf("%d",score*100) }}</span></dd><br/>
     </dl><br/>
     <dl>
-      <dt>locus</dt>
+      <dt>guide sequence: </dt>
+      <dd><span class="guide dna">{{guide}}</span><span class="small-left-margin nrg dna">{{nrg}}</span></dd>
+    </dl><br/>
+    <dl>
+      <dt>on-target locus:</dt>
       <dd><span class="locus description">{{locus}}</span></dd>
-      <dt>#offtargets (#genic)</dt>
-      <dd class="offtargets"><span class="n-top">{{n_offtargets}}</span> (<span class="n-genic">{{n_genic_offtargets}}</span>)</dd>
+    </dl><br/>
+    <dl>
+      <dt>number of offtarget sites: </dt>
+      <dd class="offtargets"><span class="n-hits">{{n_offtargets}}</span> (<span class="n-genic">{{n_genic_offtargets}}</span> are in genes)</dd>
     </dl>
   </span>
-  <span class="table-type-selection v-middle"><span class="annotation v-middle">top 20 genome-wide off-target sites</span><span class="hspace-80 dotted"></span><input class="v-middle inline " id="exonic-only" type="checkbox"><label class="v-middle inline" for="exonic-only">exonic only</label>
+  <br/><br/>
+  <span class="table-type-selection center v-middle"><span class="annotation v-middle">top 20 genome-wide off-target sites</span><span class="hspace-80 dotted"></span><input class="v-middle inline " id="exonic-only" type="checkbox"><label class="v-middle inline" for="exonic-only">show all exonic</label>
   </span>
   <div class="hits top">
     <table class="top top-hits">
@@ -59,7 +65,7 @@
 <!-- A view for a single spacer element in Left Column-list view -->
 <script type="unknown" id="spacer-list-v-template">
 
-  <td>Guide #<span class="rank">{{rank}}</span></td>
+  <td>{{ name == null? "Guide #<span class=rank>"+rank+"</span>" : name}}</td>
   <td class="center"><span class="qscore">{{sprintf("%d",score*100)}}</span></td>
   <td><span class="guide dna">{{guide}}</span><span class="nrg dna small-left-margin">{{nrg}}</span></td>
 

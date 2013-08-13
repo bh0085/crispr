@@ -62,26 +62,6 @@ body{
             color:black;
         }
     }
-    .scrolly-column{
-	.scrolly-section{
-	    &:first-child{
-		.header-back{
-		    display:none;
-		}
-	    }
-	    min-height:300px;
-	    margin-left:20px;
-	    margin-bottom:100px;
-	    .header-oneword{
-		display:inline;
-	    }
-	    .header-description{
-		display:inline;
-		vertical-align:bottom;
-		margin-left:1em;
-	    }
-	}
-    }
 }
 
 

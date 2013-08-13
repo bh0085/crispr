@@ -1,8 +1,8 @@
 from pyramid.view import view_config
 from .utils import webserver_db, genome_db, mail
-from .models import Session, Job, Hit, Spacer
+from .models import Session, Job, Hit, Spacer, JobERR
 import datetime, re
-
+from cfront import cfront_settings
 
 @view_config(route_name='job_check_spacers', renderer='json')
 def job_check_spacers(request):
@@ -32,15 +32,17 @@ def spacer_retrieve_hits(request):
 
 @view_config(route_name="job_post_new",renderer='json')
 def job_post_new(request):
-    sequence = request.params["sequence"].upper()
+    sequence = request.params["query"].upper()
     sequence = re.sub("\s","",sequence)
-    print sequence
-    if re.compile("[^AGTC]").search(sequence) is not None:
+    if cfront_settings.get("debug_mode",False): print sequence
+
+    
+    if re.compile("[^AGTCN]").search(sequence) is not None:
             return {"status":"error",
                     "message":"Ambiguous or invalid characters found in input sequene.",
                     "matches":None,
                     "job_key":None}
-    if len(sequence)<23 :
+    if len(sequence)<23 or len(sequence) > 500 :
         return {"status":"error",
                 "message":"Sequence length not within allowed range (23 - 500bp)",
                 "matches":None,
@@ -49,34 +51,36 @@ def job_post_new(request):
     matches = webserver_db.check_genome(sequence)
     infos = webserver_db.compute_spacers(sequence)
 
-    if matches == None:
-            return {"status":"error",
-                    "message":"No matches found in the human genome (hg19). Please try a new query.",
-                    "matches":None,
-                    "job_key":None}
-    elif len(matches) > 1:
-            return {"status":"error",
-                    "message":"More than one unique match found in the human genome (hg19). Please try a unique query.",
-                    "matches":matches,
-                    "job_key":None}
+    if cfront_settings.get("debug_mode",False): print "lmatches: {0}".format(len(matches))
+    if cfront_settings.get("debug_mode",False): print "linfos: {0}".format(len(infos))
+
+    print request.params.get("inputRadios")
+    if ( request.params.get("inputRadios",None) == "unique_genomic" ) and len(matches) == 0:
+        raise JobERR(Job.ERR_NOGENOME,None)
+    if request.params.get("inputRadios",None) == "unique_genomic" and len(matches) > 1:
+        raise JobERR(Job.ERR_MULTIPLE_GENOME,None)
     elif len(infos) == 0:
-            return {"status":"error",
-                    "message":"No spacers (20nt followed by the PAM sequence NRG) in the input sequence. Please try a new query.",
-                    "matches":matches,
-                    "job_key":None}
+        raise JobERR(Job.NOSPACERS,None)
     else:
-            job = Job(date_submitted = datetime.datetime.utcnow(),
-                      sequence = request.params["sequence"],
-                      genome = Job.GENOMES["HUMAN"],
+        
+    
+        params = dict(date_submitted = datetime.datetime.utcnow(),
+                      sequence = sequence,
                       name = request.params["name"],
                       email = request.params["email"],
-                      date_completed = None,
-                      chr=matches[0]["tName"],
-                      start=matches[0]["tStart"],
-                      strand=1 if matches[0]["strand"] == "+" else -1
-            )
+                      genome = Job.GENOMES[request.params.get("genome","HUMAN")],
+                      query_type = request.params.get("inputRadios"))
 
-            Session.add(job)
+        if len(matches) > 0:
+            params.update(dict(chr=matches[0]["tName"],
+                               start=matches[0]["tStart"],
+                               strand=1 if matches[0]["strand"] == "+" else -1))
+        if "key" in request.params:
+            params["key"] = request.params.get("key")
+
+        job = Job(**params)
+
+        Session.add(job)
 
     for spacer_info in infos:
         Session.add(Spacer(job = job,**spacer_info))
@@ -87,8 +91,101 @@ def job_post_new(request):
         
     return {"status":"success",
                 "message":None,
-                "matches":matches,
                 "job_key":job.key}
         
             
     
+
+
+@view_config(route_name="job_from_spacers",renderer='json')
+def job_from_spacers(request):
+    spacer_lines = request.params["query"].strip().splitlines()
+    spacer_row_lists = [re.compile("\s+").split(l.strip()) for l in spacer_lines]
+    spacers = [dict(sequence = rl[0].upper(),
+                    strand_input = rl[2] if len(rl) > 2 else "+",
+                    name = rl[1] if len(rl) > 1 else None) for rl in spacer_row_lists]
+    
+    #checks input for strand and sequence
+    for i,s in enumerate(spacers):
+        if s["strand_input"] == "+":
+            s["strand"] = 1
+        elif s["strand_input"] == "-":
+            s["strand"] = -1
+        else:
+            raise JobERR(Job.ERR_BADINPUT + "unrecognized character for strand ({0})".format(s["strand_input"]),None)
+        
+        strand = s["strand"]
+        seq = s["sequence"]
+        if s["strand"] == 1:
+            if len(seq) != 23 or (seq[-2:] != "AG" and seq[-2:] != "GG"):
+                   raise JobERR(Job.ERR_BADINPUT + " no forward strand guide found in sequence {0}: {1}"\
+                                .format(i,s["sequence"]),None)
+        else:
+            if len(seq) != 23 or (seq[:2] != "CT" and seq[:2] != "CC"):
+                   raise JobERR(Job.ERR_BADINPUT + " no reverse strand guide found in sequence {0}: {1}"\
+                                .format(i,s["sequence"]),None)
+                         
+                   
+
+    job_sequence = ""
+    spacer_infos = []
+    for i,s in enumerate(spacers):
+        job_sequence += "NN"
+        si = dict(name = s["name"],
+                  sequence = s["sequence"],
+                  position = len(job_sequence),
+                  strand = s["strand"])
+        if len(s["sequence"]) != 23:
+            raise JobERR(Job.BADSPACER_LENGTH,None)
+        spacer_infos.append(si)
+        job_sequence += si["sequence"]
+        job_sequence += "NN"
+    
+
+    if cfront_settings.get("debug_mode",False): print job_sequence
+
+    
+    if re.compile("[^AGTCN]").search(job_sequence) is not None:
+            return {"status":"error",
+                    "message":"Ambiguous or invalid characters found in input sequene.",
+                    "matches":None,
+                    "job_key":None}
+    if len(job_sequence) > 500 :
+        return {"status":"error",
+                "message":"Sequence length not within allowed range (23 - 500bp)",
+                "matches":None,
+                "job_key":None}
+    
+    print "GENOME: {0}".format(request.params.get("genome","HUMAN"))
+    
+        
+    if len(spacer_infos) == 0:
+        raise JobERR(Job.NOSPACERS,None)
+    else:
+        params = dict(date_submitted = datetime.datetime.utcnow(),
+                      sequence = job_sequence,
+                      genome = Job.GENOMES[request.params.get("genome","HUMAN")],
+                      name = request.params["name"],
+                      email = request.params["email"],
+                      twostrand = False,
+                      query_type = "guides_list")
+
+        if "key" in request.params:
+            params["key"] = request.params.get("key")
+
+        job = Job(**params)
+
+        Session.add(job)
+
+    for spacer_info in spacer_infos:
+        Session.add(Spacer(job = job,**spacer_info))
+            
+    job.computed_spacers = True
+    Session.flush()
+    mail.mail_new_job(request,job)
+        
+    return {"status":"success",
+                "message":None,
+                "job_key":job.key}
+        
+            

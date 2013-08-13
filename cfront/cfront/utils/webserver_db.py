@@ -53,7 +53,7 @@ def check_genome(sequence):
             'tStarts']
 
     if len(content) == 0:
-        return None
+        return []
 
 
     matches = []
@@ -63,11 +63,7 @@ def check_genome(sequence):
         if eligible:
             matches.append(possible)
         
-    if len(matches) == 0:
-        return None
-    else:
-        return matches
-
+    return matches
 
 
 
@@ -102,18 +98,14 @@ def compute_spacers(sequence):
     infos = []
     for m in re.finditer(expression, fwd):
         infos.append(dict(sequence = m.group(),
-                          guide = m.group()[:-3],
-                          nrg = m.group()[-3:],
                           strand = 1,
                           position = m.start()))
 
 
     for m in re.finditer(expression,rev):
         infos.append(dict(sequence = m.group(),
-                          guide = m.group()[:-3],
-                          nrg = m.group()[-3:],
                           strand = -1,
-                          position = len(sequence) - m.start()+23))
+                          position = len(sequence) - m.start()-23))
 
     
     #marks job complete, returns status
@@ -124,6 +116,7 @@ def reverse_complement(sequence):
     repl = {"A":"T",
             "T":"A",
             "G":"C",
-            "C":"G"}
+            "C":"G",
+            "N":"N"}
     return "".join(repl[let] for let in sequence[::-1])
     

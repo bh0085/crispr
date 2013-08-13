@@ -1,10 +1,1 @@
-<%inherit file="base.mako"/>
-<%block name="content_html">
-<span class="row content-row">
-  <span id="scrolling-content" class="span7 offset scrolly-column">
-    <div id="submit-container">
-    </div>
-  </span>
-</span>
-</%block>
 

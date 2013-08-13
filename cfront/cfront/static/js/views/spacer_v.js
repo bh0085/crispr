@@ -21,11 +21,16 @@ var SpacerHV = Backbone.View.extend({
 	this.$el.html(_.template(this.template,params))
 	this.$el.attr("cid", this.model.cid)
 
+	//this.$(".n-hits").text(this.get("n_offtargets"))
+	//this.$(".n-genic").text(this.get("n_genic_offtargets"))
+
 	var self = this
 	this.top_hits.on("add",function(m){
+	    if(m.get("ontarget")){
+		return
+	    }
 	    var hv = new HitV({model:m});
 	    hv.render().$el.appendTo(this.$("table.top-hits"))
-	    this.$(".n-top").text(this.top_hits.length)
 	},this)
 
 	_.each(this.model.top.models,function(e,i){
@@ -37,6 +42,9 @@ var SpacerHV = Backbone.View.extend({
 			   },this)
 
 	this.gene_hits.on("add",function(m){
+	    if(m.get("ontarget")){
+		return
+	    }
 	    var hv = new HitV({model:m});
 	    hv.render().$el.appendTo(this.$("table.gene-hits"))
 	    this.$(".n-genic").text(this.gene_hits.length)
@@ -99,10 +107,9 @@ SpacerListV = Backbone.View.extend({
 			  this.$el.toggleClass("active",v)
 		      },this);
 	this.$el.toggleClass("active",this.model.get("active"))
-	this.model.on("change:score",this.render());
+	this.model.on("change:score",this.render, this);
     },
     render:function(){
-	console.log("rendering")
 	mjson = this.model.toJSON()
 	this.$el.html(_.template(this.template,mjson))
 	this.$el.attr("cid", this.model.cid)

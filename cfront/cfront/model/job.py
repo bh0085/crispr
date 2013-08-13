@@ -2,7 +2,7 @@ from datetime import datetime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, BigInteger, String, Unicode, DateTime, ForeignKey, Index, Boolean, Float
 from cfront.models import Session, Base
-import calendar, os, random
+import calendar, os, random, re
 from sqlalchemy.types import VARCHAR
 
 
@@ -21,45 +21,76 @@ class Job(Base):
     name = Column(Unicode, nullable = True)
     email = Column(Unicode, nullable = True)
     date_completed = Column(DateTime, nullable = True)
+    query_type = Column(Unicode, nullable = True)
 
-    #error handling
+    computed_spacers = Column(Boolean, nullable = False, default = False)
+
+    #error handling for offtargets
     failed = Column(Boolean, nullable = False, default = False)
     date_failed = Column(DateTime, nullable = True)
     error_traceback = Column(Unicode, nullable = True)
     error_message = Column(Unicode, nullable = True)
 
     #v0 maps to exactly one site on the genome
-    chr = Column(VARCHAR(6), nullable = False)
-    start = Column(BigInteger, nullable = False)
-    strand = Column(Integer, nullable = False)
+    chr = Column(VARCHAR(6), nullable = True)
+    start = Column(BigInteger, nullable = True)
+    strand = Column(Integer, nullable = True)
+    twostrand = Column(Boolean, default = True, nullable = False)
 
-    computing_spacers = Column(Boolean, nullable = False, default = False)
-    computed_spacers = Column(Boolean, nullable = False, default = False)
-    files_computing =  Column(Boolean, nullable = False, default = False)
+    #messaging for offtargets
+    files_computing = Column(Boolean, nullable = False, default = False)
     files_ready = Column(Boolean, nullable = False, default = False)
+    files_failed = Column(Boolean, nullable = False, default = False)
     email_complete = Column(Boolean, nullable = False, default = True)
-    key = Column(String, nullable = False, index = True)
+    key = Column(String, nullable = False, index = True, unique = True)
 
     #fake enum type for genomes
     GENOMES={
-        "HUMAN":1
+        "HUMAN":1,
+        "MOUSE":2
     }
 
+    ERR_BADINPUT = "Problem with query input: "
+
+
+    ERR_NOGENOME = "No matches found in the human genome (hg19). Please try a new query."
+    ERR_MULTIPLE_GENOME = "More than one unique match found in the human genome (hg19). Please try a unique query."
     
     #exceptions
-    NOSPACERS = "spacers not yet computed"
+    NOSPACERSYET = "spacers not yet computed"
+    NOSPACERS = "No spacers (20nt followed by the PAM sequence NRG) in the input sequence. Please try a new query."
     NOHITS = "hits not yet computed"
     ERR_TOOMANY = "too many spacers in a single alignment. right now does 1 at a time"
     ERR_MISSING = "no spacers in bowtie alignment"
     ERR_ALREADYCOMPUTED = "already computed hits"
     ERR_MULTIPLE_ONTARGETS = "found multiple exact hits for a spacer"
     ERR_MISCSPACER = "unexplained spacer processing error"
+    ERR_BADSPACER_LENGTH = "a spacer has been submitted with the wrong length (should be 23 bp)" 
 
     
     def __init__(self, **kwargs):
         for k,v in kwargs.iteritems():
             self.__setattr__(k,v)
-        self.key = "{0}".format(int(random.random() * 1e10))
+        if not "key" in kwargs:
+            self.key = "{0}".format(int(random.random() * 1e10))
+            
+    @property
+    def genome_name(self):
+        for k,v in Job.GENOMES.items():
+            if v == self.genome:
+                return k
+        raise Exception("Genome not found")
+
+    @property
+    def mapped(self):
+        if self.chr is not None:
+            return True
+        else:
+            return False
+    @property
+    def safe_name(self):
+        r = re.compile("[^a-z]")
+        return re.sub(r, "_", self.name.lower())
 
     @property
     def f1(self):
@@ -97,11 +128,17 @@ class Job(Base):
                 {"name":"offtargets.csv".format(self.name),
                  "filename":"{0}-offtargets.csv".format(self.name),
                  "url":self.url(self.f6),
-                 "ready":os.path.isfile(self.f6)},
-                {"name":"primers.csv".format(self.name),
-                 "filename":"{0}-primers.csv".format(self.name),
-                 "url":self.url(self.f9),
-                 "ready":os.path.isfile(self.f9)}]
+                 "ready":os.path.isfile(self.f6)}]
+
+#                {"name":"primers.csv".format(self.name),
+#                 "filename":"{0}-primers.csv".format(self.name),
+#                 "url":self.url(self.f9),
+#                 "ready":os.path.isfile(self.f9)}
+#
+        
+    @property 
+    def good_spacers(self):
+        return [s for s in self.spacers if len([h for h in s.hits if h.ontarget]) == 1]
 
     @property
     def submitted_ms(self):
@@ -142,9 +179,8 @@ class Job(Base):
         # 1. extract os.path.join(os.path.split(this.path)[:-1]) from the file
         # 2. return /files + result
         
-        rootpath = os.path.split(self.path)[0]
+        rootpath = os.path.split(os.path.split(self.path)[0])[0]
         server_rel = filepath.split(rootpath)[1]
-        print server_rel
         return "/files" + server_rel
 
     @property
@@ -162,18 +198,33 @@ class Job(Base):
         return ["id", "sequence", 
                 "submitted_ms", "completed_ms", 
                 "genome", "name", "email",
-                "computing_spacers",
                 "computed_spacers",
                 "computed_hits",
-                "computing_hits",
                 "computed_n_hits",
                 "chr", "start", "strand",
                 "files_ready",
                 "email_complete",
-                "files","key"]
+                "files","key",
+                "genome_name",
+                "mapped", "query_type"]
     @staticmethod
     def get_job_by_key(job_key):
-        return Session.query(Job).filter(Job.key == job_key).one()
-
+        j =  Session.query(Job).filter(Job.key == job_key).first()
+        if j is None:
+            from cfront.models import JobNOTFOUND
+            raise JobNOTFOUND("job not found {0}".format(job_key), None)
+        return j
+    
+    def __repr__(self):
+        if self.files_ready:
+            status_string = "Files ready"
+        elif self.computed_hits:
+            status_string = "Hits ready"
+        elif self.computed_spacers:
+            status_string = "Spacers ready"
+        else:
+            status_string = "New job"
+            
+        return "Job {0} {1}bp ({2})".format(self.id, len(self.sequence), status_string)
 
 

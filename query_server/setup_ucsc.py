@@ -8,7 +8,7 @@ def populate_exons():
     cur = conn.cursor()
 
     init_table = """
-    DROP TABLE exon_hg19;
+    DROP TABLE IF EXISTS exon_hg19;
     CREATE TABLE exon_hg19 (
     id int PRIMARY KEY,
     gene_name VARCHAR(50) not null,

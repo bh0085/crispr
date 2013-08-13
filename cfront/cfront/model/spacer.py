@@ -14,8 +14,6 @@ class Spacer(Base):
     id = Column(BigInteger, primary_key = True)
     jobid = Column(BigInteger, ForeignKey("job.id"),nullable=False)
     sequence = Column(VARCHAR(23),nullable=False)
-    guide = Column(VARCHAR(20), nullable = False)
-    nrg = Column(VARCHAR(3),nullable = False)
     strand = Column(Integer, nullable = False)
     position = Column(BigInteger, nullable = False)
 
@@ -23,7 +21,15 @@ class Spacer(Base):
     computing_hits = Column(Boolean, nullable = False, default = False)
     n_offtargets = Column(Integer, nullable = True)
     n_genic_offtargets = Column(Integer, nullable = True)
+    name = Column(Unicode, nullable = True)
 
+    @property
+    def guide(self):
+        return self.sequence[:-3]
+
+    @property
+    def nrg(self):
+        return self.sequence[-3:]
     
     @property
     def computed_hits(self):
@@ -32,13 +38,17 @@ class Spacer(Base):
     def start(self):
         return self.position
 
+    @property 
     def chr_start(self):
-        return self.job.start + self.start
+        #subtracts one to account for one based indexing...
+        if self.job.start is None:
+            return -1
+        return self.job.start + self.start +1
 
     @property
     def top_hits(self):
         from cfront.models import Hit
-        return [e.toJSON() for e in Session.query(Hit).join(Spacer).filter(Hit.score < 100).filter(Spacer.id == self.id).order_by(desc(Hit.score)).limit(20).all()]
+        return [e.toJSON() for e in Session.query(Hit).join(Spacer).filter(Spacer.id == self.id).order_by(desc(Hit.score)).limit(20).all()]
 
     @property
     def genic_hits(self):
@@ -48,9 +58,4 @@ class Spacer(Base):
     def jsonAttributes(self):
         return ["jobid", "sequence", "guide", "nrg", "strand", "position",
                 "computing_hits", "computed_hits", "id", "start",
-                "score", "n_offtargets","n_genic_offtargets"]
-
-    
-
-
-
+                "score", "n_offtargets","n_genic_offtargets", "name"]

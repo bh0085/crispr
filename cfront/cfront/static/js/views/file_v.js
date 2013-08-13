@@ -23,7 +23,7 @@ var FileV= Backbone.View.extend({
 })
 
 var FileListV = Backbone.View.extend({
-    className:"file-list-v",
+    className:"file-list-v showing-less",
     tagName:"div",
     template:$("#file-list-v-template").html(),
     initialize:function(options){
@@ -38,6 +38,11 @@ var FileListV = Backbone.View.extend({
 	_.each(this.job.get("files").models,function(e){
 	    self.$('.files').append(new FileV({model:e}).render().$el);
 	});
+
+	if(this.job.get("query_type") != "unique_genomic"){
+	    this.$el.append($("<a>",{"class":"annotation med-left-margin less show-more"}).text("... show warning"))
+	    this.$el.append($("<a>",{"class":"annotation med-left-margin more show-less"}).text("... hide warning"))
+	}
 	return this
     },
 })

@@ -12,9 +12,8 @@ TMPPATH = "/tmp/ramdisk/cfront/bowtie"
 if not os.path.isdir(TMPPATH):
     os.makedirs(TMPPATH)
 GENOMEPATH = "/tmp/ramdisk/genomes/"
-GENOME2BIT = os.path.join(GENOMEPATH,"hg19.2bit")
 
-def run_queries(queries):
+def run_queries(queries, genome):
 
     tmpfile_in = os.path.join(TMPPATH,"tmpfile_{0}.fa".format(int(random.random() * 1e10)))
     tmpfile_out = os.path.join(TMPPATH,"tmpfile_{0}.out".format(int(random.random() * 1e10)))
@@ -33,9 +32,17 @@ def run_queries(queries):
         f.writelines([r.format("fasta") for r in records])
 
         
+    if genome=="HUMAN":
+        genome_string = "hg19"
+    elif genome=="MOUSE":
+        genome_string = "mm9"
+    else:
+        raise Exception("NO SUCH GENOME {0}".format(genome))
 
-    #cmd = "bowtie -n 3 -l 18 hg19 -f {0} --quiet -a {1}".format(tmpfile_in,tmpfile_out)
-    cmd = "bowtie -n 2 -l 18 hg19 -f {0} --quiet -a {1}".format(tmpfile_in,tmpfile_out)
+    GENOME2BIT = os.path.join(GENOMEPATH,"{0}.2bit".format(genome_string))
+
+    #cmd = "bowtie -n 3 -l 18 {2} -f {0} --quiet -a {1}".format(tmpfile_in,tmpfile_out)
+    cmd = "bowtie -n 2 -l 18 {2} -f {0} --quiet -a {1}".format(tmpfile_in,tmpfile_out,genome_string)
     prc = spc.Popen(cmd, shell=True, cwd="/tmp/ramdisk/bowtie-indexes")
     prc.communicate()
 
@@ -109,6 +116,8 @@ def main():
     parser.add_argument('--jobspath','-p',dest="jobspath",
                         type=str,required=True,
                         help="root path for job files IO")
+    parser.add_argument('--genome', '-g', dest="genome",
+                        type=str, required=True)
     
     args = parser.parse_args()
     query =args.query
@@ -119,7 +128,7 @@ def main():
         os.makedirs(job_path)
         
     match_file = os.path.join(job_path, "matches_s{0}.txt".format(args.spacer_id))
-    rows = run_queries([query])
+    rows = run_queries([query],args.genome)
     cols = [ "sequence","chr", "position", "strand","nrg"]
     with open(match_file,'w') as f:
         f.write("\n".join(["\t".join(["{0}".format(args.spacer_id)] + [str(o[c]) for c in cols]) for o in rows]))

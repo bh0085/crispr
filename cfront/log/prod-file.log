@@ -1,0 +1,265 @@
+DEBUG??  False
+commencing file io
+writing f1 at /data/cfront/pjobs/1463/f1.txt
+DONE
+
+writing f2 at /data/cfront/pjobs/1463/f2.txt
+done
+
+running perl /home/ben/v_crispr_design/scripts/annotate_offtarget_sites.pl /data/cfront/pjobs/1463/f1.txt /data/cfront/pjobs/1463/f2.txt /home/ben/v_crispr_design/reference/RefSeq_hg19.txt /data/cfront/pjobs/1463/f3.txt to 
+writing f3 at /data/cfront/pjobs/1463/f3.txt
+done
+writing f4 at /data/cfront/pjobs/1463/f4.txt
+DONE
+
+writing f5 at /data/cfront/pjobs/1463/f5.pdf
+writing f6 at /data/cfront/pjobs/1463/f6.csv
+running cmd:
+  R -f /home/ben/v_crispr_design/scripts/make_graphical_output.R --slave --vanilla --args /data/cfront/pjobs/1463/f4.txt /data/cfront/pjobs/1463/f5.pdf taotao_lao /data/cfront/pjobs/1463/f6.csv
+outval: (None, None)
+DONE
+
+running cmd:
+  perl /home/ben/v_crispr_design/scripts/make_primer3_offtarget_input.pl /data/cfront/pjobs/1463/f6.csv /home/ben/v_crispr_design/reference/human_g1k_v37.fasta /data/cfront/pjobs/1463/f7.in
+wrote output at: /data/cfront/pjobs/1463/f7.in
+DONE
+
+running command: primer3_core -p3_settings_file=/home/ben/v_crispr_design/primer3/primer3-2.3.5/primer3web_v4_0_0_default_settings.txt -output=/data/cfront/pjobs/1463/f8.out /data/cfront/pjobs/1463/f7.in
+writing: /data/cfront/pjobs/1463/f8.out
+DEBUG??  False
+commencing file io
+writing f1 at /data/cfront/pjobs/1463/f1.txt
+DONE
+
+writing f2 at /data/cfront/pjobs/1463/f2.txt
+done
+
+running perl /home/ben/v_crispr_design/scripts/annotate_offtarget_sites.pl /data/cfront/pjobs/1463/f1.txt /data/cfront/pjobs/1463/f2.txt /home/ben/v_crispr_design/reference/RefSeq_hg19.txt /data/cfront/pjobs/1463/f3.txt to 
+writing f3 at /data/cfront/pjobs/1463/f3.txt
+done
+writing f4 at /data/cfront/pjobs/1463/f4.txt
+DONE
+
+writing f5 at /data/cfront/pjobs/1463/f5.pdf
+writing f6 at /data/cfront/pjobs/1463/f6.csv
+running cmd:
+  R -f /home/ben/v_crispr_design/scripts/make_graphical_output.R --slave --vanilla --args /data/cfront/pjobs/1463/f4.txt /data/cfront/pjobs/1463/f5.pdf taotao_lao /data/cfront/pjobs/1463/f6.csv
+outval: (None, None)
+DONE
+
+running cmd:
+  perl /home/ben/v_crispr_design/scripts/make_primer3_offtarget_input.pl /data/cfront/pjobs/1463/f6.csv /home/ben/v_crispr_design/reference/human_g1k_v37.fasta /data/cfront/pjobs/1463/f7.in
+wrote output at: /data/cfront/pjobs/1463/f7.in
+DONE
+
+running command: primer3_core -p3_settings_file=/home/ben/v_crispr_design/primer3/primer3-2.3.5/primer3web_v4_0_0_default_settings.txt -output=/data/cfront/pjobs/1463/f8.out /data/cfront/pjobs/1463/f7.in
+writing: /data/cfront/pjobs/1463/f8.out
+DONE
+
+running command: perl /home/ben/v_crispr_design/scripts/parse_primer3_output.pl /data/cfront/pjobs/1463/f8.out /data/cfront/pjobs/1463/f6.csv /data/cfront/pjobs/1463/f9.csv
+writing: /data/cfront/pjobs/1463/f9.csv
+DONE
+
+send: 'ehlo ZLAB.MIT.EDU\r\n'
+reply: '250-crispr.mit.edu\r\n'
+reply: '250-PIPELINING\r\n'
+reply: '250-SIZE 10240000\r\n'
+reply: '250-VRFY\r\n'
+reply: '250-ETRN\r\n'
+reply: '250-STARTTLS\r\n'
+reply: '250-AUTH PLAIN LOGIN\r\n'
+reply: '250-AUTH=PLAIN LOGIN\r\n'
+reply: '250-ENHANCEDSTATUSCODES\r\n'
+reply: '250-8BITMIME\r\n'
+reply: '250 DSN\r\n'
+reply: retcode (250); Msg: crispr.mit.edu
+PIPELINING
+SIZE 10240000
+VRFY
+ETRN
+STARTTLS
+AUTH PLAIN LOGIN
+AUTH=PLAIN LOGIN
+ENHANCEDSTATUSCODES
+8BITMIME
+DSN
+send: 'mail FROM:<scan@crispr.mit.edu> size=513\r\n'
+reply: '250 2.1.0 Ok\r\n'
+reply: retcode (250); Msg: 2.1.0 Ok
+send: u'rcpt TO:<laott320@gmail.com>\r\n'
+reply: '250 2.1.5 Ok\r\n'
+reply: retcode (250); Msg: 2.1.5 Ok
+send: 'data\r\n'
+reply: '354 End data with <CR><LF>.<CR><LF>\r\n'
+reply: retcode (354); Msg: End data with <CR><LF>.<CR><LF>
+data: (354, 'End data with <CR><LF>.<CR><LF>')
+send: 'Content-Type: multipart/mixed; boundary="===============8630982480012234423=="\r\nMIME-Version: 1.0\r\nFrom: scan@crispr.mit.edu\r\nTo: laott320@gmail.com\r\nSubject: Job Completed at CRISPR.mit.edu\r\n\r\n--===============8630982480012234423==\r\nContent-Type: text/plain; charset="us-ascii"\r\nMIME-Version: 1.0\r\nContent-Transfer-Encoding: 7bit\r\n\r\nYour recent job -- (Taotao Lao) has run to completion at crispr.mit.edu. To see its output, please head over to http://crispr.mit.edu/job/2772651029.\r\n--===============8630982480012234423==--\r\n.\r\n'
+reply: '250 2.0.0 Ok: queued as 0CA0E1920FE0\r\n'
+reply: retcode (250); Msg: 2.0.0 Ok: queued as 0CA0E1920FE0
+data: (250, '2.0.0 Ok: queued as 0CA0E1920FE0')
+send: 'quit\r\n'
+reply: '221 2.0.0 Bye\r\n'
+reply: retcode (221); Msg: 2.0.0 Bye
+DEBUG??  False
+commencing file io
+writing f1 at /data/cfront/pjobs/1464/f1.txt
+DONE
+
+writing f2 at /data/cfront/pjobs/1464/f2.txt
+done
+
+running perl /home/ben/v_crispr_design/scripts/annotate_offtarget_sites.pl /data/cfront/pjobs/1464/f1.txt /data/cfront/pjobs/1464/f2.txt /home/ben/v_crispr_design/reference/RefSeq_hg19.txt /data/cfront/pjobs/1464/f3.txt to 
+writing f3 at /data/cfront/pjobs/1464/f3.txt
+done
+writing f4 at /data/cfront/pjobs/1464/f4.txt
+DONE
+
+writing f5 at /data/cfront/pjobs/1464/f5.pdf
+writing f6 at /data/cfront/pjobs/1464/f6.csv
+running cmd:
+  R -f /home/ben/v_crispr_design/scripts/make_graphical_output.R --slave --vanilla --args /data/cfront/pjobs/1464/f4.txt /data/cfront/pjobs/1464/f5.pdf stephen /data/cfront/pjobs/1464/f6.csv
+outval: (None, None)
+DONE
+
+running cmd:
+  perl /home/ben/v_crispr_design/scripts/make_primer3_offtarget_input.pl /data/cfront/pjobs/1464/f6.csv /home/ben/v_crispr_design/reference/human_g1k_v37.fasta /data/cfront/pjobs/1464/f7.in
+wrote output at: /data/cfront/pjobs/1464/f7.in
+DONE
+
+running command: primer3_core -p3_settings_file=/home/ben/v_crispr_design/primer3/primer3-2.3.5/primer3web_v4_0_0_default_settings.txt -output=/data/cfront/pjobs/1464/f8.out /data/cfront/pjobs/1464/f7.in
+writing: /data/cfront/pjobs/1464/f8.out
+DONE
+
+running command: perl /home/ben/v_crispr_design/scripts/parse_primer3_output.pl /data/cfront/pjobs/1464/f8.out /data/cfront/pjobs/1464/f6.csv /data/cfront/pjobs/1464/f9.csv
+writing: /data/cfront/pjobs/1464/f9.csv
+DONE
+
+send: 'ehlo ZLAB.MIT.EDU\r\n'
+reply: '250-crispr.mit.edu\r\n'
+reply: '250-PIPELINING\r\n'
+reply: '250-SIZE 10240000\r\n'
+reply: '250-VRFY\r\n'
+reply: '250-ETRN\r\n'
+reply: '250-STARTTLS\r\n'
+reply: '250-AUTH PLAIN LOGIN\r\n'
+reply: '250-AUTH=PLAIN LOGIN\r\n'
+reply: '250-ENHANCEDSTATUSCODES\r\n'
+reply: '250-8BITMIME\r\n'
+reply: '250 DSN\r\n'
+reply: retcode (250); Msg: crispr.mit.edu
+PIPELINING
+SIZE 10240000
+VRFY
+ETRN
+STARTTLS
+AUTH PLAIN LOGIN
+AUTH=PLAIN LOGIN
+ENHANCEDSTATUSCODES
+8BITMIME
+DSN
+send: 'mail FROM:<scan@crispr.mit.edu> size=519\r\n'
+reply: '250 2.1.0 Ok\r\n'
+reply: retcode (250); Msg: 2.1.0 Ok
+send: u'rcpt TO:<stephens@sanfordburnham.org>\r\n'
+reply: '250 2.1.5 Ok\r\n'
+reply: retcode (250); Msg: 2.1.5 Ok
+send: 'data\r\n'
+reply: '354 End data with <CR><LF>.<CR><LF>\r\n'
+reply: retcode (354); Msg: End data with <CR><LF>.<CR><LF>
+data: (354, 'End data with <CR><LF>.<CR><LF>')
+send: 'Content-Type: multipart/mixed; boundary="===============8299035856212876780=="\r\nMIME-Version: 1.0\r\nFrom: scan@crispr.mit.edu\r\nTo: stephens@sanfordburnham.org\r\nSubject: Job Completed at CRISPR.mit.edu\r\n\r\n--===============8299035856212876780==\r\nContent-Type: text/plain; charset="us-ascii"\r\nMIME-Version: 1.0\r\nContent-Transfer-Encoding: 7bit\r\n\r\nYour recent job -- (Stephen) has run to completion at crispr.mit.edu. To see its output, please head over to http://crispr.mit.edu/job/8254683169.\r\n--===============8299035856212876780==--\r\n.\r\n'
+reply: '250 2.0.0 Ok: queued as 14B1E1920FE0\r\n'
+reply: retcode (250); Msg: 2.0.0 Ok: queued as 14B1E1920FE0
+data: (250, '2.0.0 Ok: queued as 14B1E1920FE0')
+send: 'quit\r\n'
+reply: '221 2.0.0 Bye\r\n'
+reply: retcode (221); Msg: 2.0.0 Bye
+DEBUG??  False
+commencing file io
+writing f1 at /data/cfront/pjobs/1443/f1.txt
+DONE
+
+writing f2 at /data/cfront/pjobs/1443/f2.txt
+done
+
+running perl /home/ben/v_crispr_design/scripts/annotate_offtarget_sites.pl /data/cfront/pjobs/1443/f1.txt /data/cfront/pjobs/1443/f2.txt /home/ben/v_crispr_design/reference/RefSeq_hg19.txt /data/cfront/pjobs/1443/f3.txt to 
+writing f3 at /data/cfront/pjobs/1443/f3.txt
+done
+writing f4 at /data/cfront/pjobs/1443/f4.txt
+DONE
+
+writing f5 at /data/cfront/pjobs/1443/f5.pdf
+writing f6 at /data/cfront/pjobs/1443/f6.csv
+running cmd:
+  R -f /home/ben/v_crispr_design/scripts/make_graphical_output.R --slave --vanilla --args /data/cfront/pjobs/1443/f4.txt /data/cfront/pjobs/1443/f5.pdf it_ /data/cfront/pjobs/1443/f6.csv
+outval: (None, None)
+DONE
+
+running cmd:
+  perl /home/ben/v_crispr_design/scripts/make_primer3_offtarget_input.pl /data/cfront/pjobs/1443/f6.csv /home/ben/v_crispr_design/reference/human_g1k_v37.fasta /data/cfront/pjobs/1443/f7.in
+DEBUG??  False
+commencing file io
+writing f1 at /data/cfront/pjobs/1443/f1.txt
+DONE
+
+writing f2 at /data/cfront/pjobs/1443/f2.txt
+done
+
+running perl /home/ben/v_crispr_design/scripts/annotate_offtarget_sites.pl /data/cfront/pjobs/1443/f1.txt /data/cfront/pjobs/1443/f2.txt /home/ben/v_crispr_design/reference/RefSeq_hg19.txt /data/cfront/pjobs/1443/f3.txt to 
+writing f3 at /data/cfront/pjobs/1443/f3.txt
+DEBUG??  False
+commencing file io
+writing f1 at /data/cfront/pjobs/1465/f1.txt
+DONE
+
+writing f2 at /data/cfront/pjobs/1465/f2.txt
+done
+
+running perl /home/ben/v_crispr_design/scripts/annotate_offtarget_sites.pl /data/cfront/pjobs/1465/f1.txt /data/cfront/pjobs/1465/f2.txt /home/ben/v_crispr_design/reference/RefSeq_hg19.txt /data/cfront/pjobs/1465/f3.txt to 
+writing f3 at /data/cfront/pjobs/1465/f3.txt
+done
+writing f4 at /data/cfront/pjobs/1465/f4.txt
+DONE
+
+writing f5 at /data/cfront/pjobs/1465/f5.pdf
+writing f6 at /data/cfront/pjobs/1465/f6.csv
+running cmd:
+  R -f /home/ben/v_crispr_design/scripts/make_graphical_output.R --slave --vanilla --args /data/cfront/pjobs/1465/f4.txt /data/cfront/pjobs/1465/f5.pdf john /data/cfront/pjobs/1465/f6.csv
+outval: (None, None)
+DONE
+
+running cmd:
+  perl /home/ben/v_crispr_design/scripts/make_primer3_offtarget_input.pl /data/cfront/pjobs/1465/f6.csv /home/ben/v_crispr_design/reference/human_g1k_v37.fasta /data/cfront/pjobs/1465/f7.in
+wrote output at: /data/cfront/pjobs/1465/f7.in
+DONE
+
+running command: primer3_core -p3_settings_file=/home/ben/v_crispr_design/primer3/primer3-2.3.5/primer3web_v4_0_0_default_settings.txt -output=/data/cfront/pjobs/1465/f8.out /data/cfront/pjobs/1465/f7.in
+writing: /data/cfront/pjobs/1465/f8.out
+DEBUG??  False
+commencing file io
+writing f1 at /data/cfront/pjobs/1465/f1.txt
+DONE
+
+writing f2 at /data/cfront/pjobs/1465/f2.txt
+done
+
+running perl /home/ben/v_crispr_design/scripts/annotate_offtarget_sites.pl /data/cfront/pjobs/1465/f1.txt /data/cfront/pjobs/1465/f2.txt /home/ben/v_crispr_design/reference/RefSeq_hg19.txt /data/cfront/pjobs/1465/f3.txt to 
+writing f3 at /data/cfront/pjobs/1465/f3.txt
+done
+writing f4 at /data/cfront/pjobs/1465/f4.txt
+DONE
+
+writing f5 at /data/cfront/pjobs/1465/f5.pdf
+writing f6 at /data/cfront/pjobs/1465/f6.csv
+running cmd:
+  R -f /home/ben/v_crispr_design/scripts/make_graphical_output.R --slave --vanilla --args /data/cfront/pjobs/1465/f4.txt /data/cfront/pjobs/1465/f5.pdf john /data/cfront/pjobs/1465/f6.csv
+outval: (None, None)
+DONE
+
+running cmd:
+  perl /home/ben/v_crispr_design/scripts/make_primer3_offtarget_input.pl /data/cfront/pjobs/1465/f6.csv /home/ben/v_crispr_design/reference/human_g1k_v37.fasta /data/cfront/pjobs/1465/f7.in
+wrote output at: /data/cfront/pjobs/1465/f7.in
+DONE
+
+running command: primer3_core -p3_settings_file=/home/ben/v_crispr_design/primer3/primer3-2.3.5/primer3web_v4_0_0_default_settings.txt -output=/data/cfront/pjobs/1465/f8.out /data/cfront/pjobs/1465/f7.in
+writing: /data/cfront/pjobs/1465/f8.out

@@ -37,11 +37,14 @@ def main(global_config, **settings):
 
     #page routes
     config.add_route('submit', '/', factory=PageResourceFactory)
+    config.add_route('readonly', '/readonly',factory=PageResourceFactory)
     config.add_route('readout', '/job/{job_key}',factory=PageResourceFactory)
+    config.add_route('nickase', '/nick/{job_key}',factory=PageResourceFactory)
 
     #ajax routes
     config.add_route('job_check_spacers','/j/check_spacers/{job_key}',factory=JobResourceFactory)
     config.add_route('job_post_new', '/j/post_new')
+    config.add_route('job_from_spacers', '/j/from_spacers')
     config.add_route('job_retrieve_spacers', '/j/retrieve_spacers/{job_key}',factory=JobResourceFactory)
     config.add_route('job_email_complete', '/j/email_complete/{job_key}',factory=JobResourceFactory)
 

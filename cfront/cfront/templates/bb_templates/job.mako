@@ -25,12 +25,12 @@
 	<div class="bar" style="width: 0%;"></div>
       </div>
       <div style="white-space:nowrap;">
-	STATUS: <span class="text">locating guides... should take a couple of seconds</span>
+	<span class="text">locating guides... should take a couple of seconds</span>
       </div>
     </div>
     
     <!-- files download area -->
-    <div class="files-area"></div>
+    <div id="downloadable" class="files-area"></div>
     
     <!-- svg drawing area -->
     <div class="header"><span class="section-name">Interactive results: </span><span class="annotation med-left-margin">mouse over a guide or explore below for details</div>

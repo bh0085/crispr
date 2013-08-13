@@ -11,7 +11,6 @@ JobV = Backbone.View.extend({
 	this.binder = new Backbone.EventBinder()
     },   
     update_status:function(){
-	
 	var done_count = _.filter(this.model.get("spacers").models,function(e){return e.get("computed_hits")}).length
 	var total_count = this.model.get("spacers").length
 	
@@ -20,14 +19,21 @@ JobV = Backbone.View.extend({
 	    frac = .33 + .33*(done_count/total_count)
 	}  else if(!current_job.get("files_ready")){
 	    ndone = _.filter(this.model.get("files").models,function(m){return m.get('ready')}).length
-	    this.$(".status .text").empty().append($("<span>").text("offtargets scored, compiling downloadable files ("+ndone + "/3)"))
-	    frac = .66 + .33 * ndone /3
+	    this.$(".status .text").empty().append($("<span>")
+						   .append($("<p>").text('now running primer design to generate ')
+				.append($("<a>",{href:"#downloadable"})
+					.text('Downloadable results'))
+			       )
+						   .append($("<p>").text("this step may take several minutes ("+ndone + " of 2 files ready)"))
+						   .append($("<p>").text('Interactive results are ready '))
+
+						  )
+	    frac = .66 + .33 * ndone /2
 	} else {
 	    frac = 1
 	} 
 	this.$(".status").toggleClass("done",current_job.get("files_ready")?true:false);
 	this.$(".status .progress .bar").css("width"," "+ (frac * 100)+"%");
-
     },
     render:function(){
 	this.left_f = .25;
@@ -167,11 +173,13 @@ JobV = Backbone.View.extend({
 	p.lineTo(this.canvas_w,halfint((top_plus+top_minus)/2))
 	this.svg.path(p,{stroke:"lightgray", strokeWidth:1})
 	top_avg =halfint((top_plus+top_minus)/2)
-	this.svg.text(null,0,-5+(top_plus+top_minus)/2,"hg19 " + current_job.get("chr"))
+	this.svg.text(null,0,-5+(top_plus+top_minus)/2,current_job.get("genome_name")+" " + (current_job.get("mapped") ? current_job.get("chr") : "unmapped") )
 
 	//p = this.svg.line(null,left-3,top_avg-15, left-3, top_avg+15,{stroke:"lightgray",strokeWidth:1})
-	t = this.svg.text(null,left-3,top_avg-5,"+"+this.model.get("start"),{"textAnchor":"end"})
-	t = this.svg.text(null,right+3,top_avg+10,"-"+(this.model.get("start")+this.model.get("sequence").length))
+	t = this.svg.text(null,left-3,top_avg-5,"+"+
+			  (current_job.get("mapped") ? this.model.get("start") : "??"),{"textAnchor":"end"})
+	t = this.svg.text(null,right+3,top_avg+10,"-"+
+			   (current_job.get("mapped") ? this.model.get("start") : "??"))
 
 	p = this.svg.createPath();
 	p.moveTo(left, top_plus)
@@ -186,13 +194,11 @@ JobV = Backbone.View.extend({
     draw_query_spacer:function(spacer){
 	var opts, left, right,top, input_sequence, left_f, right_f;
 	input_sequence = spacer.get("job").get("sequence")
+	left_f_rel = spacer.get("start") /input_sequence.length;
+	right_f_rel = (spacer.get("start") +23) / input_sequence.length;
 	if(spacer.get("strand")==1){
-	    left_f_rel = spacer.get("start") /input_sequence.length;
-	    right_f_rel = (spacer.get("start") +23) / input_sequence.length;
 	    top =halfint( this.canvas_h / 2 - this.strand_ofs - this.collision_ofs*(this.collisions[spacer.id] + 1))
 	} else {
-	    left_f_rel = (input_sequence.length - spacer.get("start") - 23) / input_sequence.length;
-	    right_f_rel = ( input_sequence.length - spacer.get("start")) / input_sequence.length;
 	    top =halfint(this.canvas_h/2 + this.strand_ofs + this.collision_ofs * (this.collisions[spacer.id] + 1))
 	}
 
@@ -267,7 +273,6 @@ JobSV = Backbone.View.extend({
 	       $.proxy(function(e){
 		   this.spacers.add(e)
 		   e.on("change:score",function(e){
-		       console.log("noticed score change to: ",e.get("score"))
 		       this.spacers.remove(e);
 		       this.spacers.add(e);
 		   },this)
@@ -276,7 +281,6 @@ JobSV = Backbone.View.extend({
     },
     add_one:function(spacer){
 	var view, $parent
-	console.log("added ",spacer.id)
 	view = new SpacerListV({model:spacer})
 	this.views_by_id[spacer.id] = view;
 	idx = this.spacers.indexOf(spacer)
@@ -285,7 +289,6 @@ JobSV = Backbone.View.extend({
 	else {this.$(".views").prepend(view.render().$el)}
     },
     remove_one:function(spacer){
-	console.log("removed ",spacer.id)
 	var v = this.views_by_id[spacer.id]
 	delete this.views_by_id[spacer.id]
 	v.remove()

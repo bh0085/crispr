@@ -38,15 +38,9 @@
     <%include file="bb_templates/readout.mako"/>
     <%include file="bb_templates/submit.mako"/>
     <%include file="bb_templates/file.mako"/>
+    <%include file="bb_templates/nickase.mako"/>
     <script type="text/javascript" src="/js/pages/base.js"></script>
-
-    %if request.matched_route.name == "submit":
-    <script type="text/javascript" src="/js/pages/submit.js"></script>
-    %elif request.matched_route.name == "readout":
-    <script type="text/javascript" src="/js/pages/readout.js"></script>
-    %endif
-
-
+    <script type="text/javascript" src="/js/pages/${request.matched_route.name}.js"></script>
     <script type="text/javascript" src="/js/app/constants.js"></script>
     <script type="text/javascript" src="/js/app/delegates.js"></script>
     <script type="text/javascript" src="/js/app/url.js"></script>
@@ -66,7 +60,9 @@
       <%include file="navbar.mako"/>
     </div>
     
-    <%block name="content_html"/>
+    <div id=${request.matched_route.name}-container>
+    </div>
+
     <div class="footer">Zhang Lab, MIT 2013</div> 
   </body> 
 </html>
