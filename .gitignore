@@ -6,4 +6,5 @@ cfront/venv
 #*
 .#*
 .sass-cache
+cfront/log
 cfront/cfront/static/files
