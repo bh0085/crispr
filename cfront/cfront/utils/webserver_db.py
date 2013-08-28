@@ -94,7 +94,7 @@ def compute_spacers(sequence):
     fwd = sequence
     rev = reverse_complement(sequence)
     
-    expression = re.compile(".{20}[ATGC][GA][G]")
+    expression = re.compile(".{20}[ATGC]GG")
     infos = []
     for m in re.finditer(expression, fwd):
         infos.append(dict(sequence = m.group(),

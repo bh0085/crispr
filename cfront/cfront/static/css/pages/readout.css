@@ -1,0 +1,42 @@
+.left {
+  text-align: left; }
+
+.center {
+  text-align: center; }
+
+.med-left-margin {
+  margin-left: 20px; }
+
+.med-top-margin {
+  margin-top: 20px; }
+
+.small-left-margin {
+  margin-left: 1em; }
+
+th {
+  padding-left: 5px;
+  padding-right: 5px; }
+
+svg {
+  font-family: courier;
+  font-size: 10px; }
+
+.dna {
+  font-family: courier; }
+
+.locus {
+  font-family: courier; }
+
+.nrg {
+  color: green;
+  font-weight: bold; }
+
+.occupied {
+  color: rgba(0, 0, 0, 0.75);
+  text-decoration: underline; }
+
+.break-all {
+  word-break: break-all; }
+
+.hover {
+  display: none; }

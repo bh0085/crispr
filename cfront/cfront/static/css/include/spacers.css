@@ -1,0 +1,124 @@
+.high-quality {
+  border-left: 5px solid green; }
+
+.medium-quality {
+  border-left: 5px solid yellow; }
+
+.low-quality {
+  border-left: 5px solid red; }
+
+.no-quality {
+  border-left: 5px solid lightgrey; }
+
+.guide-quality {
+  box-sizing: border-box;
+  width: 100%;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px; }
+  .guide-quality > div {
+    padding-left: 10px; }
+
+.annotation {
+  opacity: 0.4; }
+
+.spacer-v-container {
+  margin-left: 20px; }
+
+.spacers-area {
+  white-space: nowrap; }
+  .spacers-area .col {
+    box-sizing: border-box;
+    position: relative;
+    height: 100%;
+    display: inline-block;
+    vertical-align: text-top; }
+    .spacers-area .col.left {
+      width: 400px;
+      padding-left: 20px;
+      z-index: 1; }
+    .spacers-area .col.right {
+      width: 100%;
+      margin-left: -400px;
+      padding-right: 20px;
+      padding-left: 420px;
+      z-index: 0; }
+
+.job-spacer-list-v {
+  border-right: 1px dotted rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+  min-height: 600px; }
+  .job-spacer-list-v table {
+    width: 100%;
+    margin-right: 10px; }
+    .job-spacer-list-v table tr.spacer-list-v {
+      border-bottom-width: 0px;
+      border-left-width: 5px;
+      border-top-width: 0px; }
+      .job-spacer-list-v table tr.spacer-list-v.active {
+        border-right: 1px solid black;
+        background-color: rgba(0, 0, 0, 0.05); }
+      .job-spacer-list-v table tr.spacer-list-v th, .job-spacer-list-v table tr.spacer-list-v td {
+        padding-left: 10px; }
+        .job-spacer-list-v table tr.spacer-list-v th:not(:last-child), .job-spacer-list-v table tr.spacer-list-v td:not(:last-child) {
+          padding-right: 10px; }
+      .job-spacer-list-v table tr.spacer-list-v th {
+        text-align: center; }
+
+.qscore {
+  font-weight: bold;
+  color: blue; }
+
+.spacer-h-v-container .info {
+  display: inline-block; }
+  .spacer-h-v-container .info dl.header {
+    margin-top: 8px;
+    margin-bottom: 8px; }
+  .spacer-h-v-container .info dl {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    display: inline-block;
+    box-sizing: border-box; }
+    .spacer-h-v-container .info dl dt, .spacer-h-v-container .info dl dd {
+      display: inline; }
+    .spacer-h-v-container .info dl dt:not(:first-child) {
+      margin-left: 15px;
+      font-weight: bold; }
+    .spacer-h-v-container .info dl dd {
+      margin-left: 2px; }
+.spacer-h-v-container .spacer-h-view .table-type-selection {
+  display: block; }
+  .spacer-h-v-container .spacer-h-view .table-type-selection .hspace-80 {
+    height: 0px;
+    vertical-align: middle;
+    margin-left: 20px;
+    margin-right: 10px;
+    border-top: 1px dotted rgba(0, 0, 0, 0.25);
+    width: 140px;
+    display: inline-block; }
+  .spacer-h-v-container .spacer-h-view .table-type-selection input {
+    margin-top: -1px;
+    margin-right: 10px;
+    margin-left: 10px; }
+.spacer-h-v-container .spacer-h-view .hits {
+  margin-top: 20px; }
+  .spacer-h-v-container .spacer-h-view .hits.top table.gene {
+    display: none; }
+  .spacer-h-v-container .spacer-h-view .hits.gene table.top {
+    display: none; }
+  .spacer-h-v-container .spacer-h-view .hits table {
+    width: 100%; }
+    .spacer-h-v-container .spacer-h-view .hits table th, .spacer-h-v-container .spacer-h-view .hits table td {
+      padding-right: 10px; }
+      .spacer-h-v-container .spacer-h-view .hits table th:nth-child(even), .spacer-h-v-container .spacer-h-view .hits table td:nth-child(even) {
+        background-color: rgba(0, 0, 0, 0.02); }
+      .spacer-h-v-container .spacer-h-view .hits table th:not(:first-child), .spacer-h-v-container .spacer-h-view .hits table td:not(:first-child) {
+        padding-left: 10px; }
+    .spacer-h-v-container .spacer-h-view .hits table th {
+      text-align: center; }
+    .spacer-h-v-container .spacer-h-view .hits table td {
+      font-family: courier;
+      white-space: nowrap; }
+      .spacer-h-v-container .spacer-h-view .hits table td.sequence, .spacer-h-v-container .spacer-h-view .hits table td.score, .spacer-h-v-container .spacer-h-view .hits table td.locus, .spacer-h-v-container .spacer-h-view .hits table td.gene {
+        text-align: center; }

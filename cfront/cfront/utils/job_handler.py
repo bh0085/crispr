@@ -52,56 +52,20 @@ def process_queue():
     
     #starts a transaction to compute hits for any spacer which has not
     # "computed_hits" or "computing_hits"
-    for j in Session.query(Spacer)\
-                    .filter(Spacer.computing_hits == False)\
+    for j in Session.query(Job)\
+                    .join(Spacer)\
                     .filter(Spacer.score == None)\
-                    .join(Job)\
                     .filter(Job.failed == False)\
                     .order_by(Job.id.desc()).limit(3).all():
 
-        print "computing hits for spacer {0}".format(s.id)
         with transaction.manager:
             try:
-                if not s in Session: s = Session.merge(s)
-                if s.job.failed: 
-                    print "j failed, continuing"
-                    continue
-                    
-                genome_db.compute_hits(s.id)
-                s.computing_hits = True
-                Session.add(s)
+                if not j in Session: j = Session.merge(j)
+                print "COMPUTING HITS for job: {0}".format(j.id)
+                genome_db.compute_hits(j.id)
+                Session.add(j)
             except JobERR, e:
                 print "excepted a job/spacer error on COMPUTE for job {0}".format(s.job.id)
-
-    for s in Session.query(Spacer).join(Job)\
-                             .filter(Spacer.score == None)\
-                             .filter(Job.failed != True)\
-                             .order_by(Job.id.desc()).limit(3).all():
-
-        #opens up a transaction for each spacer.
-        #genome_db will enter hits and modify s in the Session
-
-        print "entering hits for spacer {0}".format(s.id)
-        with transaction.manager:
-            try:
-            
-                ready = genome_db.check_hits(s.id)
-                if not ready:
-                    continue
-                if s not in Session: s = Session.merge(s)
-                
-                #check to see if another spacer computation has caused the job to fail...
-                if s.job.failed:
-                    print "marked job failed for: {0}, SKIPPING (job {1})".format(s.id,s.job.id)
-                    continue
-                else:
-                    print "entering spacer: {0}".format(s.id)
-                    
-                genome_db.enter_hits(s)
-
-            except JobERR, e:
-                print "excepted a job/spacer on ENTRY for job {0}".format(s.job.id)
-
 
 
 def main():

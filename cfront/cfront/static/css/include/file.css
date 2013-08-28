@@ -1,0 +1,18 @@
+.file-list-v {
+  min-height: 10px;
+  width: 100%;
+  box-sizing: border-box;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  border-top: 1px rgba(0, 0, 0, 0.05) solid;
+  border-bottom: 1px rgba(0, 0, 0, 0.05) solid;
+  margin-top: 15px;
+  margin-bottom: 10px; }
+  .file-list-v .files {
+    margin-left: 20px; }
+    .file-list-v .files .file-v {
+      margin-left: 10px; }
+      .file-list-v .files .file-v:not(.ready) {
+        pointer-events: none; }
+        .file-list-v .files .file-v:not(.ready) a {
+          color: rgba(0, 0, 0, 0.3); }

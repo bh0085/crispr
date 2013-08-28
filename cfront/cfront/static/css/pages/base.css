@@ -4,29 +4,51 @@
   padding-top: 1em;
   text-align: center; }
 
+.inline {
+  display: inline; }
+
+.alert .content {
+  max-width: 300px;
+  margin: 0 auto; }
+
 .unselectable {
   -moz-user-select: -moz-none;
   -khtml-user-select: none;
   -webkit-user-select: none;
   user-select: none; }
 
+.disabled {
+  color: lightgray;
+  cursor: not-allowed; }
+
 .sequence {
   font-family: courier; }
 
+.v-middle {
+  vertical-align: middle; }
+
+.valid {
+  position: fixed;
+  width: 200px;
+  right: 0px;
+  background-color: #FEFEFE;
+  border: 1px solid lightgrey;
+  padding: 20px;
+  margin: 25px;
+  bottom: 0px; }
+  .valid .dna {
+    word-break: break-all; }
+  .valid li {
+    margin-top: 10px; }
+
+.showing-less > .more {
+  display: none; }
+
+.showing-more > .less {
+  display: none; }
+
 body .navbar li > a, body .navbar .brand {
   color: black; }
-body .scrolly-column .scrolly-section {
-  min-height: 300px;
-  margin-left: 20px;
-  margin-bottom: 100px; }
-  body .scrolly-column .scrolly-section:first-child .header-back {
-    display: none; }
-  body .scrolly-column .scrolly-section .header-oneword {
-    display: inline; }
-  body .scrolly-column .scrolly-section .header-description {
-    display: inline;
-    vertical-align: bottom;
-    margin-left: 1em; }
 
 .section {
   padding: .5em;

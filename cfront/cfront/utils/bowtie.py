@@ -6,32 +6,31 @@ import twobitreader
 from cfront import cfront_settings
 
 #ROOT = os.environ["HOME"]
-DATAPATH = os.environ["CFRONTDATA"]
 
 TMPPATH = "/tmp/ramdisk/cfront/bowtie"
 if not os.path.isdir(TMPPATH):
     os.makedirs(TMPPATH)
 GENOMEPATH = "/tmp/ramdisk/genomes/"
 
-def run_queries(queries, genome):
-
+def run_queries(spacers,  genome):
+    print "RUNNING QUERIES"
+    queries = [s.guide for s in spacers]
     tmpfile_in = os.path.join(TMPPATH,"tmpfile_{0}.fa".format(int(random.random() * 1e10)))
     tmpfile_out = os.path.join(TMPPATH,"tmpfile_{0}.out".format(int(random.random() * 1e10)))
         
     records = []
-    for i,q in enumerate(queries):
-        if len(q) != 20:
-            raise Exception("demands queries of length 20")
-        
-        records.extend([SeqRecord.SeqRecord(Seq.Seq( q[5:] + n + r + "G"), 
-                                            id="query_{0}".format(i),
+    for i,s in enumerate(spacers):
+        records.extend([SeqRecord.SeqRecord(Seq.Seq( s.guide[5:] + n + r + "G"), 
+                                            id="query_{0}".format(s.id),
                                             description="")  
-                        for n in "ATGC" for r in "GA"])
+                        for n in "N" for r in "GA"])
 
     with open(tmpfile_in,'w') as f:
         f.writelines([r.format("fasta") for r in records])
 
-        
+    print "\n".join([r.format("fasta") for r in records])
+
+
     if genome=="HUMAN":
         genome_string = "hg19"
     elif genome=="MOUSE":
@@ -40,19 +39,22 @@ def run_queries(queries, genome):
         raise Exception("NO SUCH GENOME {0}".format(genome))
 
     GENOME2BIT = os.path.join(GENOMEPATH,"{0}.2bit".format(genome_string))
+    
 
     #cmd = "bowtie -n 3 -l 18 {2} -f {0} --quiet -a {1}".format(tmpfile_in,tmpfile_out)
-    cmd = "bowtie -n 2 -l 18 {2} -f {0} --quiet -a {1}".format(tmpfile_in,tmpfile_out,genome_string)
+    cmd = "bowtie -p 8 -y -n 2 -a {2} -f {0} --quiet {1}".format(tmpfile_in,tmpfile_out,genome_string)
+
+    print cmd
     prc = spc.Popen(cmd, shell=True, cwd="/tmp/ramdisk/bowtie-indexes")
     prc.communicate()
 
     with open(tmpfile_out) as f:
         lines = f.readlines()
         
-    os.remove(tmpfile_in)
+    #os.remove(tmpfile_in)
     os.remove(tmpfile_out)
 
-    rows = [dict(zip(["spacer_id","strand","chr","position","sequence","alignment","mismatch","mistmatch_pos"] , l.split("\t") )) for l in lines]
+    rows = [dict(zip(["query_id","strand","chr","position","sequence","alignment","mismatch","mistmatch_pos"] , l.split("\t") )) for l in lines]
 
 
     tbf = twobitreader.TwoBitFile(GENOME2BIT)
@@ -83,9 +85,12 @@ def run_queries(queries, genome):
         r["nrg"] = context[-3:].upper()
         r["context"] = context.upper()
         r["chr"] = r["chr"]
+        r["spacer_id"] = int(r["query_id"][6:])
         
         if r["nrg"][-2:] == "AG" or r["nrg"][-2:] == "GG":
             out.append(r)
+
+    print "RAN QUERIES"
 
     return out
 

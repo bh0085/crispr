@@ -5,5 +5,5 @@ from spacer import Spacer
 from hit import Hit
 from bad_job import BadJob
 
-Spacer.job = relation(Job,backref=backref("spacers", cascade="all,delete"))
-Hit.spacer = relation(Spacer,backref=backref("hits", cascade="all,delete"))
+Spacer.job = relation(Job,backref=backref("spacers", cascade="all, delete, delete-orphan"))
+Hit.spacer = relation(Spacer,backref=backref("hits", cascade="all, delete, delete-orphan"))

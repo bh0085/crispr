@@ -41,9 +41,9 @@ def commence_file_io(job_id):
         job.files_failed = True
     job.files_computing = False
 
-    if job.email_complete:
-        if not cfront_settings.get("debug_mode",False):
-            mail.mail_completed_job(None, job)
+    #if job.email_complete:
+    #    if not cfront_settings.get("debug_mode",False):
+    #        mail.mail_completed_job(None, job)
 
 
 

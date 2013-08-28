@@ -4,29 +4,51 @@
   padding-top: 1em;
   text-align: center; }
 
+.inline {
+  display: inline; }
+
+.alert .content {
+  max-width: 300px;
+  margin: 0 auto; }
+
 .unselectable {
   -moz-user-select: -moz-none;
   -khtml-user-select: none;
   -webkit-user-select: none;
   user-select: none; }
 
+.disabled {
+  color: lightgray;
+  cursor: not-allowed; }
+
 .sequence {
   font-family: courier; }
 
+.v-middle {
+  vertical-align: middle; }
+
+.valid {
+  position: fixed;
+  width: 200px;
+  right: 0px;
+  background-color: #FEFEFE;
+  border: 1px solid lightgrey;
+  padding: 20px;
+  margin: 25px;
+  bottom: 0px; }
+  .valid .dna {
+    word-break: break-all; }
+  .valid li {
+    margin-top: 10px; }
+
+.showing-less > .more {
+  display: none; }
+
+.showing-more > .less {
+  display: none; }
+
 body .navbar li > a, body .navbar .brand {
   color: black; }
-body .scrolly-column .scrolly-section {
-  min-height: 300px;
-  margin-left: 20px;
-  margin-bottom: 100px; }
-  body .scrolly-column .scrolly-section:first-child .header-back {
-    display: none; }
-  body .scrolly-column .scrolly-section .header-oneword {
-    display: inline; }
-  body .scrolly-column .scrolly-section .header-description {
-    display: inline;
-    vertical-align: bottom;
-    margin-left: 1em; }
 
 .section {
   padding: .5em;
@@ -96,3 +118,58 @@ body .scrolly-column .scrolly-section {
 
 a {
   cursor: pointer; }
+
+.left {
+  text-align: left; }
+
+.center {
+  text-align: center; }
+
+.med-left-margin {
+  margin-left: 20px; }
+
+.med-top-margin {
+  margin-top: 20px; }
+
+.small-left-margin {
+  margin-left: 1em; }
+
+th {
+  padding-left: 5px;
+  padding-right: 5px; }
+
+svg {
+  font-family: courier;
+  font-size: 10px; }
+
+.dna {
+  font-family: courier; }
+
+.locus {
+  font-family: courier; }
+
+.nrg {
+  color: green;
+  font-weight: bold; }
+
+.occupied {
+  color: rgba(0, 0, 0, 0.75);
+  text-decoration: underline; }
+
+.break-all {
+  word-break: break-all; }
+
+.hover {
+  display: none; }
+
+#sequence_submission_area {
+  min-width: 400px; }
+
+#submit {
+  margin-left: 100px; }
+
+form.submitted {
+  cursor: wait; }
+  form.submitted .submit-group input {
+    pointer-events: none;
+    opacity: .5; }
