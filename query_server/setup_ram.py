@@ -79,6 +79,7 @@ def save_flatfile(table, nlines):
 
 def load_flatfile(table, nlines):
     RD_PATH = os.path.join(RD_DATAROOT,"{0}_{1}.npy".format(table,nlines))
+
     
     times = [utcnow()]
     with open(RD_PATH) as f:
@@ -93,15 +94,33 @@ def load_flatfile(table, nlines):
         match = re.compile( "(?P<id>.*)\n(?P<guide>\S{20})\s*(?P<nrg>\S{3})",re.M).search(e)
         tests.append(match.groupdict())
 
-    tests_array = np.array([translate(e["guide"]) for e in tests])
+    tests_array = np.array([translate(e["guide"]) for e in tests ])
     times +=[utcnow()]
-    min_matches = 12
-    sims_1 = np.greater_equal(np.sum(np.equal(all_seqs-tests_array[np.newaxis,,:],0)),min_matches)
-    times +=[utcnow()]
-    matches_1 = np.nonzero(sims_1)
-    times+= [utcnow()]
+    min_matches = 15
+    
+    method = "cdist"
+    if method=="numpy":
+        sims_1 = np.greater_equal(np.sum(np.equal(all_seqs[:,np.newaxis,:]-tests_array[np.newaxis,:,:],0),2),min_matches)
+        times +=[utcnow()]
+        matches_1 = np.nonzero(sims_1)
+        times+= [utcnow()]
+    elif method == "cdist":
+        from scipy.spatial.distance import cdist
+        dists = cdist(all_seqs, tests_array, 'hamming')
+        times +=[utcnow()]
+        matches_bool = np.less_equal(dists, float((20 - min_matches)) /20)
+        print dists[:10]
+        matches_1 = np.nonzero(matches_bool)
+        times+= [utcnow()]
+        
+    
+
+    print np.shape(matches_1), np.shape(dists)
+    print "n_matches: {0} ({1}queries) (<{2}MM".format(  sum(len(e) for e in matches_1) , len(tests_array), min_matches )
     print "computed one sims (matches) in {0} ({1})".format(times[-2] - times[-3],
                                                             times[-1] - times[-2])
+
+
     
 def compute_similarities(table, nlines):
     global cur

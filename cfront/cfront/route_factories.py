@@ -32,9 +32,11 @@ class JobResourceFactory(Res):
 
 class PageResourceFactory(Res):
     def __init__(self,request):
+        print  cfront_settings.get("maintenance_mode", False)
         if "job_key" in request.matchdict:
             set_request_job(request)
             
+        
         if cfront_settings.get("maintenance_mode", False):
             if not "sorry" in request.url:
                 raise exc.HTTPFound(request.route_url("maintainance")) 

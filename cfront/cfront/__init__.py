@@ -17,10 +17,12 @@ def set_cfront_settings(settings, prefix):
             cfront_settings[k[len(prefix):]] = (v.lower()=='true') \
                                          if v.lower() in ['true', 'false'] else v
 
+
 def main(global_config, **settings):
     """ 
     This function returns a Pyramid WSGI application.
     """
+    import inspect
     set_cfront_settings(settings, 'cfront.')
 
     engine = engine_from_config(settings, 'sqlalchemy.')
