@@ -15,6 +15,7 @@ requires = [
     'zope.sqlalchemy',
     'waitress',
     'psycopg2',
+    'cython',
     ]
 
 setup(name='cfront',
@@ -41,5 +42,6 @@ setup(name='cfront',
       main = cfront:main
       [console_scripts]
       initialize_cfront_db = cfront.scripts.initializedb:main
+      initialize_genomes = cfront.scripts.install_genomes:main
       """,
       )

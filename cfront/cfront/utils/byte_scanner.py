@@ -4,7 +4,7 @@ import psycopg2
 from scipy import sparse
 import argparse
 import os, numpy as np, pickle, re
-import datetime
+import datetime, StringIO
 utcnow = datetime.datetime.utcnow
 
 global ltests
@@ -55,7 +55,7 @@ def library_file(genome):
     return LIBRARY_BYTES_PATH
 
 def reference_file(genome):
-    REFERENCE_PATH =  os.path.join(RD_DATAROOT,"{0}_{1}_reference.pickle".format(genome))
+    REFERENCE_PATH =  os.path.join(RD_DATAROOT,"{0}_reference.pickle".format(genome))
     return REFERENCE_PATH
 
 def init_library_bytes(genome):
@@ -79,24 +79,56 @@ def init_library_bytes(genome):
 
     with open(LIBRARY_BYTES_PATH,'w') as f:
         np.save(f, bytes_array)
-    print "saved lines to a bytes array at {1}".format(LIBRARY_BYTES_PATH)
+    print "saved lines to a bytes array at {0}".format(LIBRARY_BYTES_PATH)
     
 def init_reference_dictionary(genome):
     REFERENCE_PATH = reference_file(genome)
-    lines = []
+
+    conn = psycopg2.connect("dbname=vineeta user=ben password=random12345")
+    cur = conn.cursor()
+    
+    init_table = """
+    DROP TABLE IF EXISTS loc_references_{0};
+    CREATE TABLE loc_references_{0} (
+    id int PRIMARY KEY,
+    strand SMALLINT not null,
+    chr  VARCHAR(25) not null,
+    sequence VARCHAR(20) not null,
+    nrg VARCHAR(3) not null,
+    start INT not null
+    );""".format(genome)
+
+    cur.execute(init_table);
+    buf = StringIO.StringIO()
+    cols = ["id","chr", "start", "strand", "sequence", "nrg"] 
+
     with open(raw_locs_file(genome)) as f:
-        for l in f:
+        for i,l in enumerate(f):
             d = dict(zip(["chr","start","strand","sequence"],
                                   [e.strip() for e in l.split("\t")]))
             d["nrg"] = d["sequence"][-3:]
             d["sequence"] = d["sequence"][:-3]
-
-            lines.append(d)
-                    
+            d["chr"] = d["chr"] if d["chr"][0:3] == "chr" else "chr" + d["chr"]
+            d["strand"] = 1 if d["strand"] == "+" else -1
+        
+            buffered_row = "\t".join([str(i)] + [str(d[key]) for key in cols[1:]]) + "\n"
+            buf.write(buffered_row)
+            
             if i %1e6 == 0:
+                buf.seek(0)
+                cur.copy_from(buf,"loc_references_{0}".format(genome), columns = cols)
+                buf.close()
+                buf = StringIO.StringIO()
                 print "{0} millions of lines of reference written".format(i/1e6)
-    with open(REFERENCE_PATH, 'w') as f:
-        pickle.dump(lines, f)
+
+    buf.seek(0)
+    cur.copy_from(buf,"loc_references_{0}".format(genome), columns = cols)
+    buf.close()
+    conn.commit()
+            
+
+
+
     
 def run_sequence_vs_genome(sequence, genome):
     if not genome == "hg19":
@@ -109,8 +141,10 @@ def run_sequence_vs_genome(sequence, genome):
     
     #inits library if required
     if not lfpath:
+        print "no library bytes set. creating"
         init_library_bytes(genome)
     if not os.path.isfile(rfpath):
+        print "no reference dictionary. creating."
         init_reference_dictionary(genome)
         
     #loads and queries the correct genomewide library
@@ -160,9 +194,11 @@ def main():
     
     args = parser.parse_args()
 
+    if args.program == "test":
+        run_sequence_vs_genome("GGCTGCTGTCAGGGAGCTCA",args.genome)
     if args.program == "init":
-        init_library_bytes(args.genome)
-        init_library_bytes(args.genome)
+        #init_library_bytes(args.genome)
+        init_reference_dictionary(args.genome)
     elif args.program == "query":
         query_library_bytes(args.genome, sample_sequence())
 

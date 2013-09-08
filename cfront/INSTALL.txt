@@ -1,6 +1,0 @@
-# Installation notes for
-## Webserver
-
-## Exon databases
-
-##

@@ -3,21 +3,25 @@
 Configures exon databases used by the CRISPR server to get labels for offtarget hits. 
 '''
 
-
 import os, StringIO
 import psycopg2    
 import random
-             
+
+from cfront import genomes_settings
 
 def genes_file(genome_name):
-    path = os.path.join(os.environ["HOME"],"data/zlab/ben/ucsc/{0}-genes.tsv".format(genome_name))
+    path = genomes_settings.get("ucsc_tsv_template").format(genome_name)
     if not os.path.isfile(path):
-        raise Exception("unsupported genome (file ucsc file does not exist) at\n {0}".format(path))
+        raise Exception("unsupported genome (file ucsc file does not exist) at\n {0}"\
+                        .format(path))
 
 #simple code takes every one of a list of hits and runs a SQL query on an indexed
 #database containing all UCSC exons.
 def get_hit_genes(hits, genome_name):
-    conn = psycopg2.connect("dbname=vineeta user=ben password=random12345")
+    conn = psycopg2.connect("dbname={0} user={1} password={2}"\
+                            .format(genomes_settings.get("postgres_database"),
+                                    genomes_settings.get("postgres_user"),
+                                    genomes_settings.get("postgres_password")))
     cur = conn.cursor()
 
 
@@ -44,7 +48,6 @@ def get_hit_genes(hits, genome_name):
                 "exon_{0}".format(genome_name),
                 genome_name,
                 updates,
-                
         )    
     
     cur.execute(cmd)
@@ -52,7 +55,7 @@ def get_hit_genes(hits, genome_name):
     conn.close()
       
     hits_by_id = dict([(h.id, h) for h in hits])
-    genes_by_hitid = dict[(h.id, None) for h in hits])
+    genes_by_hitid = dict([(h.id, None) for h in hits])
     for r in results:
         h = hits_by_id[r[0]]
         if h.chr == r[2]:
@@ -64,7 +67,10 @@ def get_hit_genes(hits, genome_name):
 
 
 def populate_exons(genome_name):
-    conn = psycopg2.connect("dbname=vineeta user=ben password=random12345")
+    conn = psycopg2.connect("dbname={0} user={1} password={2}"\
+                            .format(genomes_settings.get("postgres_database"),
+                                    genomes_settings.get("postgres_user"),
+                                    genomes_settings.get("postgres_password")))
     cur = conn.cursor()
 
     init_table = """
@@ -117,7 +123,10 @@ def populate_exons(genome_name):
     conn.commit()
 
 def create_indexes(genome_name):
-    conn = psycopg2.connect("dbname=vineeta user=ben password=random12345")
+    conn = psycopg2.connect("dbname={0} user={1} password={2}"\
+                            .format(genomes_settings.get("postgres_database"),
+                                    genomes_settings.get("postgres_user"),
+                                    genomes_settings.get("postgres_password")))
     cur = conn.cursor()
     cur.execute("""
     CREATE INDEX exon_start_idx ON exon_{0}(exon_start);
@@ -135,7 +144,7 @@ if __name__ =="__main__":
 
     parser.add_argument('--genome', '-g', dest = "genome_name",
                         default="hg19", type = str,
-                        help = "genome name [hg19 ...]")
+                        help = "genome name [...]")
     parser.add_argument('--program', '-p', dest = "program",
                         default="init", type= str,
                         help = "program to run [init]")

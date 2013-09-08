@@ -7,78 +7,16 @@ import genome_io as gio
 import random
 import itertools as it
 from cfront import cfront_settings
-import bowtie
 
 from Bio import SeqRecord as sr, Seq as seq
 import transaction
 import exons
+import webserver_db
 
 weights =  array([0,0,0.014,0,0,0.395,0.317,0,0.389,0.079,0.445,0.508,0.613,0.851,0.732,0.828,0.615,0.804,0.685,0.583]);
 TMPPATH = "/tmp/ramdisk/cfront/genomedb"
 if not os.path.isdir(TMPPATH):
     os.makedirs(TMPPATH)
-
-#runs a blat query (gfClient) to check for unique matches to a spacer.
-def check_genome(spacer):
-    sequence = spacer.sequence
-    record = sr.SeqRecord(seq.Seq(sequence),id="seqA",description="")
-    tmpfile_in = os.path.join(TMPPATH,"tmpfile_{0}.fa".format(int(random.random() * 1e10)))
-    tmpfile_out = os.path.join(TMPPATH,"tmpfile_{0}.psl".format(int(random.random() * 1e10)))
-    with open(tmpfile_in,'w') as f:
-        f.write(record.format("fasta"))
-
-    #uses the long wordsize index to find exact matches in the genome.
-    #more than one will generate an error
-    cmd = "gfClient localhost 8000 /data/genomes/ {0} {1} -minScore={2} -minIdentity=100".format(tmpfile_in, tmpfile_out, len(sequence))
-    
-    prc = spc.Popen(cmd,shell = True, stdout = spc.PIPE)
-    prc.communicate()
-    with open(tmpfile_out) as f:
-        content = f.read()
-        
-    os.remove(tmpfile_in)
-    os.remove(tmpfile_out)
-    
-    lines = content.splitlines()
-    headers, content = lines[:5],lines[5:]
-    
-
-    cols = ['matches',
-            'misMatches',
-            'repMatches',
-            'nCount',
-            'qNumInsert',
-            'qBaseInsert',
-            'tNumInsert',
-            'tBaseInsert',
-            'strand',
-            'qName',
-            'qSize',
-            'qStart',
-            'qEnd',
-            'tName',
-            'tSize',
-            'tStart',
-            'tEnd',
-            'blockCount',
-            'blockSizes',
-            'qStarts',
-            'tStarts']
-
-    if len(content) == 0:
-        return []
-
-
-    matches = []
-    for l in content:
-        possible = dict([(cols[i],e.strip()) for i,e in enumerate(re.compile("\s+").split(l))])
-        eligible = True if int(possible["misMatches"]) == 0 else False
-        if eligible:
-            matches.append(possible)
-        
-    return matches
-
-
 
 
 def compute_hits_for_spacer(spacer_id):
@@ -86,7 +24,8 @@ def compute_hits_for_spacer(spacer_id):
 
         #FILTER SPACERS
         #check to make sure that spacers do not have huge number of perfect matches
-        exact_matches = check_genome(spacer)
+
+        exact_matches = webserver_db.check_genome(spacer,spacer.job.genome_name)
         if len(exact_matches) > 5:
             raise SpacerERR(Spacer.ERR_MANY_EXACT_MATCHES,spacer)
 

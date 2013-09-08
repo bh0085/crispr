@@ -29,7 +29,6 @@ RUNNING THE WEBSERVER IN PRODUCTION MODE
 >> god load god/launch-prod.god
 
 
-# 
 
 # Data directories
 Most data is stored on the RAMDISK of the CRISPR server

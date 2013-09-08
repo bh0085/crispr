@@ -47,8 +47,9 @@ def job_post_new(request):
                 "message":"Sequence length not within allowed range (23 - 500bp)",
                 "matches":None,
                 "job_key":None}
-    
-    matches = webserver_db.check_genome(sequence)
+
+    genome = request.params.get("genome","hg19")
+    matches = webserver_db.check_genome(sequence,genome)
     infos = webserver_db.compute_spacers(sequence)
 
     if cfront_settings.get("debug_mode",False): print "lmatches: {0}".format(len(matches))
@@ -57,7 +58,7 @@ def job_post_new(request):
     print request.params.get("inputRadios")
     if ( request.params.get("inputRadios",None) == "unique_genomic" ) and len(matches) == 0:
         raise JobERR(Job.ERR_NOGENOME,None)
-    if request.params.get("inputRadios",None) == "unique_genomic" and len(matches) > 1:
+    if request.params.get("inputRadios",None) == "unique_genom2ic" and len(matches) > 1:
         raise JobERR(Job.ERR_MULTIPLE_GENOME,None)
     elif len(infos) == 0:
         raise JobERR(Job.NOSPACERS,None)
@@ -68,7 +69,7 @@ def job_post_new(request):
                       sequence = sequence,
                       name = request.params["name"],
                       email = request.params["email"],
-                      genome = Job.GENOMES[request.params.get("genome","HUMAN")],
+                      genome = Job.GENOMES[genome],
                       query_type = request.params.get("inputRadios"))
 
         if len(matches) > 0:

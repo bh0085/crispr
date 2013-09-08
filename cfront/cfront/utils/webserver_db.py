@@ -1,13 +1,13 @@
 from ..models import Session, Job, Hit, Spacer
 import re, subprocess as spc, os, random
 from Bio import SeqIO as sio, Seq as seq, SeqRecord as sr
-
+from cfront import genomes_settings
 
 
 TMPPATH = "/tmp/ramdisk/cfront/webserver"
 if not os.path.isdir(TMPPATH):
     os.makedirs(TMPPATH)
-def check_genome(sequence):
+def check_genome(sequence, genome):
     record = sr.SeqRecord(seq.Seq(sequence),id="seqA",description="")
     tmpfile_in = os.path.join(TMPPATH,"tmpfile_{0}.fa".format(int(random.random() * 1e10)))
     tmpfile_out = os.path.join(TMPPATH,"tmpfile_{0}.psl".format(int(random.random() * 1e10)))
@@ -16,7 +16,9 @@ def check_genome(sequence):
 
     #uses the long wordsize index to find exact matches in the genome.
     #more than one will generate an error
-    cmd = "gfClient localhost 8000 /data/genomes/ {0} {1} -minScore={2} -minIdentity=100".format(tmpfile_in, tmpfile_out, len(sequence))
+
+    gfport = genomes_settings.get("{0}_gfport".format(genome))
+    cmd = "gfClient localhost {3} {4} {0} {1} -minScore={2} -minIdentity=100".format(tmpfile_in, tmpfile_out, len(sequence), gfport, genomes_settings.get("gfport_root"))
     
     prc = spc.Popen(cmd,shell = True, stdout = spc.PIPE)
     prc.communicate()
@@ -29,7 +31,6 @@ def check_genome(sequence):
     lines = content.splitlines()
     headers, content = lines[:5],lines[5:]
     
-
     cols = ['matches',
             'misMatches',
             'repMatches',

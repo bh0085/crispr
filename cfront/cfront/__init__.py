@@ -3,6 +3,7 @@ from sqlalchemy import engine_from_config
 from cfront.models import Session, Base
 
 cfront_settings = {}
+genomes_settings = {}
 
 from .route_factories import (
     JobResourceFactory,
@@ -10,20 +11,29 @@ from .route_factories import (
 )
 
 
-def set_cfront_settings(settings, prefix):
+def set_cfront_settings(settings):
+    prefix = "cfront."
     global cfront_settings
     for k,v in settings.iteritems():
         if prefix == k[:len(prefix)]:
             cfront_settings[k[len(prefix):]] = (v.lower()=='true') \
                                          if v.lower() in ['true', 'false'] else v
 
+def set_genomes_settings(settings):
+    prefix = "genomes."
+    global cfront_settings
+    for k,v in settings.iteritems():
+        if prefix == k[:len(prefix)]:
+            cfront_settings[k[len(prefix):]] = (v.lower()=='true') \
+                                         if v.lower() in ['true', 'false'] else v
 
 def main(global_config, **settings):
     """ 
     This function returns a Pyramid WSGI application.
     """
     import inspect
-    set_cfront_settings(settings, 'cfront.')
+    set_cfront_settings(settings)
+    set_genomes_settings(settings)
 
     engine = engine_from_config(settings, 'sqlalchemy.')
     Session.configure(bind=engine)
