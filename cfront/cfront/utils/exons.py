@@ -1,7 +1,8 @@
 #!/usr/bin/env python
-# Configures exon databases used by the CRISPR server to get labels
-# for offtarget hits.
-#
+''' 
+Configures exon databases used by the CRISPR server to get labels for offtarget hits. 
+'''
+
 
 import os, StringIO
 import psycopg2    
@@ -9,7 +10,9 @@ import random
              
 
 def genes_file(genome_name):
-    return os.path.join(os.environ["HOME"],"data/zlab/ben/ucsc/{0}-genes.tsv".format(genome_name))
+    path = os.path.join(os.environ["HOME"],"data/zlab/ben/ucsc/{0}-genes.tsv".format(genome_name))
+    if not os.path.isfile(path):
+        raise Exception("unsupported genome (file ucsc file does not exist) at\n {0}".format(path))
 
 #simple code takes every one of a list of hits and runs a SQL query on an indexed
 #database containing all UCSC exons.
@@ -21,9 +24,6 @@ def get_hit_genes(hits, genome_name):
     updates = ",".join( ["({0},'{1}',{2})".format(h.id,h.chr,h.start) 
                                         for h in hits]
     )
-    
-    if genome_name != "hg19":
-        raise Exception()
 
     cmd = """
     CREATE TEMP TABLE {0} (
@@ -132,9 +132,14 @@ def create_indexes(genome_name):
                 
 if __name__ =="__main__":
     parser = argparse.ArgumentParser()
+
     parser.add_argument('--genome', '-g', dest = "genome_name",
                         default="hg19", type = str,
-                        help = "genome name [hg19]")
+                        help = "genome name [hg19 ...]")
+    parser.add_argument('--program', '-p', dest = "program",
+                        default="init", type= str,
+                        help = "program to run [init]")
+
     args = parser.parse_args()
 
     populate_exons(args.genome_name)

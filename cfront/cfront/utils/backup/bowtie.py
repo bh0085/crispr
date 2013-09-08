@@ -31,18 +31,14 @@ def run_queries(spacers,  genome):
     print "\n".join([r.format("fasta") for r in records])
 
 
-    if genome=="HUMAN":
-        genome_string = "hg19"
-    elif genome=="MOUSE":
-        genome_string = "mm9"
-    else:
+    if not genome in ["hg19", "mm9"]
         raise Exception("NO SUCH GENOME {0}".format(genome))
 
-    GENOME2BIT = os.path.join(GENOMEPATH,"{0}.2bit".format(genome_string))
+    GENOME2BIT = os.path.join(GENOMEPATH,"{0}.2bit".format(genome))
     
 
     #cmd = "bowtie -n 3 -l 18 {2} -f {0} --quiet -a {1}".format(tmpfile_in,tmpfile_out)
-    cmd = "bowtie -p 8 -y -n 2 -a {2} -f {0} --quiet {1}".format(tmpfile_in,tmpfile_out,genome_string)
+    cmd = "bowtie -p 8 -y -n 2 -a {2} -f {0} --quiet {1}".format(tmpfile_in,tmpfile_out,genome)
 
     print cmd
     prc = spc.Popen(cmd, shell=True, cwd="/tmp/ramdisk/bowtie-indexes")

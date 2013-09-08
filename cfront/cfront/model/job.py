@@ -46,8 +46,8 @@ class Job(Base):
 
     #fake enum type for genomes
     GENOMES={
-        "HUMAN":1,
-        "MOUSE":2
+        "hg19":1,
+        "mm9":2
     }
 
     ERR_BADINPUT = "Problem with query input: "

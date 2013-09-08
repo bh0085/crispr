@@ -47,6 +47,59 @@ def commence_file_io(job_id):
 
 
 
+
+
+def write_f1(job_id):
+    '''writes a file formatted:
+(F1). Spacers, eg:
+spacer1 AATATAACCTGCCGCTTTGC AGG +
+spacer2 CTTTGCAGGTGTATTCCACG TGG +
+spacer3 ATGGTCGCTACAGCATCTCT CGG +
+'''
+    
+    job = Session.query(Job).get(job_id)
+    if not job.computed_spacers: raise Exception(Job.NOSPACERS)
+
+    fpath = job.f1
+
+    if os.path.isfile(fpath):
+        os.remove(fpath)
+
+    if v: print "writing f1 at {0}".format(fpath)
+    with open(fpath, 'w') as f:
+        f.write("\n".join(["\t".join([str(s.id),
+                                      s.guide, 
+                                      s.nrg, 
+                                      "+" if s.strand ==1 else "-"])
+                           for s in job.good_spacers ]))
+    if v: print "DONE"
+    if v: print
+
+def write_f2(job_id):
+    '''writes a file formatted:
+(F2). Offtargets, eg:
+spacer33        1       13020   -       TTCTCCACCAGAGCCTTTCTTGG
+spacer3 1       40914   +       ATTTTCTCTACAGCAATTCTAGG
+spacer9 1       62767   -       ATGGACAAAGCTGTGCTCAGAGG
+'''
+    job = Session.query(Job).get(job_id)
+    if not job.computed_hits: raise Exception(Job.NOHITS)
+    fpath = job.f2
+    
+    if os.path.isfile(fpath):
+        os.remove(fpath)
+
+    if v: print "writing f2 at {0}".format(fpath)
+    with open(fpath,'w') as f:
+        f.write("\n".join(["\t".join([str(s.id),
+                                      h.chr, 
+                                      str(h.start), 
+                                      "+" if h.strand ==1 else "-",
+                                      h.sequence])
+                           for s in job.good_spacers for h in s.hits ]))
+    if v: print "done"
+    if v: print
+
 def write_f4(job_id):
     job = Session.query(Job).get(job_id)
     f4p = job.f4

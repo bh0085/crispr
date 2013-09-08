@@ -29,6 +29,7 @@ $seq;
 '''
 
 def run_commands():
+    raise Exception("PRIMER DESIGN DOES NOT YET WORK WITH MULTIGENOMES")
     cmd1 = ("perl {0}/scripts/make_primer3_offtarget_input.pl {1} "+\
            "{0}/reference/human_g1k_v37.fasta {2}").format(CDHOME, f6p, f7p)
     cmd2="primer3_core -p3_settings_file={0}/primer3/primer3-2.3.5/primer3web_v4_0_0_default_settings.txt -output={1} {2}".format(CDHOME,f8p,f7p)
