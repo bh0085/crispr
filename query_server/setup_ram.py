@@ -42,6 +42,8 @@ RD_DATAROOT = "/tmp/ramdisk/crispr"
 if not os.path.isdir(RD_DATAROOT):
     os.makedirs(RD_DATAROOT)
 
+bytes_translation_dict = dict([(e,i) for i,e in enumerate([l0+l1+l2+l3 for l0 in "ATGC" for l1 in "ATGC" for l2 in "ATGC" for l3 in "ATGC"])])
+
 
 def translate(sequence):
     translation = {"A":0,
@@ -76,6 +78,76 @@ def save_flatfile(table, nlines):
         np.save(f,all_seqs)
     print "saved {0} lines".format(len(all_seqs))
 
+
+def init_library_bytes(table, nlines):
+    LIBRARY_BYTES_PATH =  os.path.join(RD_DATAROOT,"{0}_{1}_bytes.npy".format(table,nlines))
+
+    powers_lookup = dict([(i, 2**(4*i)) for i in range(4)])
+
+    #enter only some lines... change later    
+    bytes_array = np.zeros(nlines, dtype = np.dtype("uint32"))
+    for i,l in enumerate(open("/tmp/ramdisk/crispr/alllocs.txt")):
+        if i >= nlines:
+            break
+
+        #translate four characters from the library
+        row = l.split("\t")
+        seq =  row[3].strip()[:-3]
+        for j in range(4):
+            bytes_array[i] += powers_lookup[j] \
+                              * bytes_translation_dict.get(seq[(1+j)*4:(1+j)*4+4],0)
+        
+        if i %1e6 == 0:
+            print "millions: {0}".format(i/1e6)
+
+
+
+    with open(LIBRARY_BYTES_PATH,'w') as f:
+        np.save(f, bytes_array)
+    print "saved {0} lines to a bytes array at {1}".format(nlines, LIBRARY_BYTES_PATH)
+        
+    
+
+def query_library_bytes(table, nlines):  
+    print "starting query, loading lib"
+    LIBRARY_BYTES_PATH =  os.path.join(RD_DATAROOT,"{0}_{1}_bytes.npy".format(table,nlines))
+
+    with open(LIBRARY_BYTES_PATH) as f:
+        max_lines = int(1e9)
+        library_bytes = np.load(f)[:max_lines]
+
+    print "loaded lib, setting up query bytes"
+    tests = []
+    for e in re.compile(">", re.M).split(ltests.strip()):
+        if not e: continue
+        match = re.compile( "(?P<id>.*)\n(?P<guide>\S{20})\s*(?P<nrg>\S{3})",re.M).search(e)
+        tests.append(match.groupdict())
+
+        
+    query_bytes = np.array([sum([2**(4*j) * bytes_translation_dict[tests[0]["guide"][(1+j)*4:(1+j)*4+4]] 
+                            for j in range(4)])],
+                            dtype=np.dtype("uint32"))
+    threshold_mismatches = 3
+    bits_mismatch_threshold = threshold_mismatches * 2
+
+    f = library_bytes
+    g = query_bytes
+    h = np.zeros((len(library_bytes)/len(query_bytes),), dtype = np.dtype("uint32"))
+
+    print "running comparison"
+    import bc
+
+    times = [utcnow()]
+    n_matches = bc.striding_8bit_comparison(f,g,h,bits_mismatch_threshold)
+    times+=[utcnow()]
+    compare_time = times[1] - times[0]
+    print "compared {0} matches in {1} ({2} microsec/ million)".format(len(library_bytes), compare_time,(compare_time.seconds * 1e6 + compare_time.microseconds)/(float(len(library_bytes)/1e6)) )
+    matches_list = h[:n_matches]
+    
+    print "done comparing, computing NZ elts"
+    #matches = np.nonzero(h)[0]
+    print "python, n_matches: {0}".format(n_matches)
+    print "first match: {0}".format(matches_list[0])
 
 def load_flatfile(table, nlines):
     RD_PATH = os.path.join(RD_DATAROOT,"{0}_{1}.npy".format(table,nlines))
@@ -222,7 +294,10 @@ def main():
         save_flatfile(args.table, args.nlines)
     elif args.program == "load":
         load_flatfile(args.table, args.nlines)
-
+    elif args.program == "init":
+        init_library_bytes(args.table,args.nlines)
+    elif args.program == "query":
+        query_library_bytes(args.table, args.nlines)
 if __name__ == "__main__":
     main()
 

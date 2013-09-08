@@ -2,7 +2,7 @@ from distutils.core import setup
 from distutils.extension import Extension
 from Cython.Distutils import build_ext
 
-ext_modules = [Extension("bc0", ["bit_counting.pyx"])]
+ext_modules = [Extension("bc", ["bit_counting.pyx"])]
 
 setup(
   name = 'Hello world app',
