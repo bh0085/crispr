@@ -7,7 +7,9 @@ import os, StringIO
 import psycopg2    
 import random
              
-HUMAN_GENES=os.path.join(os.environ["HOME"],"data/zlab/ben/ucsc/hg19-genes.tsv")
+
+def genes_file(genome_name):
+    return os.path.join(os.environ["HOME"],"data/zlab/ben/ucsc/{0}-genes.tsv".format(genome_name))
 
 #simple code takes every one of a list of hits and runs a SQL query on an indexed
 #database containing all UCSC exons.
@@ -61,13 +63,13 @@ def get_hit_genes(hits, genome_name):
     return hits_by_id
 
 
-def populate_exons():
+def populate_exons(genome_name):
     conn = psycopg2.connect("dbname=vineeta user=ben password=random12345")
     cur = conn.cursor()
 
     init_table = """
-    DROP TABLE IF EXISTS exon_hg19;
-    CREATE TABLE exon_hg19 (
+    DROP TABLE IF EXISTS exon_{0};
+    CREATE TABLE exon_{0} (
     id int PRIMARY KEY,
     gene_name VARCHAR(50) not null,
     exon_number SMALLINT not null,
@@ -80,12 +82,12 @@ def populate_exons():
     cds_end INT NOT NULL
     );
     
-    """
+    """.format(genome_name)
     cur.execute(init_table);
     buf = StringIO.StringIO()
     exon_cols = ["id","gene_name","exon_number","chr","strand","start","end","protein_id","cds_start","cds_end"]
     id_counter = 1
-    with open(HUMAN_GENES) as f:
+    with open(genes_file(genome_name)) as f:
         for exon_id,l in enumerate(f):
             if exon_id==0:
                 cols = [e.strip() for e in l[1:].split("\t")]
@@ -110,25 +112,31 @@ def populate_exons():
 
     buf.seek(0)
     buf.seek(0)
-    cur.copy_from(buf,"exon_hg19")
+    cur.copy_from(buf,"exon_{0}".format(genome_name))
     buf.close()
     conn.commit()
 
-def create_indexes():
+def create_indexes(genome_name):
     conn = psycopg2.connect("dbname=vineeta user=ben password=random12345")
     cur = conn.cursor()
     cur.execute("""
-    CREATE INDEX exon_start_idx ON exon_hg19(exon_start);
-    CREATE INDEX cds_start_idx ON exon_hg19(cds_start);
-    CREATE INDEX exon_end_idx ON exon_hg19(exon_end);
-    CREATE INDEX cds_end_idx ON exon_hg19(cds_end);
-    CREATE INDEX chr_idx ON exon_hg19(chr);
-    CREATE INDEX strand_idx ON exon_hg19(strand);
-""")
+    CREATE INDEX exon_start_idx ON exon_{0}(exon_start);
+    CREATE INDEX cds_start_idx ON exon_{0}(cds_start);
+    CREATE INDEX exon_end_idx ON exon_{0}(exon_end);
+    CREATE INDEX cds_end_idx ON exon_{0}(cds_end);
+    CREATE INDEX chr_idx ON exon_{0}(chr);
+    CREATE INDEX strand_idx ON exon_{0}(strand);
+    """.format(genome_name))
     conn.commit()
     return
                 
 if __name__ =="__main__":
-    populate_exons()
-    create_indexes()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--genome', '-g', dest = "genome_name",
+                        default="hg19", type = str,
+                        help = "genome name [hg19]")
+    args = parser.parse_args()
+
+    populate_exons(args.genome_name)
+    create_indexes(args.genome_name)
 
