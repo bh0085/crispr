@@ -3,10 +3,6 @@ import numpy as np
 import sys
 cimport cython
 
-
-cdef extern from "inttypes.h":
-    ctypedef int int32_t  
-
 from cython.operator cimport dereference as deref, preincrement as inc
 
 # "cimport" is used to import special compile-time information
@@ -95,49 +91,72 @@ def less_than_bits(np.ndarray[DTYPE_t, ndim=1] f, np.ndarray[DTYPE_t, ndim=1] g,
     return
     
 @cython.boundscheck(False) # turn of bounds-checking for entire function
-def striding_8bit_comparison(np.ndarray[DTYPE32_t, ndim=1] f
-                                , np.ndarray[DTYPE32_t, ndim=1] g
+def striding_8bit_comparison(np.ndarray[DTYPE_t, ndim=1] f
+                                , np.ndarray[DTYPE_t, ndim=1] g
                                 , np.ndarray[DTYPE32_t, ndim=1] h
                                 , DTYPE_t threshold):
-
+    cdef unsigned long stride = g.shape[0]
     cdef unsigned long n_elts = f.shape[0]
+    if n_elts % stride != 0:
+        raise ValueError("n_elts must be a multiple of stride")
+
+    cdef unsigned long loops = long(n_elts/stride)
+    cdef unsigned long innerloops = long(stride)
     cdef unsigned long n_outputs = h.shape[0]
-    if n_outputs != n_elts:
+    if n_outputs != loops:
         raise ValueError("n_outputs (third arg) should equal n_elts/stride")
 
-    cdef unsigned long x
-    cdef int32_t n = 0
+    cdef unsigned long x, y,z, idx
+    cdef char n
+    cdef char mismatch_counter    
     
     cdef unsigned long match_count = 0
     cdef unsigned long mc_inc = 1
 
     print "starting c loop"
-    for x in range(n_elts):
+    #result = []
+    for x in range(loops):
 
-        n = f[x] ^ g[0]
+        mismatch_counter = 0
+        for y in range(innerloops):
+            idx = stride * x + 2 * y
+            n = f[idx] ^ g[y]
+            #mismatch_counter+= __builtin_popcount(temp_xor)
+            n = ((n & 0xAA) >> 1) + (n & 0x55)
+            # Now every two bits are a two bit integer that indicate how many bits were
+            # set in those two bits in the original number
 
-        #code to do the same thing for 32 bits
-        n = ((n & 0xAAAAAAAA) >> 1) + (n & 0x55555555)
-        #// Now every two bits are a two bit integer that indicate how many bits were
-        #// set in those two bits in the original number
-        #
-        n = ((n & 0xCCCCCCCC) >> 2) + (n & 0x33333333)
-        ##// Now we're at 4 bits
-        #    
-        #n = ((n & 0xF0F0F0F0) >> 4) + (n & 0x0F0F0F0F)
-        ##// 8 bits
-        #    
-        #n = ((n & 0xFF00FF00) >> 8) + (n & 0x00FF00FF)
-        ##// 16 bits
-        #    
-        #n = ((n & 0xFFFF0000) >> 16) + (n & 0x0000FFFF)
-        ##// kaboom - 32 bits
+            n = ((n & 0xCC) >> 2) + (n & 0x33)
+            #Now we're at 4 bits
+            n = ((n & 0xF0) >> 4) + (n & 0x0F)
+            mismatch_counter += n
+            # 8 bits
 
-        #if n < threshold:
-        #    h[<unsigned long> (match_count) ] = <unsigned long> (x)
-        #    match_count = match_count + mc_inc
+            #code to do the same thing for 32 bits
+            #n = ((n & 0xAAAAAAAA) >> 1) + (n & 0x55555555)
+            #// Now every two bits are a two bit integer that indicate how many bits were
+            #// set in those two bits in the original number
+            #
+            #n = ((n & 0xCCCCCCCC) >> 2) + (n & 0x33333333)
+            #// Now we're at 4 bits
+            #
+            #n = ((n & 0xF0F0F0F0) >> 4) + (n & 0x0F0F0F0F)
+            #// 8 bits
+            #
+            #n = ((n & 0xFF00FF00) >> 8) + (n & 0x00FF00FF)
+            #// 16 bits
+            #
+            #n = ((n & 0xFFFF0000) >> 16) + (n & 0x0000FFFF)
+            #// kaboom - 32 bits
 
-    print n
+
+
+        if mismatch_counter < threshold:
+            h[<unsigned long> (match_count) ] = <unsigned long> (x)
+            match_count = match_count + mc_inc
+        print x, match_count, mismatch_counter
+
+
     return match_count
 
 def fill_with_4_ints(np.ndarray[DTYPE_t, ndim=1] f, np.ndarray[DTYPE_t, ndim=1] g):

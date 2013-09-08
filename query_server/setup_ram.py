@@ -82,20 +82,16 @@ def save_flatfile(table, nlines):
 def init_library_bytes(table, nlines):
     LIBRARY_BYTES_PATH =  os.path.join(RD_DATAROOT,"{0}_{1}_bytes.npy".format(table,nlines))
 
-    powers_lookup = dict([(i, 2**(4*i)) for i in range(4)])
-
     #enter only some lines... change later    
-    bytes_array = np.zeros(nlines, dtype = np.dtype("uint32"))
+    bytes_array = np.zeros(nlines * 4, dtype = np.dtype("uint8"))
     for i,l in enumerate(open("/tmp/ramdisk/crispr/alllocs.txt")):
         if i >= nlines:
             break
-
-        #translate four characters from the library
-        row = l.split("\t")
-        seq =  row[3].strip()[:-3]
         for j in range(4):
-            bytes_array[i] += powers_lookup[j] \
-                              * bytes_translation_dict.get(seq[(1+j)*4:(1+j)*4+4],0)
+            #translate four characters from the library
+            row = l.split("\t")
+            seq =  row[3].strip()[:-3]
+            bytes_array[4*i + j] = bytes_translation_dict.get(seq[(1+j)*4:(1+j)*4+4],0)
         
         if i %1e6 == 0:
             print "millions: {0}".format(i/1e6)
@@ -113,8 +109,7 @@ def query_library_bytes(table, nlines):
     LIBRARY_BYTES_PATH =  os.path.join(RD_DATAROOT,"{0}_{1}_bytes.npy".format(table,nlines))
 
     with open(LIBRARY_BYTES_PATH) as f:
-        max_lines = int(1e9)
-        library_bytes = np.load(f)[:max_lines]
+        library_bytes = np.load(f)
 
     print "loaded lib, setting up query bytes"
     tests = []
@@ -124,10 +119,10 @@ def query_library_bytes(table, nlines):
         tests.append(match.groupdict())
 
         
-    query_bytes = np.array([sum([2**(4*j) * bytes_translation_dict[tests[0]["guide"][(1+j)*4:(1+j)*4+4]] 
-                            for j in range(4)])],
-                            dtype=np.dtype("uint32"))
-    threshold_mismatches = 3
+    query_bytes = np.array([bytes_translation_dict[tests[0]["guide"][(1+j)*4:(1+j)*4+4]] 
+                            for j in range(4)],
+                            dtype=np.dtype("uint8"))
+    threshold_mismatches = 4
     bits_mismatch_threshold = threshold_mismatches * 2
 
     f = library_bytes
