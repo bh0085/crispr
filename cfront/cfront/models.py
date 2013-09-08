@@ -43,28 +43,24 @@ class JobERR(Exception):
         traceback.print_stack(None, None, s)
         s.seek(0)
         tb_content = s.read()
-    
-        #if job.id  and Session.query(BadJob).get(job.id) is None:
-        #
-        #    #prints error message and a strack trace to the BadJob table
-        #    Session.add(BadJob(sequence = job.sequence,
-        #                       date_submitted = job.date_submitted,
-        #                       date_failed = datetime.datetime.utcnow(),
-        #                       error_message = msg,
-        #                       id = job.id,
-        #                       traceback = tb_content,
-        #                       genome=job.genome,
-        #                       name = job.name,
-        #                       email = job.email))
-        #Session.delete(job)
 
-        if job is not None:
-            job.failed = True
-            job.error_traceback = tb_content
-            job.error_message = tb_content
-            job.date_failed = datetime.datetime.utcnow()
+        if self.job is not None:
+            self.job.failed = True
+            self.job.error_traceback = tb_content
+            self.job.error_message = tb_content
+            self.job.date_failed = datetime.datetime.utcnow()
 
-    
+class SpacerERR(Exception):
+    def __init__(self, message, spacer):
+
+        # Call the base class constructor with the parameters it needs
+        Exception.__init__(self, message)
+
+        # Now for your custom code...
+        self.spacer = spacer
+        print message
+        raise Exception()
+        Session.delete(spacer)
 
 import model
 from model import *

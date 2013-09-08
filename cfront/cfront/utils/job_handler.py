@@ -57,16 +57,19 @@ def process_queue():
                     .filter(Spacer.score == None)\
                     .filter(Job.failed == False)\
                     .order_by(Job.id.desc()).limit(3).all():
-
-        with transaction.manager:
-            try:
-                if not j in Session: j = Session.merge(j)
-                print "COMPUTING HITS for job: {0}".format(j.id)
-                genome_db.compute_hits(j.id)
-                Session.add(j)
-            except JobERR, e:
-                print "excepted a job/spacer error on COMPUTE for job {0}".format(s.job.id)
-
+        
+        #spacers may be deleted from the session in the interior of this loop
+        for s in [s for s in j.spacers if s.score is None]:
+            if not s in Session: s = Session.merge(s)
+            with transaction.manager:
+                try:
+                    print "COMPUTING HITS for spacer: {0}".format(s.id)
+                    genome_db.compute_hits_for_spacer(s.id)
+                    Session.add(s)
+                except JobERR, e:
+                    print "excepted a job/spacer error on COMPUTE for job {0}".format(s.job.id)
+                except SpacerERR, e:
+                    print "excepted a spacer error for spacer id {0}".format(s.id)
 
 def main():
     parser = argparse.ArgumentParser()

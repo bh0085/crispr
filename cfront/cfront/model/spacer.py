@@ -23,6 +23,8 @@ class Spacer(Base):
     n_genic_offtargets = Column(Integer, nullable = True)
     name = Column(Unicode, nullable = True)
 
+    ERR_MANY_EXACT_MATCHES = "Many unique matches found in the genome"
+
     @property
     def guide(self):
         return self.sequence[:-3]

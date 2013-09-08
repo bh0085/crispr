@@ -10,17 +10,15 @@ from cfront import cfront_settings
 import bowtie
 
 from Bio import SeqRecord as sr, Seq as seq
-
 import transaction
+import exons
 
 weights =  array([0,0,0.014,0,0,0.395,0.317,0,0.389,0.079,0.445,0.508,0.613,0.851,0.732,0.828,0.615,0.804,0.685,0.583]);
-
-#        cols = ["spacer_id", "sequence", "chr", "start", "strand","nrg"]    
-
 TMPPATH = "/tmp/ramdisk/cfront/genomedb"
 if not os.path.isdir(TMPPATH):
     os.makedirs(TMPPATH)
 
+#runs a blat query (gfClient) to check for unique matches to a spacer.
 def check_genome(spacer):
     sequence = spacer.sequence
     record = sr.SeqRecord(seq.Seq(sequence),id="seqA",description="")
@@ -83,141 +81,90 @@ def check_genome(spacer):
 
 
 
-def compute_hits(job_id):
-    #spacer = Session.query(Spacer).get(spacer_id)
-    job = Session.query(Job).get(job_id)
-    
-    #query file IO
-    jp = job.path
+def compute_hits_for_spacer(spacer_id):
+        spacer = Session.query(Spacer).get(spacer_id)
 
-    for i in range(len(job.spacers))[::-1]:
-        s = job.spacers[i]
-        exact_matches = check_genome(s)
+        #FILTER SPACERS
+        #check to make sure that spacers do not have huge number of perfect matches
+        exact_matches = check_genome(spacer)
         if len(exact_matches) > 5:
-            del job.spacers[i]
+            raise SpacerERR(Spacer.ERR_MANY_EXACT_MATCHES,spacer)
 
+        #BYTE SCAN FOR HITS
+        hits = byte_scanner.run_sequence_vs_genome(spacer.sequence, spacer.job.genome_name)
+        translation = {"A":0,"G":1, "T":2,"C":3}
 
-    hits = bowtie.run_queries([s for s in job.spacers if s.score is None],job.genome_name)
-
-    translation = {"A":0,"G":1, "T":2,"C":3}
-    spacer_hits =dict([(k,list(g)) for k,g in  it.groupby(sorted(hits, key = lambda x:x["spacer_id"]), key = lambda x:int(x["spacer_id"]))])
-
-    #processes hits by spacer
-    for spacer_id, hits_rows in spacer_hits.items():
-            hits_array = np.array([[translation.get(let,4) 
-                                    for let in e["sequence"]] for e in hits_rows])
-    
-            spacer = Session.query(Spacer).get(spacer_id)
-            #translate spacers, hits into numbers to compute sims with numpy
-            spacer_array = np.array([translation.get(let,4) for let in spacer.guide])
-            nz = array(nonzero(not_equal(spacer_array[newaxis,:],hits_array))).transpose()
-            mismatches_by_hit = dict([(k,array([e[1] for e in g])) 
+        
+        #LIST MISMATCHES
+        hits_array = np.array([[translation.get(let,4) 
+                                    for let in e["sequence"]] for e in hits])
+        spacer = Session.query(Spacer).get(spacer_id)
+        spacer_array = np.array([translation.get(let,4) for let in spacer.guide])
+        nz = array(nonzero(not_equal(spacer_array[newaxis,:],hits_array))).transpose()
+        mismatches_by_hit = dict([(k,array([e[1] for e in g])) 
                                       for k,g in \
                                       it.groupby(nz,key = lambda x:x[0])])
+         
+        #CREATE HITS
+        found_ontarget = False
+        for idx,h in enumerate(hits_array):
+            hit = hits[idx]
+            mismatches = mismatches_by_hit.get(idx,array([]))
+            ontarget = False
     
-    
-            
-            found_ontarget = None
-            for idx,h in enumerate(hits_array):
-                if idx > 100:
-                    break
-                hit = hits_rows[idx]
-                mismatches = mismatches_by_hit.get(idx,array([]))
-                ontarget = False
-    
-                if len(mismatches) > 5:
-                    continue
-                if len(mismatches) == 0:
-                        score = 100
-                        if int(hit["position"]) == int(spacer.chr_start) :
-                            ontarget = True
-                else:
-                    score = 100 * (1 - weights[mismatches]).prod()
-                    if len(mismatches) > 1:
-                        mean_pairwise =float(sum(mismatches[1:] - mismatches[:-1])) / (len(mismatches)-1)
-                        mpw_factor = ((float((19-mean_pairwise))/19)*4 + 1)
-                        scl_factor = pow(len(mismatches),2)
 
-                        score  = score / ( mpw_factor * scl_factor )
+            #COMPUTE SCORE
+            if len(mismatches) > 5:
+                continue
+            if len(mismatches) == 0:
+                score = 100
+                if int(hit["position"]) == int(spacer.chr_start) :
+                    ontarget = True
+                    found_ontarget = True
+            else:
+                score = 100 * (1 - weights[mismatches]).prod()
+                if len(mismatches) > 1:
+                    mean_pairwise =float(sum(mismatches[1:] - mismatches[:-1])) / (len(mismatches)-1)
+                    mpw_factor = ((float((19-mean_pairwise))/19)*4 + 1)
+                    scl_factor = pow(len(mismatches),2)
+
+                    score  = score / ( mpw_factor * scl_factor )
                     score = max([score,0])
-    
-                Session.add(Hit(spacer = spacer,
+                        
+            Session.add(Hit(spacer = spacer,
                             chr = hit["chr"],
                             sequence = hit["sequence"] +hit["nrg"],
                             n_mismatches = len(mismatches),
                             start = hit["position"],
                             strand = 1 if hit["strand"] == "+" else -1,
                             score = score,
-                                ontarget = ontarget
+                            ontarget = ontarget
                         ))
                 
-            Session.flush()
+        Session.flush()
 
-            if not found_ontarget:
+        #SET ONTARGET
+        #if no ontarget position was explicitly set for the spacer,
+        #guess one if only one hit is perfect.
+        if not found_ontarget:
                 possible = [h for h in spacer.hits if h.score == 100]
                 if len(possible) == 1:
                     possible[0].ontarget = True
                     found_ontarget = True
                     Session.add(possible[0])
     
-            if len(spacer.hits) > 0:
-
-                updates = ",".join( ["({0},'{1}',{2})".format(h.id,h.chr,h.start) 
-                                        for h in spacer.hits]
-                                )
+        #FIND EXONS
+        if len(spacer.hits) > 0:
+            genes_by_hitid = exons.get_hit_genes(spacer.hit, spacer.job.genome_name)
+            for h in spacer.hits:
+                h.gene = genes_by_hitid.get(h.id)
+                Session.add(h)
+                    
+        #SPACER AGGREGATE CHARACTERISTICS
+        ot_sum = sum(h.score for h in spacer.hits if not h.ontarget)
+        spacer.score =100 / (100 + sum(h.score for h in spacer.hits if not h.ontarget))
+        spacer.n_offtargets = len([ h for h in spacer.hits if not h.ontarget])
+        spacer.n_genic_offtargets = len([h for h in spacer.hits if h.gene is not None])
+        Session.add(spacer)
+        print "spacer: {1}(J{0}) -- {2}  N_OTS: {3}, TOTSCORE {4}".format(spacer.jobid, spacer.id, spacer.score, len(spacer.hits) - 1, ot_sum)
     
-                import psycopg2    
-                conn = psycopg2.connect("dbname=vineeta user=ben password=random12345")
-                cur = conn.cursor()
-    
-                import random
-    
-                cmd = """
-        CREATE TEMP TABLE {0} (
-                id int, chr text, start int);
-        INSERT INTO {0} VALUES {2};
-        
-        SELECT 
-                {0}.id as exon_id, 
-                {1}.gene_name as gene_name,
-                {1}.chr as c1,
-                {1}.exon_start as s1,
-                {1}.exon_end as e1
-        FROM {0}, exon_hg19
-                WHERE  ({0}.start+20+100) > {1}.exon_start
-                AND ({0}.start-100 - 5000) < {1}.exon_start
-                """\
-                    .format("hits_{0}".format(int(random.random() * 10000000 )),
-                            "exon_hg19",
-                            updates
-                        )
-    
-    
-    
-                cur.execute(cmd)
-                results = cur.fetchall()
-                conn.close()
-      
-                hits_by_id = dict([(h.id, h) for h in spacer.hits])
-                for r in results:
-                    h = hits_by_id[r[0]]
-                    if h.chr == r[2]:
-                        #print "accepted {0}".format(h.gene)
-                        if h.start > r[3] - 100:
-                            if h.start < r[4] + 100 + 20:
-                                h.gene = r[1]
-    
-                
-    
-    
-            ot_sum = sum(h.score for h in spacer.hits if not h.ontarget)
-            spacer.score =100 / (100 + sum(h.score for h in spacer.hits if not h.ontarget))
-            spacer.n_offtargets = len([ h for h in spacer.hits if not h.ontarget])
-            spacer.n_genic_offtargets = len([h for h in spacer.hits if h.gene is not None])
-            Session.add(spacer)
-            print "spacer: {1}(J{0}) -- {2}  N_OTS: {3}, TOTSCORE {4}".format(spacer.jobid, spacer.id, spacer.score, len(spacer.hits) - 1, ot_sum)
-    
-    return True
-
-
-

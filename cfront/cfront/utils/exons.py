@@ -1,7 +1,65 @@
 #!/usr/bin/env python
+# Configures exon databases used by the CRISPR server to get labels
+# for offtarget hits.
+#
+
 import os, StringIO
-import psycopg2
+import psycopg2    
+import random
+             
 HUMAN_GENES=os.path.join(os.environ["HOME"],"data/zlab/ben/ucsc/hg19-genes.tsv")
+
+#simple code takes every one of a list of hits and runs a SQL query on an indexed
+#database containing all UCSC exons.
+def get_hit_genes(hits, genome_name):
+    conn = psycopg2.connect("dbname=vineeta user=ben password=random12345")
+    cur = conn.cursor()
+
+
+    updates = ",".join( ["({0},'{1}',{2})".format(h.id,h.chr,h.start) 
+                                        for h in hits]
+    )
+    
+    if genome_name != "hg19":
+        raise Exception()
+
+    cmd = """
+    CREATE TEMP TABLE {0} (
+    id int, chr text, start int);
+    INSERT INTO {0} VALUES {2};
+    
+    SELECT 
+    {0}.id as exon_id, 
+    {1}.gene_name as gene_name,
+    {1}.chr as c1,
+    {1}.exon_start as s1,
+    {1}.exon_end as e1
+    FROM {0}, {2}
+    WHERE  ({0}.start+20+100) > {1}.exon_start
+    AND ({0}.start-100 - 5000) < {1}.exon_start
+    """\
+        .format("hits_{0}".format(int(random.random() * 10000000 )),
+                "exon_{0}".format(genome_name),
+                genome_name,
+                updates,
+                
+        )    
+    
+    cur.execute(cmd)
+    results = cur.fetchall()
+    conn.close()
+      
+    hits_by_id = dict([(h.id, h) for h in hits])
+    genes_by_hitid = dict[(h.id, None) for h in hits])
+    for r in results:
+        h = hits_by_id[r[0]]
+        if h.chr == r[2]:
+            #print "accepted {0}".format(h.gene)
+            if h.start > r[3] - 100:
+                if h.start < r[4] + 100 + 20:
+                    hits_by_id[h.id] = r[1]
+    return hits_by_id
+
 
 def populate_exons():
     conn = psycopg2.connect("dbname=vineeta user=ben password=random12345")
