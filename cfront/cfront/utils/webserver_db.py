@@ -18,15 +18,18 @@ def check_genome(sequence, genome):
     #more than one will generate an error
 
     gfport = genomes_settings.get("{0}_gfport".format(genome))
-    cmd = "gfClient localhost {3} {4} {0} {1} -minScore={2} -minIdentity=100".format(tmpfile_in, tmpfile_out, len(sequence), gfport, genomes_settings.get("gfport_root"))
+    print genome
+
+
+    cmd = "gfClient localhost {3} . {0} {1} -minScore={2} -minIdentity=100".format(tmpfile_in, tmpfile_out, len(sequence), gfport)
     
-    prc = spc.Popen(cmd,shell = True, stdout = spc.PIPE)
+    prc = spc.Popen(cmd,shell = True, stdout = spc.PIPE, cwd = genomes_settings.get("gfport_root"))
     prc.communicate()
     with open(tmpfile_out) as f:
         content = f.read()
         
-    os.remove(tmpfile_in)
-    os.remove(tmpfile_out)
+    #os.remove(tmpfile_in)
+    #os.remove(tmpfile_out)
     
     lines = content.splitlines()
     headers, content = lines[:5],lines[5:]

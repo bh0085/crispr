@@ -6,41 +6,15 @@ import argparse
 import os, numpy as np, pickle, re
 import datetime, StringIO
 utcnow = datetime.datetime.utcnow
-
-global ltests
-ltests = """>SpTet1.4
-GGCTGCTGTCAGGGAGCTCA TGG
->SpTet2.3
-ATGAGATGCGGTACTCTGCA CGG
->SpTet3.2
-GGGTAGACCAGAAGCCCGAC TGG
->SaCas9_Tet1.3
-GTGTGACTACTGGGCGCTGG GAGAGT
->SaCas9_Tet2.3
-AAGGCAGCCAGAGCAGTCAT GAGAGT
->SaCas9_Tet3.4
-GAGTTCCGGGGTGTCGCTGG GGGGGT
->SaCas9_Tet3.5
-GAGGTACAGGCCAGGAGTTC CGGGGT
->SaCas9_Tet3.6
-TAGCTGCTCCAGTTCTGCCA TAGGGT
->SpDnmt3a_1
-TTGGCATGGGTCGCTGACGG AGG
->SpDnmt1_1
-CGGGCTGGAGCTGTTCGCGC TGG
->SpDnmt3b 
-AGAGGGTGCCAGCGGGTATG AGG
->SaDnmt3a_3
-TCTCCGAACCACATGACCCA GCGAGT
->SaDnmt1_8
-AGAATGGTGTTGTCTACCGA CTGGGT
->SaDnmt3b_2
-GCAGGGCCGCCACCATGTGC AGGAGT"""
+import twobitreader
+from pyramid.paster import bootstrap
+from cfront import genomes_settings
 
 
 RD_DATAROOT = "/tmp/ramdisk/crispr"
 if not os.path.isdir(RD_DATAROOT):
     os.makedirs(RD_DATAROOT)
+
 
 bytes_translation_dict = dict([(e,i) for i,e in enumerate([l0+l1+l2+l3 for l0 in "ATGC" for l1 in "ATGC" for l2 in "ATGC" for l3 in "ATGC"])])
 
@@ -48,7 +22,37 @@ open_libraries = {}
 open_references = {}
 
 def raw_locs_file(genome):
+    if not os.path.isdir(os.path.join(RD_DATAROOT,genome)):
+        os.makedirs(os.path.join(RD_DATAROOT,genome))
     return os.path.join(RD_DATAROOT,"{0}/alllocs.txt".format(genome))
+
+def create_locs_file(genome):
+    rlf = raw_locs_file(genome)
+    twobitfile = "/tmp/ramdisk/genomes/{0}.2bit".format(genome)
+    tb = twobitreader.TwoBitFile(twobitfile)
+    chr_names = [k for k in tb.keys() if not "_" in k]
+    rc_dict ={"A":"T","T":"A","G":"C","C":"G"}
+    reverse_complement = lambda x:[reverse_complement(e) for e in x]
+
+    with open(rlf,"w") as f:
+        buf = ""
+        for k in chr_names:
+            c = str(tb[k])
+            l = len(c)
+            try:
+                for i in range(l-2):
+                    rng = c[i:i+2]
+                    if (rng == "GG" or rng == "AG")  and (i >= 21 and i < l-3):
+                        buf += "\t".join([k[3:],str(i - 21),  "+",c[i-21:i+2]]) + "\n"
+                    if (rng == "CC" or rng == "CT") and (i < l-23):
+                        buf += "\t".join([k[3:],str(i), "-", c[i:i+23]])  + "\n"
+                    if i % 1e6 == 0:
+                        print "{0} millions of locs written".format(i/1e6)
+                        f.write(buf)
+                        buf = ""
+            except IndexError, e:
+                print "error on index {0} out of {1}".format(i, l)
+        f.write(buf)
 
 def library_file(genome):
     LIBRARY_BYTES_PATH =  os.path.join(RD_DATAROOT,"{0}_bytes.npy".format(genome))
@@ -84,7 +88,11 @@ def init_library_bytes(genome):
 def init_reference_dictionary(genome):
     REFERENCE_PATH = reference_file(genome)
 
-    conn = psycopg2.connect("dbname=vineeta user=ben password=random12345")
+    conn = psycopg2.connect("dbname={0} user={1} password={2}"\
+                            .format(genomes_settings.get("postgres_database"),
+                                    genomes_settings.get("postgres_user"),
+                                    genomes_settings.get("postgres_password")),
+                            cursor_factory=psycopg2.extras.RealDictCursor)
     cur = conn.cursor()
     
     init_table = """
@@ -129,28 +137,43 @@ def init_reference_dictionary(genome):
 
 
 
+class TooManyHits(Exception):
+    pass
+
     
 def run_sequence_vs_genome(sequence, genome):
-    if not genome == "hg19":
-        raise Exception("unrecognized genome")
     if not len(sequence) == 20:
         raise Exception("wrong length input sequence")
-        
+    
     lfpath  = library_file(genome)
     rfpath  = reference_file(genome)
     
     #inits library if required
     if not lfpath:
-        print "no library bytes set. creating"
-        init_library_bytes(genome)
-    if not os.path.isfile(rfpath):
-        print "no reference dictionary. creating."
-        init_reference_dictionary(genome)
-        
+        raise Exception("genome has no library set: {0} ({1})".format(genome, lfpath))
+                        
     #loads and queries the correct genomewide library
     matches = query_library_bytes(genome, sequence)
     
+    if len(matches) > 10000:
+        raise TooManyHits()
+
+    conn = psycopg2.connect("dbname={0} user={1} password={2}"\
+                            .format(genomes_settings.get("postgres_database"),
+                                    genomes_settings.get("postgres_user"),
+                                    genomes_settings.get("postgres_password")),
+                            cursor_factory=psycopg2.extras.RealDictCursor)
+    cur = conn.cursor()
+
+
+    print "found {0} matches, scanning for loci in postgres".format(len(matches))
     #retrieve matches from the reference.
+    cur.execute("SELECT * FROM loc_references_{0} WHERE id = ANY(%s);".format(genome), ([long(m) for m in matches],))
+    results = cur.fetchall()
+    print "done scanning for matches in postgres!"
+    
+    conn.close()
+    return results    
 
 def sample_sequence():
     tests = []
@@ -161,6 +184,7 @@ def sample_sequence():
     return tests[0]["guide"]
 
 def query_library_bytes(genome, sequence):  
+    lfpath  = library_file(genome)
     if not genome in open_libraries:
         with open(lfpath) as f:
             open_libraries[genome] = np.load(f)
@@ -169,7 +193,7 @@ def query_library_bytes(genome, sequence):
     query_bytes = np.array([bytes_translation_dict[sequence[(j)*4:(j)*4+4]] 
                             for j in range(5)],
                            dtype=np.dtype("uint8"))
-    mismatches_threshold = 4
+    mismatches_threshold = 5
 
     f = library_bytes
     g = query_bytes
@@ -178,26 +202,33 @@ def query_library_bytes(genome, sequence):
     import bc
     n_matches = bc.striding_8bit_comparison(f,g,h,mismatches_threshold)
     matches_list = h[:n_matches]
-
+    return matches_list
 
 def main():
     parser = argparse.ArgumentParser()
 
     parser.add_argument('--program', '-p', dest="program",
                         default='save', type=str,
-                        help="program to run -- default, save, allowed: [save,load,sim]")
+                        help="program to run -- default, save, allowed: [create, init, test, query]")
     parser.add_argument('--genome', '-g', dest = "genome",
                         default="hg19", type = str,
                         help = "target genomic library")
 
-    
+    parser.add_argument('inifile')
     
     args = parser.parse_args()
+    env = bootstrap(args.inifile)
 
+    if args.program == "all":
+        create_locs_file(args.genome)
+        init_library_bytes(args.genome)
+        init_reference_dictionary(args.genome)
+    if args.program == "create":
+        create_locs_file(args.genome)
     if args.program == "test":
         run_sequence_vs_genome("GGCTGCTGTCAGGGAGCTCA",args.genome)
     if args.program == "init":
-        #init_library_bytes(args.genome)
+        init_library_bytes(args.genome)
         init_reference_dictionary(args.genome)
     elif args.program == "query":
         query_library_bytes(args.genome, sample_sequence())

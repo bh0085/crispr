@@ -43,16 +43,23 @@ class Job(Base):
     files_failed = Column(Boolean, nullable = False, default = False)
     email_complete = Column(Boolean, nullable = False, default = True)
     key = Column(String, nullable = False, index = True, unique = True)
+    batchid = Column(BigInteger, ForeignKey("batch.id"), nullable = True)
 
     #fake enum type for genomes
     GENOMES={
         "hg19":1,
-        "mm9":2
+        "mm9":2,
+        "rn5":3,
+        "danRer7":4,
+        "ce10":5,
     }
 
     ERR_BADINPUT = "Problem with query input: "
+    ERR_LARGEFILE = "Please submit a smaller file. As of 9/10/2013 we're limiting filesizes to <10kb to reduce load on the alpha server. Look for increased limits in the future!"
 
-
+    ERR_UNIMPLEMENTED = "Batch submit from .fa files is not yet implemented."
+    ERR_BADFILETYPE = "Please input a fasta file (.fa)."
+    ERR_PARSING_FASTA = "Could not parse fasta file."
     ERR_NOGENOME = "No matches found in the human genome (hg19). Please try a new query."
     ERR_MULTIPLE_GENOME = "More than one unique match found in the human genome (hg19). Please try a unique query."
     
@@ -72,7 +79,7 @@ class Job(Base):
         for k,v in kwargs.iteritems():
             self.__setattr__(k,v)
         if not "key" in kwargs:
-            self.key = "{0}".format(int(random.random() * 1e10))
+            self.key = "{0}".format(long(random.random() * 1e16))
             
     @property
     def genome_name(self):
@@ -170,6 +177,14 @@ class Job(Base):
         return True
 
     @property
+    def n_spacers(self):
+        return len(self.spacers)
+
+    @property
+    def n_completed_spacers(self):
+        return len([s for s in self.spacers if s.computed_hits])
+
+    @property
     def computed_n_hits(self):
         return sum([len(s.hits) for s in self.spacers])
 
@@ -206,7 +221,8 @@ class Job(Base):
                 "email_complete",
                 "files","key",
                 "genome_name",
-                "mapped", "query_type"]
+                "mapped", "query_type",
+                "n_spacers","n_completed_spacers"]
     @staticmethod
     def get_job_by_key(job_key):
         j =  Session.query(Job).filter(Job.key == job_key).first()

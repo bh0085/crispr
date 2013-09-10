@@ -27,6 +27,9 @@ Base.toJSON = toJSON
 class JobNOTFOUND(Exception):
     pass
 
+class BatchNOTFOUND(Exception):
+    pass
+
 class JobFAILED(Exception):
     pass
 
@@ -58,9 +61,9 @@ class SpacerERR(Exception):
 
         # Now for your custom code...
         self.spacer = spacer
-        print message
-        raise Exception()
+        print "deleting spacer with id: {0}\n({1})".format(spacer.id, message)
         Session.delete(spacer)
+        print "done"
 
 import model
 from model import *

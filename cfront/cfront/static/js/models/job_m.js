@@ -12,7 +12,7 @@ var JobM = Backbone.RelationalModel.extend({
 	files_ready:true,
 	computing_spacers:false,
 	computed_spacers:false,	
-	poll_timeout:250,
+	poll_timeout:1000,
 	active_spacer:null
     },
     relations:[
@@ -53,7 +53,7 @@ var JobM = Backbone.RelationalModel.extend({
 
 	self.fetch(
 	    {success:function(){
-		self.set("poll_timeout",self.get("poll_timeout") + 100);
+		self.set("poll_timeout",self.get("poll_timeout") + 200);
 		window.setTimeout($.proxy(self.poll,self),
 				  self.get("poll_timeout"));
 	    }})
@@ -61,7 +61,6 @@ var JobM = Backbone.RelationalModel.extend({
     },
     activateOne:function(s,val){
 	if( val){
-	    console.log("activating a spacer")
 	    _.each(this.get("spacers").models,function(s2, i2){
 		if (s2.id != s.id)
 		{s2.set("active",false)}

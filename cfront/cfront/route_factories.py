@@ -1,4 +1,4 @@
-from cfront.models import Job
+from cfront.models import Job, Batch
 import pyramid.httpexceptions as exc
 from cfront import cfront_settings
 
@@ -26,9 +26,24 @@ def set_request_job(request):
                 request.job = Job.get_job_by_key(request.matchdict["job_key"])
         else: raise Exception()
 
+
+def set_request_batch(request):
+        if 'batch_key' in request.matchdict:
+            if request.matchdict["batch_key"] == "-1":
+                request.batch = None
+            else:
+                request.batch = Batch.get_batch_by_key(request.matchdict["batch_key"])
+        else: raise Exception()
+
+
 class JobResourceFactory(Res):
     def __init__(self, request):
         set_request_job(request)
+
+
+class BatchResourceFactory(Res):
+    def __init__(self, request):
+        set_request_batch(request)
 
 class PageResourceFactory(Res):
     def __init__(self,request):

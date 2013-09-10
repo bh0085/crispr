@@ -179,7 +179,7 @@ JobV = Backbone.View.extend({
 	t = this.svg.text(null,left-3,top_avg-5,"+"+
 			  (current_job.get("mapped") ? this.model.get("start") : "??"),{"textAnchor":"end"})
 	t = this.svg.text(null,right+3,top_avg+10,"-"+
-			   (current_job.get("mapped") ? this.model.get("start") : "??"))
+			   (current_job.get("mapped") ? this.model.get("start")+this.model.get("sequence").length : "??"))
 
 	p = this.svg.createPath();
 	p.moveTo(left, top_plus)

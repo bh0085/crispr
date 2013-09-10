@@ -24,7 +24,8 @@ class Spacer(Base):
     name = Column(Unicode, nullable = True)
 
     ERR_MANY_EXACT_MATCHES = "Many unique matches found in the genome"
-
+    ERR_FAILED_TO_RETRIEVE_HITS = "Failed to retrieve hits from the genome"
+    ERR_TOOMANYHITS = "This spacer had over 10,000 similar sequences in the genome"
     @property
     def guide(self):
         return self.sequence[:-3]

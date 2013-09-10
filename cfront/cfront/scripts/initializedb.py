@@ -10,7 +10,7 @@ from pyramid.paster import (
 
 from ..models import (
     Session,
-    Job,
+    Batch,
     Base,
     )
 

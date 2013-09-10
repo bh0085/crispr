@@ -9,6 +9,8 @@
     <meta name="description" content="CRISPR design portal">
     <title>Optimized CRISPR Design</title>
     
+    <link href='http://fonts.googleapis.com/css?family=Alegreya+SC' rel='stylesheet' type='text/css'>
+
     <% import json %>
     <script type="text/javascript">
       console.log("INITING")
@@ -19,6 +21,7 @@
       sessionInfo = ${json.dumps(sessionInfo) | n}
       %endif
     </script>
+
     <script type="text/javascript" src="/js/cdn/jquery.min.js" ></script>
     <script type="text/javascript" src="/js/cdn/underscore-min.js" ></script>
     <script type="text/javascript" src="/js/cdn/backbone-min.js" ></script>
@@ -35,6 +38,7 @@
     <%include file="backbone.mako"/>
     <%include file="bb_templates/spacers.mako"/>
     <%include file="bb_templates/job.mako"/>
+    <%include file="bb_templates/batch.mako"/>
     <%include file="bb_templates/readout.mako"/>
     <%include file="bb_templates/submit.mako"/>
     <%include file="bb_templates/file.mako"/>

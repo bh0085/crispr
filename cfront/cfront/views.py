@@ -1,7 +1,8 @@
 from pyramid.response import Response
 from pyramid.view import view_config
 from cfront.utils import genome_db, webserver_db
-from cfront.models import JobERR, JobNOTFOUND, JobFAILED
+from cfront.models import JobERR, JobNOTFOUND, JobFAILED, BatchNOTFOUND
+from cfront import genomes_settings
 
 @view_config(route_name="readout", renderer='base.mako')
 def readout_view(request):
@@ -19,9 +20,19 @@ def nickase_view(request):
     return {"init_state":{"job":jj},
             "sessionInfo":{"routes":routes_dict(request)}}
 
+@view_config(route_name="batch", renderer="base.mako")
+def batch_view(request):
+    bj = request.batch.toJSON()
+    jobs = [j.toJSON() for j in request.batch.jobs]
+    bj["jobs"] = jobs
+    return {"init_state":{"batch":bj},
+            "sessionInfo":{"routes":routes_dict(request)}}
+
 @view_config(route_name="submit", renderer="base.mako")
 def submit_view(request):
-    return { "sessionInfo":{"routes":routes_dict(request)}}
+    return { "sessionInfo":
+             {"routes":routes_dict(request),
+              "genome_names":genomes_settings["genome_names"]}}
 
 @view_config(route_name="readonly", renderer="readonly.mako")
 def readonly_view(request):
@@ -46,7 +57,11 @@ def joberr_view(err, request):
 @view_config(context=JobNOTFOUND, renderer="errors/notfound.mako")
 def jobnotfound_view(err,request):
     return {"job":None}
-    
+
+@view_config(context=BatchNOTFOUND, renderer="errors/notfound.mako")
+def jobnotfound_view(err,request):
+    return {"job":None}
+        
 @view_config(context=JobFAILED, renderer="errors/failed.mako")
 def jobfailed_view(err,request):
     return {"job":err.job.toJSON(),

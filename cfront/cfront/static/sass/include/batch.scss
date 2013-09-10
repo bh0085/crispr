@@ -1,0 +1,20 @@
+.job-link-v{
+    a{
+	>*:second-child{
+	    display:inline-block;
+	    width:75px;
+	}
+	.name{
+	    font-weight:bold;
+	}
+	.unstarted{
+	    color:red;
+	}
+	.started{
+	    color:green;
+	}
+    }
+}
+
+.batch-v{
+}

@@ -1,12 +1,11 @@
 #!/usr/bin/env python
 
 from cfront.utils import genome_db, webserver_db, genome_io
-from cfront.models import Session, Job, Spacer, Hit
+from cfront.models import Session, SpacerERR, JobERR, Job, Spacer, Hit
 import sys, shutil
 import time
 import transaction
 from pyramid.paster import bootstrap
-from cfront.models import JobERR
 from cfront import cfront_settings
 import argparse, os
 
@@ -19,8 +18,6 @@ def queue_loop():
         process_queue()
         time.sleep(1)
         
-
-
 def process_queue():
     #start a transaction to compute spacers for any jobs which lack them
     #NOTE this is the second place in our code where spacers can be created
@@ -32,7 +29,7 @@ def process_queue():
 
 
     for j in Session.query(Job).filter(Job.computed_spacers == False)\
-                               .order_by(Job.id.desc()).limit(10).all():
+                               .order_by(Job.id.desc()).limit(100).all():
 
         print "computing spacers for job {0}".format(j.id)
         with transaction.manager:
@@ -52,24 +49,34 @@ def process_queue():
     
     #starts a transaction to compute hits for any spacer which has not
     # "computed_hits" or "computing_hits"
-    for j in Session.query(Job)\
+
+    possible_jobs =  Session.query(Job)\
                     .join(Spacer)\
                     .filter(Spacer.score == None)\
                     .filter(Job.failed == False)\
-                    .order_by(Job.id.desc()).limit(3).all():
+                    .all()
+
+    if len(possible_jobs) > 0:
+        batched_jobs = [j for j in possible_jobs if j.batch is not None]
+        print "{0} jobs in the queue {1} are batched".format(len(possible_jobs), len(batched_jobs))
+        def priority(j):
+            if j.batch is not None: return 100
+            else: return -1* j.id 
+            
+        top_job = sorted(possible_jobs, key = priority)[0]
         
+        if not top_job in Session: top_job = Session.merge(j)
         #spacers may be deleted from the session in the interior of this loop
-        for s in [s for s in j.spacers if s.score is None]:
+        for i,s in enumerate([s for s in top_job.spacers if s.score is None][:3]):
             if not s in Session: s = Session.merge(s)
             with transaction.manager:
-                try:
-                    print "COMPUTING HITS for spacer: {0}".format(s.id)
-                    genome_db.compute_hits_for_spacer(s.id)
-                    Session.add(s)
-                except JobERR, e:
-                    print "excepted a job/spacer error on COMPUTE for job {0}".format(s.job.id)
-                except SpacerERR, e:
-                    print "excepted a spacer error for spacer id {0}".format(s.id)
+                    try:
+                        print "computing hits for spacer: {0}".format(s.id)
+                        genome_db.compute_hits_for_spacer(s.id)
+                    except JobERR, e:
+                        print "excepted a job/spacer error on COMPUTE for job {0}".format(s.job.id, top_job)
+                    except SpacerERR, e:
+                        print "excepted a spacer error for spacer id {0}".format(s.id)
 
 def main():
     parser = argparse.ArgumentParser()

@@ -3,10 +3,10 @@
 Configures exon databases used by the CRISPR server to get labels for offtarget hits. 
 '''
 
-import os, StringIO
+import os, StringIO, argparse
 import psycopg2    
 import random
-
+from pyramid.paster import bootstrap
 from cfront import genomes_settings
 
 def genes_file(genome_name):
@@ -14,6 +14,7 @@ def genes_file(genome_name):
     if not os.path.isfile(path):
         raise Exception("unsupported genome (file ucsc file does not exist) at\n {0}"\
                         .format(path))
+    return path
 
 #simple code takes every one of a list of hits and runs a SQL query on an indexed
 #database containing all UCSC exons.
@@ -40,13 +41,12 @@ def get_hit_genes(hits, genome_name):
     {1}.chr as c1,
     {1}.exon_start as s1,
     {1}.exon_end as e1
-    FROM {0}, {2}
+    FROM {0}, {1}
     WHERE  ({0}.start+20+100) > {1}.exon_start
     AND ({0}.start-100 - 5000) < {1}.exon_start
     """\
         .format("hits_{0}".format(int(random.random() * 10000000 )),
                 "exon_{0}".format(genome_name),
-                genome_name,
                 updates,
         )    
     
@@ -62,8 +62,8 @@ def get_hit_genes(hits, genome_name):
             #print "accepted {0}".format(h.gene)
             if h.start > r[3] - 100:
                 if h.start < r[4] + 100 + 20:
-                    hits_by_id[h.id] = r[1]
-    return hits_by_id
+                    genes_by_hitid[h.id] = r[1]
+    return genes_by_hitid
 
 
 def populate_exons(genome_name):
@@ -91,7 +91,23 @@ def populate_exons(genome_name):
     """.format(genome_name)
     cur.execute(init_table);
     buf = StringIO.StringIO()
-    exon_cols = ["id","gene_name","exon_number","chr","strand","start","end","protein_id","cds_start","cds_end"]
+    exon_cols_rs = ['bin',
+                    'name',
+                    'chrom',
+                    'strand',
+                    'txStart',
+                    'txEnd',
+                    'cdsStart',
+                    'cdsEnd',
+                    'exonCount',
+                    'exonStarts',
+                    'exonEnds',
+                    'score',
+                    'name2',
+                    'cdsStartStat',
+                    'cdsEndStat',
+                    'exonFrames']
+    #exon_cols = ["id","gene_name","exon_number","chr","strand","start","end","protein_id","cds_start","cds_end"]
     id_counter = 1
     with open(genes_file(genome_name)) as f:
         for exon_id,l in enumerate(f):
@@ -109,7 +125,7 @@ def populate_exons(genome_name):
                                                            1 if row["strand"] == "+" else -1,
                                                            pair[0],
                                                            pair[1],
-                                                           row["proteinID"] if row["proteinID"] !="" else None,
+                                                           None,
                                                            row["cdsStart"],
                                                            row["cdsEnd"]]]) + "\n"
                 id_counter+=1
@@ -129,28 +145,29 @@ def create_indexes(genome_name):
                                     genomes_settings.get("postgres_password")))
     cur = conn.cursor()
     cur.execute("""
-    CREATE INDEX exon_start_idx ON exon_{0}(exon_start);
-    CREATE INDEX cds_start_idx ON exon_{0}(cds_start);
-    CREATE INDEX exon_end_idx ON exon_{0}(exon_end);
-    CREATE INDEX cds_end_idx ON exon_{0}(cds_end);
-    CREATE INDEX chr_idx ON exon_{0}(chr);
-    CREATE INDEX strand_idx ON exon_{0}(strand);
+    CREATE INDEX {0}_exon_start_idx ON exon_{0}(exon_start);
+    CREATE INDEX {0}_cds_start_idx ON exon_{0}(cds_start);
+    CREATE INDEX {0}_exon_end_idx ON exon_{0}(exon_end);
+    CREATE INDEX {0}_cds_end_idx ON exon_{0}(cds_end);
+    CREATE INDEX {0}_chr_idx ON exon_{0}(chr);
+    CREATE INDEX {0}_strand_idx ON exon_{0}(strand);
     """.format(genome_name))
     conn.commit()
     return
                 
 if __name__ =="__main__":
-    parser = argparse.ArgumentParser()
 
+    parser = argparse.ArgumentParser()
     parser.add_argument('--genome', '-g', dest = "genome_name",
                         default="hg19", type = str,
                         help = "genome name [...]")
     parser.add_argument('--program', '-p', dest = "program",
                         default="init", type= str,
                         help = "program to run [init]")
+    parser.add_argument('inifile')
 
     args = parser.parse_args()
-
+    env = bootstrap(args.inifile)
     populate_exons(args.genome_name)
     create_indexes(args.genome_name)
 

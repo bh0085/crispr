@@ -1,17 +1,58 @@
 #sequence_submission_area{
-    min-width:400px;
+    min-width:325px;
 }
+
 
 #submit{
-    margin-left:100px;
-}
+    margin-top:50px;
+    .nav-tabs{
+	margin-top: -36px;
+	padding-right: 20px;
+	border-bottom: 1px solid #eee;
+	li{
+	    border-color:#eee;
+	    float:right;
+	    >a{
+		padding-top: 6px;
+		padding-bottom: 6px;
+	    }
+	}
+    }
+    .disabled{
+	opacity:.4;
+	color:black;
+    }
+    .tab-content{
+	overflow:visible;
+	.tab-pane{
+	    padding-top:80px;
+	    max-width: 600px;
+	    margin-right: auto;
+	    margin-left: auto;
 
-form{
-    &.submitted {
-	cursor:wait;
-	.submit-group input{
-	    pointer-events:none;
-	    opacity:.5;
+	    .header-description{
+		margin-top: -60px;
+		position: absolute;
+		text-align: center;
+		left: 0px;
+		right: 0px;
+		color: #000;
+		opacity: .5;
+		font-size: 100%;
+	    }
+	}	
+    }
+    form{
+	&.submitted {
+	    cursor:wait;
+	    .submit-group input{
+		pointer-events:none;
+		opacity:.5;
+	    }
+	    input[type='file']{
+		width: 95px;
+	    }
 	}
     }
 }
+

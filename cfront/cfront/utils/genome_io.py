@@ -23,14 +23,12 @@ def commence_file_io(job_id):
     job = Session.query(Job).get(job_id)    
     Session.add(job)
     
-    if job.genome_name != "HUMAN" or len(job.good_spacers) == 0:
+    if job.genome_name != "hg19" or len(job.good_spacers) == 0:
         job.files_failed = True
         job.date_failed = datetime.datetime.utcnow()
     else:
         job.files_computing = True
 
-    write_f1(job_id)
-    write_f2(job_id)
     write_f4(job_id)
     write_f5_f6(job_id)
     
@@ -41,9 +39,9 @@ def commence_file_io(job_id):
         job.files_failed = True
     job.files_computing = False
 
-    #if job.email_complete:
-    #    if not cfront_settings.get("debug_mode",False):
-    #        mail.mail_completed_job(None, job)
+    if job.email_complete:
+        if not cfront_settings.get("debug_mode",False):
+            mail.mail_completed_job(None, job)
 
 
 

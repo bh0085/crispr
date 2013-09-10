@@ -1,4 +1,4 @@
-q#!/usr/bin/env python
+#!/usr/bin/env python
 '''
 populates a postgres database with CRISPR loci
 computes the distribution of letters in each locus

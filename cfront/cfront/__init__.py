@@ -7,7 +7,8 @@ genomes_settings = {}
 
 from .route_factories import (
     JobResourceFactory,
-    PageResourceFactory
+    PageResourceFactory,
+    BatchResourceFactory
 )
 
 
@@ -21,11 +22,14 @@ def set_cfront_settings(settings):
 
 def set_genomes_settings(settings):
     prefix = "genomes."
-    global cfront_settings
+    global genomes_settings
     for k,v in settings.iteritems():
         if prefix == k[:len(prefix)]:
-            cfront_settings[k[len(prefix):]] = (v.lower()=='true') \
-                                         if v.lower() in ['true', 'false'] else v
+            genomes_settings[k[len(prefix):]] = (v.lower()=='true') \
+                                                if v.lower() in ['true', 'false'] else v
+    genomes_settings["genome_names"] = [e.strip() 
+                                        for e in genomes_settings["genome_names"].split(",")]
+     
 
 def main(global_config, **settings):
     """ 
@@ -52,10 +56,13 @@ def main(global_config, **settings):
     config.add_route('readonly', '/readonly',factory=PageResourceFactory)
     config.add_route('readout', '/job/{job_key}',factory=PageResourceFactory)
     config.add_route('nickase', '/nick/{job_key}',factory=PageResourceFactory)
+    config.add_route('batch', '/batch/{batch_key}', factory = BatchResourceFactory)
+    
 
     #ajax routes
     config.add_route('job_check_spacers','/j/check_spacers/{job_key}',factory=JobResourceFactory)
     config.add_route('job_post_new', '/j/post_new')
+    config.add_route('jobs_from_fasta', '/j/from_fasta')
     config.add_route('job_from_spacers', '/j/from_spacers')
     config.add_route('job_retrieve_spacers', '/j/retrieve_spacers/{job_key}',factory=JobResourceFactory)
     config.add_route('job_email_complete', '/j/email_complete/{job_key}',factory=JobResourceFactory)
@@ -65,6 +72,7 @@ def main(global_config, **settings):
 
     #rest routes
     config.add_route('job_rest', '/r/job/{job_key}',factory=JobResourceFactory)
+    config.add_route('batch_rest', '/r/batch/{batch_key}',factory=BatchResourceFactory)
     config.add_route('spacer_rest', '/r/spacer/{spacer_id}')
     
     config.add_route('maintainance','/sorry')

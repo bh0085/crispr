@@ -1,7 +1,7 @@
 <div class="navbar unselectable">
-  <div class="navbar-inner">
+  <div class=""><!--removed navbar inner styling -->
     <div class="container"> 
-      <a class="brand" href="/">CRISPR Design <span class="med-left-margin dna" style="font-size:12px;">Alpha version .02</span></a>
+      <a class="brand" href="/">CRISPR Design</a>
       <!-- Everything you want hidden at 940px or less, place within here -->
       <ul class="nav pull-right">
         <li><a href="/about">About</a></li>        
@@ -10,21 +10,25 @@
     </div>
   </div>
 </div>
-<div class="alert alpha-warning header">
+%if request.matched_route.name == "submit":
+<div class="alert alert-success alpha-warning header">
   <button type="button" class="close" data-dismiss="alert">&times;</button>
   <div class="content showing-less">
-    <span class="text-fixed-width-content">The CRISPR design tool is an alpha release undergoing active development. During this period it is possible that jobs will run slowly or not at all. We'll fix errors as we become aware of them, so if you run into any issues or have questions, please don't hesitate to contact us at: <a href="mailto:crispr.scan@gmail.com">crispr.design@gmail.com</a> or visit the <a href="https://groups.google.com/forum/#!forum/crispr">discussion forum.</a></span>
+    <span class="text-fixed-width-content">The CRISPR design tool is all fixed up and will soon enter beta-phase. During this period we're going to continue working to improve performance and reliability -- especially of handy features like email alerts and the like. We'll fix errors as we become aware of them, so as always, please don't hesitate to contact us at: <a href="mailto:crispr.scan@gmail.com">crispr.design@gmail.com</a> or post on the <a href="https://groups.google.com/forum/#!forum/crispr">discussion forum.</a></span>
     <a class=" less show-more">show more</a>
     <span class="more"> </span>
     <a class="med-left-margin more show-less">... show less</a> 
   </div>
 </div>
-<div class="alert alert-error error-warning header">
+%endif
+%if request.matched_route.name == "batch":
+<div class="alert alert-info alpha-warning header">
   <button type="button" class="close" data-dismiss="alert">&times;</button>
   <div class="content showing-less">
-    <span class="text-fixed-width-content">The CRISPR design tool is experiencing serious issues which may result in queries returning with invalid scores and missing off target hits. We recommend waiting until the issue is fixed to submit queries, until please see our Announcement on the <a href="https://groups.google.com/forum/#!forum/crispr">discussion forum</a> for details and updates.</span>
+    <span class="text-fixed-width-content">"Batch-submit" and this page are in experimental development. We are currently working to improve the experience of this page and make it easier for you to quickly recover, view, and check the status of submitted jobs! For updates and announcement, please check visit our <a href="https://groups.google.com/forum/#!forum/crispr">discussion forum.</a>.</span>
     <a class=" less show-more">show more</a>
     <span class="more"> </span>
     <a class="med-left-margin more show-less">... show less</a> 
   </div>
 </div>
+%endif

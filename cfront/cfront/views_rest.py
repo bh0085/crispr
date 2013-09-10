@@ -12,30 +12,40 @@ def job_rest(request):
         raise Exception("id-less request with a non-post method")
     elif method == 'POST' and job:
         raise Exception("post request for persisted job")
-
     if method == 'POST':
         raise Exception("please post jobs through the ajax gateway")
-        job = Job(date_submitted = datetime.datetime.utcnow(),
-                  sequence = request.params["sequence"],
-                  genome = Job.GENOMES["HUMAN"],
-                  name = request.params["name"],
-                  email = request.params["email"],
-                  date_completed = None
-        )
-
-        
-
     elif method == 'GET':
         pass
     else:
         raise Exception("unsupported method: {0}".format(method))
                   
-    Session.add(job)
-    Session.flush()
     json = job.toJSON()
     json["spacers"] = [s.toJSON() for s in job.spacers]
 
     return json
+
+
+@view_config(route_name="batch_rest", renderer="json")
+def batch_rest(request):
+    method = request.method
+    batch = request.batch
+    if method != 'POST' and not batch:
+        raise Exception("id-less request with a non-post method")
+    elif method == 'POST' and batch:
+        raise Exception("post request for persisted batch")
+    if method == 'POST':
+        raise Exception("please post batchs through the ajax gateway")
+    elif method == 'GET':
+        pass
+    else:
+        raise Exception("unsupported method: {0}".format(method))
+                  
+    json = batch.toJSON()
+    json["jobs"] = [j.toJSON() for j in batch.jobs]
+
+    return json
+
+
 
 
 @view_config(route_name="spacer_rest", renderer="json")

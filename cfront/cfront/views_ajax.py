@@ -1,6 +1,6 @@
 from pyramid.view import view_config
 from .utils import webserver_db, genome_db, mail
-from .models import Session, Job, Hit, Spacer, JobERR
+from .models import Session, Job, Hit, Spacer, JobERR, Batch
 import datetime, re
 from cfront import cfront_settings
 
@@ -34,6 +34,10 @@ def spacer_retrieve_hits(request):
 def job_post_new(request):
     sequence = request.params["query"].upper()
     sequence = re.sub("\s","",sequence)
+
+    
+    if request.params["genome"] != "hg19":
+        raise JobERR("non hg19 queries temporarily disabled to keep away from glitches while N&O run queries", None)
     if cfront_settings.get("debug_mode",False): print sequence
 
     
@@ -42,9 +46,9 @@ def job_post_new(request):
                     "message":"Ambiguous or invalid characters found in input sequene.",
                     "matches":None,
                     "job_key":None}
-    if len(sequence)<23 or len(sequence) > 500 :
+    if len(sequence)<23 or len(sequence) > 250 :
         return {"status":"error",
-                "message":"Sequence length not within allowed range (23 - 500bp)",
+                "message":"Sequence length not within allowed range (23 - 250bp)",
                 "matches":None,
                 "job_key":None}
 
@@ -58,7 +62,7 @@ def job_post_new(request):
     print request.params.get("inputRadios")
     if ( request.params.get("inputRadios",None) == "unique_genomic" ) and len(matches) == 0:
         raise JobERR(Job.ERR_NOGENOME,None)
-    if request.params.get("inputRadios",None) == "unique_genom2ic" and len(matches) > 1:
+    if request.params.get("inputRadios",None) == "unique_genomic" and len(matches) > 1:
         raise JobERR(Job.ERR_MULTIPLE_GENOME,None)
     elif len(infos) == 0:
         raise JobERR(Job.NOSPACERS,None)
@@ -96,6 +100,84 @@ def job_post_new(request):
         
             
     
+@view_config(route_name="jobs_from_fasta", renderer='json')
+def jobs_from_fasta(request):
+    '''
+    takes fasta file and spawns jobs from it.
+    currently checks for 
+    1. file type (.fa)
+    2. fasta parse errors
+    3. file size < 100,000 bytes
+
+    but makes no guarantees that the individual jobs are good.
+    '''
+
+    filename = request.POST['fasta_file'].filename
+    if not filename[-3:] == ".fa":
+        raise JobERR(Job.ERR_BADFILETYPE, None)
+
+    if request.params["genome"] != "hg19":
+        raise JobERR("non hg19 queries temporarily disabled to keep away from glitches while N&O run queries", None)
+
+    input_file = request.POST['fasta_file'].file
+    import StringIO
+    output_buffer = StringIO.StringIO()
+    
+    # Finally write the data to a temporary file
+    input_file.seek(0)
+    while True:
+        data = input_file.read(2<<16)
+        if not data:
+            break
+        output_buffer.write(data)
+
+    if output_buffer.len > 1e4:
+        raise JobERR(Job.ERR_LARGEFILE, None)
+
+    from Bio import SeqIO
+    try:
+        output_buffer.seek(0)
+        fasta_records = [r for r in SeqIO.parse(output_buffer,"fasta")]
+    except Exception,e:
+        raise JobERR(Job.ERR_PARSING_FASTA,None)
+        
+    b = Batch(original_filename = filename,
+              email = request.params["email"],
+              date_submitted = datetime.datetime.utcnow(),
+              genome = Job.GENOMES[request.params["genome"]],
+          )
+    output_buffer.seek(0)
+    b.save_input_file(output_buffer)       
+    Session.add(b)
+
+    for r in fasta_records:
+        sequence = str(r.seq)
+        matches = webserver_db.check_genome(sequence,request.params["genome"])
+        if len(matches) == 1:
+            chr = matches[0]["tName"]
+            start = matches[0]["tStart"]
+            strand=1 if matches[0]["strand"] == "+" else -1
+        else:
+            chr = None
+            start = None
+            strand = None
+
+        j = Job(batch = b,
+                name = r.id,
+                email = b.email,
+                chr = chr,
+                start = start,
+                strand = strand,
+                sequence = sequence,
+                genome = Job.GENOMES[request.params["genome"]],
+                email_complete=False,
+                date_submitted = datetime.datetime.utcnow())
+
+        Session.add(j)
+
+    return {"status":"success",
+            "message":None,
+            "batch_key":b.key}
 
 
 @view_config(route_name="job_from_spacers",renderer='json')
@@ -157,7 +239,7 @@ def job_from_spacers(request):
                 "matches":None,
                 "job_key":None}
     
-    print "GENOME: {0}".format(request.params.get("genome","HUMAN"))
+    print "GENOME: {0}".format(request.params.get("genome","hg19"))
     
         
     if len(spacer_infos) == 0:
@@ -165,7 +247,7 @@ def job_from_spacers(request):
     else:
         params = dict(date_submitted = datetime.datetime.utcnow(),
                       sequence = job_sequence,
-                      genome = Job.GENOMES[request.params.get("genome","HUMAN")],
+                      genome = Job.GENOMES[request.params.get("genome","hg19")],
                       name = request.params["name"],
                       email = request.params["email"],
                       twostrand = False,
