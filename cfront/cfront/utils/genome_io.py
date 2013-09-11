@@ -39,10 +39,13 @@ def commence_file_io(job_id):
         job.files_failed = True
     job.files_computing = False
 
-    if job.email_complete:
-        if not cfront_settings.get("debug_mode",False):
-            mail.mail_completed_job(None, job)
-
+    try:
+        if job.email_complete:
+            if not cfront_settings.get("debug_mode",False):
+                mail.mail_completed_job(None, job)
+    except mail.MailError as m:
+        print "writing mail on complete failed for job {0}".format(job.id)
+        
 
 
 def write_f4(job_id):

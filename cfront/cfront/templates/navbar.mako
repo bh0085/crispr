@@ -32,3 +32,15 @@
   </div>
 </div>
 %endif
+%if request.matched_route.name == "readout":
+<div class="alert alert-warning alpha-warning header">
+  <button type="button" class="close" data-dismiss="alert">&times;</button>
+  <div class="content showing-less">
+    <span class="text-fixed-width-content">Heads up -- the CRISPR server is currently under heavy load as we churn through jobs which were submitted before system upgrades taking place over the past week. Single jobs may at the moment take an hour or more to complete, batch jobs are are at the back of the queue and could take longer. If any fail to finish by 9/11/2013, please let us know!</span>
+    <a class=" less show-more">show more</a>
+    <span class="more"> </span>
+    <a class="med-left-margin more show-less">... show less</a> 
+  </div>
+</div>
+%endif
+

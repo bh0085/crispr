@@ -28,8 +28,8 @@ def check_genome(sequence, genome):
     with open(tmpfile_out) as f:
         content = f.read()
         
-    #os.remove(tmpfile_in)
-    #os.remove(tmpfile_out)
+    os.remove(tmpfile_in)
+    os.remove(tmpfile_out)
     
     lines = content.splitlines()
     headers, content = lines[:5],lines[5:]

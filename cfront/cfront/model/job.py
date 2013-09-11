@@ -41,7 +41,7 @@ class Job(Base):
     files_computing = Column(Boolean, nullable = False, default = False)
     files_ready = Column(Boolean, nullable = False, default = False)
     files_failed = Column(Boolean, nullable = False, default = False)
-    email_complete = Column(Boolean, nullable = False, default = True)
+    email_complete = Column(Boolean, nullable = False, default = False)
     key = Column(String, nullable = False, index = True, unique = True)
     batchid = Column(BigInteger, ForeignKey("batch.id"), nullable = True)
 
