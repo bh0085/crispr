@@ -35,11 +35,7 @@ def job_post_new(request):
     sequence = request.params["query"].upper()
     sequence = re.sub("\s","",sequence)
 
-    
-    if request.params["genome"] != "hg19":
-        raise JobERR("non hg19 queries temporarily disabled to keep away from glitches while N&O run queries", None)
     if cfront_settings.get("debug_mode",False): print sequence
-
     
     if re.compile("[^AGTCN]").search(sequence) is not None:
             return {"status":"error",
@@ -152,6 +148,10 @@ def jobs_from_fasta(request):
 
     for r in fasta_records:
         sequence = str(r.seq)
+            
+        if re.compile("[^AGTCN]").search(sequence) is not None:
+            raise JobERR(Job.ERR_INVALID_CHARACTERS, None) 
+
         matches = webserver_db.check_genome(sequence,request.params["genome"])
         if len(matches) == 1:
             chr = matches[0]["tName"]

@@ -32,7 +32,11 @@ def batch_view(request):
 def submit_view(request):
     return { "sessionInfo":
              {"routes":routes_dict(request),
-              "genome_names":genomes_settings["genome_names"]}}
+              "genome_names":genomes_settings["genome_names"]}} 
+
+@view_config(route_name="about", renderer="base.mako")
+def about_view(request):
+    return  { "sessionInfo":{"routes":routes_dict(request)}}
 
 @view_config(route_name="readonly", renderer="readonly.mako")
 def readonly_view(request):

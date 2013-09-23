@@ -52,11 +52,12 @@ def main(global_config, **settings):
     config.add_static_view('/files', 'static/files', cache_max_age=3600)
 
     #page routes
+    config.add_route('about', '/about', factory=PageResourceFactory)
+    config.add_route('batch', '/batch/{batch_key}', factory = BatchResourceFactory)
     config.add_route('submit', '/', factory=PageResourceFactory)
     config.add_route('readonly', '/readonly',factory=PageResourceFactory)
     config.add_route('readout', '/job/{job_key}',factory=PageResourceFactory)
     config.add_route('nickase', '/nick/{job_key}',factory=PageResourceFactory)
-    config.add_route('batch', '/batch/{batch_key}', factory = BatchResourceFactory)
     
 
     #ajax routes

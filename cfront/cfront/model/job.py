@@ -55,6 +55,7 @@ class Job(Base):
     }
 
     ERR_BADINPUT = "Problem with query input: "
+    ERR_INVALID_CHARACTERS = "Invalid characters in submission, please restrict query input to sequences including A, T, G, or C"
     ERR_LARGEFILE = "Please submit a smaller file. As of 9/10/2013 we're limiting filesizes to <10kb to reduce load on the alpha server. Look for increased limits in the future!"
 
     ERR_UNIMPLEMENTED = "Batch submit from .fa files is not yet implemented."

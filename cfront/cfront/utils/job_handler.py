@@ -38,7 +38,7 @@ def process_queue():
                 print 'computing spacers {0}'.format(j.id)
                 spacer_infos = webserver_db.compute_spacers(j.sequence)
                 if(len(spacer_infos)) == 0:
-                    raise JobERR(Job.ERR_NOSPACERS, j)
+                    raise JobERR(Job.NOSPACERS, j)
                 for spacer_info in spacer_infos:
                     Session.add(Spacer(job = j,**spacer_info))
                 j.computed_spacers = True

@@ -2,6 +2,7 @@ from ..models import Session, Job, Hit, Spacer
 import re, subprocess as spc, os, random
 from Bio import SeqIO as sio, Seq as seq, SeqRecord as sr
 from cfront import genomes_settings
+from cfront.models import JobERR
 
 
 TMPPATH = "/tmp/ramdisk/cfront/webserver"
@@ -23,6 +24,8 @@ def check_genome(sequence, genome):
 
     cmd = "gfClient localhost {3} . {0} {1} -minScore={2} -minIdentity=100".format(tmpfile_in, tmpfile_out, len(sequence), gfport)
     
+    print genomes_settings.get("gfport_root")
+    print "HIHI"
     prc = spc.Popen(cmd,shell = True, stdout = spc.PIPE, cwd = genomes_settings.get("gfport_root"))
     prc.communicate()
     with open(tmpfile_out) as f:
@@ -95,9 +98,14 @@ qStarts - Comma-separated list of start position of each block in query.
 tStarts - Comma-separated list of start position of each block in target."""
 
 def compute_spacers(sequence):
+    
+    if re.compile("[^AGTCN]").search(sequence) is not None:
+        raise JobERR(Job.ERR_INVALID_CHARACTERS, None)
+
     fwd = sequence
     rev = reverse_complement(sequence)
-    
+
+ 
     expression = re.compile(".{20}[ATGC]GG")
     infos = []
     for m in re.finditer(expression, fwd):

@@ -160,10 +160,7 @@ if __name__ =="__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--genome', '-g', dest = "genome_name",
                         default="hg19", type = str,
-                        help = "genome name [...]")
-    parser.add_argument('--program', '-p', dest = "program",
-                        default="init", type= str,
-                        help = "program to run [init]")
+                        help = "genome name [...]", required = True)
     parser.add_argument('inifile')
 
     args = parser.parse_args()
@@ -171,3 +168,4 @@ if __name__ =="__main__":
     populate_exons(args.genome_name)
     create_indexes(args.genome_name)
 
+    

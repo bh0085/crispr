@@ -42,6 +42,7 @@
     <%include file="bb_templates/readout.mako"/>
     <%include file="bb_templates/submit.mako"/>
     <%include file="bb_templates/file.mako"/>
+    <%include file="bb_templates/about.mako"/>
     <%include file="bb_templates/nickase.mako"/>
     <script type="text/javascript" src="/js/pages/base.js"></script>
     <script type="text/javascript" src="/js/pages/${request.matched_route.name}.js"></script>
