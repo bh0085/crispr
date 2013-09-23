@@ -3,6 +3,7 @@
 *~
 *.sqlite
 cfront/venv
+*#
 #*
 .#*
 .sass-cache

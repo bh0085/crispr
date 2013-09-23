@@ -45,6 +45,7 @@ def process_queue():
                 Session.add(j)
             except JobERR, e:
                 print "excepted a job error for job: {0}".format(j.id)
+                print j.sequence
 
     
     #starts a transaction to compute hits for any spacer which has not
