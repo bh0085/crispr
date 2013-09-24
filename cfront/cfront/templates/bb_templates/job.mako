@@ -1,8 +1,7 @@
 <script type="unknown" id="job-v-template">
   <div class="header showing-less">
     <!--header-->
-    <h1>Optimized CRISPR Design</h1>
-    <h4 style="display:inline;">For query sequence "{{name}}" </h4>
+    <h2 style="display:inline-block;">"{{name}}"</h2>
     <a class="show-more less med-left-margin annotation">... show info</a>
     <a class="med-left-margin more annotation show-less">... hide info?</a>
     <div class="job-description med-left-margin med-top-margin more">
@@ -54,6 +53,7 @@
       <div id="downloads-tab" name="downloads" class="tab-pane">
       </div>
       <div id="double-nickase-tab" name="double nickase" class="tab-pane active">
+	<div class="nickase-v-container"></div>
       </div>
     </div>
   </div>

@@ -1,6 +1,7 @@
 JobSVGV = Backbone.View.extend({
     tagName:"div",
     className:"selection-svg",
+    template:$("#job-svg-view-template").html(),
     initialize:function(){
 	this.compute_collisions()
 	this.rendered_spacers = {}
@@ -9,18 +10,17 @@ JobSVGV = Backbone.View.extend({
     },
 
     render:function(){
+	this.$el.html(_.template(this.template, {}))
 
 	this.left_f = .25;
 	this.right_f = .75;
-        //this.selt = this.$(".selection-svg");  
 	this.canvas_w=900;
 	this.canvas_h = 150
 	
-	this.svg = this.$el.svg({}).svg("get");
+	this.svg = this.$(".main-svg-canvas").svg({}).svg("get");
 	$(this.svg._svg).attr("height",""+ this.canvas_h + "px");
 	$(this.svg._svg).attr("width", "100%");
 	this.draw_spacers();
-
 
 	var self = this
 	_.each(this.model.get("spacers").models,function(s){
@@ -167,4 +167,6 @@ JobSVGV = Backbone.View.extend({
 
 
 NickaseV = JobSVGV.extend({
+    template:$("#nickase-svg-view-template").html(),
+
 })

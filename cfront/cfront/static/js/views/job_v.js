@@ -9,6 +9,7 @@ JobV = Backbone.View.extend({
 	this.binder = new Backbone.EventBinder()
 	this.compute_collisions();
 	this.svgv = new JobSVGV({model:this.model})
+	this.nsvgv = new NickaseV({model:this.model})
     },   
     update_status:function(){
 	var done_count = _.filter(this.model.get("spacers").models,function(e){return e.get("computed_hits")}).length
@@ -57,12 +58,10 @@ JobV = Backbone.View.extend({
 	this.ranges_rev = ranges_rev
     },
     render:function(){
-	this.left_f = .25;
-	this.right_f = .75;
 	params = this.model.toJSON()
 
 	var seq = params.sequence
-	inc = 40
+	inc = 40 
 	iters = Math.ceil(seq.length /inc)
 	var ranges = this.ranges_fwd.concat(this.ranges_rev)
 	var occupied = new Array(seq.length)
@@ -115,6 +114,7 @@ JobV = Backbone.View.extend({
 	self.binder.bindTo(this.model, "change:files-ready", this.update_status,this)
 	this.$(".files-area").empty().append(new FileListV({job:this.model}).render().$el);
 	this.$(".svg-container").append(this.svgv.render().$el)
+	this.$(".nickase-v-container").append(this.nsvgv.render().$el)
 	
         return this;
     },

@@ -32,6 +32,7 @@
   </div>
 </div>
 %endif
+<!--
 %if request.matched_route.name == "readout":
 <div class="alert alert-warning alpha-warning header">
   <button type="button" class="close" data-dismiss="alert">&times;</button>
@@ -43,4 +44,4 @@
   </div>
 </div>
 %endif
-
+-->

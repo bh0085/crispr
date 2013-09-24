@@ -22,7 +22,27 @@ body{
 	}
     }
     
+    .nav-tabs{
+	margin-top: -36px;
+	padding-right: 20px;
+	border-bottom: 1px solid #eee;
+	li{
+	    border-color:#eee;
+	    float:right;
+	    >a{
+		padding-top: 6px;
+		padding-bottom: 6px;
+	    }
+	}
+    }
+    .disabled{
+	opacity:.4;
+	color:black;
+    }
+
 }
+
+
 
 body{
     &.submit{
