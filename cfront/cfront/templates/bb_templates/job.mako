@@ -11,7 +11,7 @@
 	<dt>Date submitted:</dt><dd>{{submitted}}</dd><br/>
 	<dt>Date completed:</dt><dd>{{completed}}</dd><br/>
 	<dt>Aligns to:</dt><dd>hg19 on the <b>{{strand=="1"?"sense":"antisense"}}</b> strand of <b>{{chr}}</b> at <b>{{start}}</b> ({{locus}})</dd><br/>
-	<dt>Sequence:</dt><dd class="seq"><span class="break-all dna">{{seq_html}}</dna></dd><br/>
+	<dt>Sequence:</dt><dd class="seq"><span class="break-all dna">{{seq_html}}</span></dd><br/>
 	<dt>Statistics:</dt><dd>{{sequence.length}}nt, contains {{spacers.length}} possible guide sequences</dd><br/>
       </dl>
     </div>
@@ -28,15 +28,33 @@
 	<span class="text">locating guides... should take a couple of seconds</span>
       </div>
     </div>
+
     
-    <!-- files download area -->
-    <div id="downloadable" class="files-area"></div>
-    
-    <!-- svg drawing area -->
-    <div class="header"><span class="section-name">Interactive results: </span><span class="annotation med-left-margin">mouse over a guide or explore below for details</div>
-  </div>
-  <div class="svg-container">
-    <div class="selection-svg">
+    <ul class="nav nav-tabs">
+      <li><a href="#spacers-tab" data-toggle="tab">Spacers</a></li>
+      <li ><a href="#downloads-tab" data-toggle="tab">Downloads</a></li>
+      <li class="active"><a href="#double-nickase-tab" data-toggle="tab">Double Nickase</a></li>
+    </ul>
+    <div class="tab-content content-area">
+      <div id="spacers-tab" name="spacers" class="tab-pane">
+	<!-- files download area -->
+	<div id="downloadable" class="files-area"></div>
+	<!-- svg drawing area -->
+	<div class="header"><span class="section-name">Interactive results: </span><span class="annotation med-left-margin">mouse over a guide or explore below for details</div>
+	<div class="svg-container">
+	</div>
+	<div class="spacers-area">
+	  <div class="spacer-v-container"></div>
+	  <div class="col left">
+	    <div class="spacers-container"></div>
+	  </div><div class="col right spacer-h-v-container">
+	  </div>
+	</div>
+      </div>
+      <div id="downloads-tab" name="downloads" class="tab-pane">
+      </div>
+      <div id="double-nickase-tab" name="double nickase" class="tab-pane active">
+      </div>
     </div>
   </div>
 </script>
