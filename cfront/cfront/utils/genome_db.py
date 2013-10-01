@@ -55,11 +55,14 @@ def compute_hits_for_spacer(spacer_id):
             else:
                 raise e
 
+        if len(hits) == 0:
+            raise SpacerERR(Spacer.ERR_NO_HITS,spacer)
 
         translation = {"A":0,"G":1, "T":2,"C":3}
         #LIST MISMATCHES
         hits_array = np.array([[translation.get(let,4) 
                                     for let in e["sequence"]] for e in hits])
+
         spacer = Session.query(Spacer).get(spacer_id)
         spacer_array = np.array([translation.get(let,4) for let in spacer.guide])
 

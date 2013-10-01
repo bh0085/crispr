@@ -99,23 +99,23 @@ tStarts - Comma-separated list of start position of each block in target."""
 
 def compute_spacers(sequence):
     
-    if re.compile("[^AGTCN]").search(sequence) is not None:
+    if re.compile("[^AGTC]").search(sequence) is not None:
         raise JobERR(Job.ERR_INVALID_CHARACTERS, None)
 
     fwd = sequence
     rev = reverse_complement(sequence)
 
  
-    expression = re.compile(".{20}[ATGC]GG")
+    expression = re.compile("(?<=.{21}GG)")
     infos = []
     for m in re.finditer(expression, fwd):
-        infos.append(dict(sequence = m.group(),
+        letters = fwd[m.start() - 23: m.start()]
+        infos.append(dict(sequence  = letters,
                           strand = 1,
-                          position = m.start()))
-
-
+                          position = m.start() - 23 ))
     for m in re.finditer(expression,rev):
-        infos.append(dict(sequence = m.group(),
+        letters = fwd[m.start() - 23: m.start()]
+        infos.append(dict(sequence = letters,
                           strand = -1,
                           position = len(sequence) - m.start()-23))
 

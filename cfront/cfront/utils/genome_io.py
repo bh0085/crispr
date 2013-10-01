@@ -23,7 +23,7 @@ def commence_file_io(job_id):
     job = Session.query(Job).get(job_id)    
     Session.add(job)
     
-    if  len(job.good_spacers) == 0:
+    if  len(job.good_spacers) == 0 or job.genome_name != 'hg19':
         job.files_failed = True
         job.date_failed = datetime.datetime.utcnow()
     else:

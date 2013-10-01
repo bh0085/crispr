@@ -190,8 +190,8 @@ def query_library_bytes(genome, sequence):
             open_libraries[genome] = np.load(f)
     
     library_bytes = open_libraries[genome]
-    query_bytes = np.array([bytes_translation_dict[sequence[(j)*4:(j)*4+4]] 
-                            for j in range(5)],
+    query_bytes = np.array([ bytes_translation_dict.get(sequence[(j)*4:(j)*4+4],0) 
+                           for j in range(5)],
                            dtype=np.dtype("uint8"))
     mismatches_threshold = 5
 
