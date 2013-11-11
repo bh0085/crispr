@@ -61,8 +61,8 @@ class Job(Base):
     ERR_UNIMPLEMENTED = "Batch submit from .fa files is not yet implemented."
     ERR_BADFILETYPE = "Please input a fasta file (.fa)."
     ERR_PARSING_FASTA = "Could not parse fasta file."
-    ERR_NOGENOME = "No matches found in the human genome (hg19). Please try a new query."
-    ERR_MULTIPLE_GENOME = "More than one unique match found in the human genome (hg19). Please try a unique query."
+    ERR_NOGENOME = "No matches found in the target genome. Please try a new query."
+    ERR_MULTIPLE_GENOME = "More than one unique match found in the target genome. Please try a unique query."
     
     #exceptions
     NOSPACERSYET = "spacers not yet computed"

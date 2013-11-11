@@ -112,9 +112,6 @@ def jobs_from_fasta(request):
     if not filename[-3:] == ".fa":
         raise JobERR(Job.ERR_BADFILETYPE, None)
 
-    if request.params["genome"] != "hg19":
-        raise JobERR("non hg19 queries temporarily disabled to keep away from glitches while N&O run queries", None)
-
     input_file = request.POST['fasta_file'].file
     import StringIO
     output_buffer = StringIO.StringIO()
@@ -147,7 +144,7 @@ def jobs_from_fasta(request):
     Session.add(b)
 
     for r in fasta_records:
-        sequence = str(r.seq)
+        sequence = str(r.seq.upper())
             
         if re.compile("[^AGTCN]").search(sequence) is not None:
             raise JobERR(Job.ERR_INVALID_CHARACTERS, None) 

@@ -73,9 +73,9 @@ def compute_hits_for_spacer(spacer_id):
         scores = [scoring_fun( mismatches_by_hit.get(i,array([])) )
                   for i in range(len(hits))]
 
-        if len(scores) > 1500:
+        if len(scores) > 500:
             if v: print "many hits; taking top 1000"
-        hits_taken_idxs = np.argsort(scores)[::-1][:1501]
+        hits_taken_idxs = np.argsort(scores)[::-1][:501]
 
         #CREATE HITS
         found_ontarget = False

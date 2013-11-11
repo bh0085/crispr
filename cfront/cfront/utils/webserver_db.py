@@ -107,17 +107,17 @@ def compute_spacers(sequence):
 
  
     expression = re.compile("(?<=.{21}GG)")
-    infos = []
+    infos = [] 
     for m in re.finditer(expression, fwd):
         letters = fwd[m.start() - 23: m.start()]
         infos.append(dict(sequence  = letters,
                           strand = 1,
                           position = m.start() - 23 ))
     for m in re.finditer(expression,rev):
-        letters = fwd[m.start() - 23: m.start()]
+        letters = rev[m.start() - 23: m.start()]
         infos.append(dict(sequence = letters,
                           strand = -1,
-                          position = len(sequence) - m.start()-23))
+                          position = len(sequence) - (m.start()-23) ))
 
     
     #marks job complete, returns status

@@ -16,8 +16,10 @@ JobV = Backbone.View.extend({
 	
 	if(done_count < total_count){
 	    this.$(".status .text").empty().append($("<span>").text("found spacers, scoring offtargets ("+ done_count + " of " + total_count +")"))
-	    frac = .33 + .33*(done_count/total_count)
-	}  else if(!current_job.get("files_ready")){
+	    frac = .33 + .67*(done_count/total_count)
+	} 
+
+	/* else if(!current_job.get("files_ready")){
 	    ndone = _.filter(this.model.get("files").models,function(m){return m.get('ready')}).length
 	    this.$(".status .text").empty().append($("<span>")
 						   .append($("<p>").text('now running primer design to generate ')
@@ -29,13 +31,15 @@ JobV = Backbone.View.extend({
 
 						  )
 	    frac = .66 + .33 * ndone /2
-	} else {
+	} */ else {
 	    frac = 1
 	} 
-	this.$(".status").toggleClass("done",current_job.get("files_ready")?true:false);
+	this.$(".status").toggleClass("done",frac == 1) 
+	//current_job.get("files_ready")?true:false);
 	this.$(".status .progress .bar").css("width"," "+ (frac * 100)+"%");
     },
     render:function(){
+	var self = this;
 	this.left_f = .25;
 	this.right_f = .75;
 	params = this.model.toJSON()
@@ -82,7 +86,8 @@ JobV = Backbone.View.extend({
 	this.$el.html(_.template(this.template,params))
         this.selt = this.$(".selection-svg");  
 	this.canvas_w=900;
-	this.canvas_h = 150
+
+	this.canvas_h = 100 + (16 * 2 * _.max(_.map(self.collisions,function(e){return e})))
 	
 	this.svg = this.selt.svg({}).svg("get");
 	//null, 0, 0,this.canvas_w,this.canvas_h,0,0,this.canvas_w,this.canvas_h).svg('get');
@@ -144,7 +149,7 @@ JobV = Backbone.View.extend({
 	
 	//draw functions and config
 	this.strand_ofs = 15;
-	this.collision_ofs = 10;
+	this.collision_ofs = 12;
 	this.spacer_color = "lightgray"
 	this.spacer_width =10
 	this.strand_color = "black"
@@ -154,9 +159,11 @@ JobV = Backbone.View.extend({
 	//draw loop
 	this.draw_query_strands()
 	var spacers = this.model.get("spacers")
+	this.texts = []
 	for (var i = 0 ; i < spacers.length ; i++){
 	       this.draw_query_spacer(spacers.models[i]);
 	}
+	this.draw_query_annotations()
 	
     },
     draw_query_strands:function(){
@@ -193,6 +200,7 @@ JobV = Backbone.View.extend({
     },
     draw_query_spacer:function(spacer){
 	var opts, left, right,top, input_sequence, left_f, right_f;
+	var self = this;
 	input_sequence = spacer.get("job").get("sequence")
 	left_f_rel = spacer.get("start") /input_sequence.length;
 	right_f_rel = (spacer.get("start") +23) / input_sequence.length;
@@ -211,11 +219,17 @@ JobV = Backbone.View.extend({
 
 	if (spacer.get("rank") <= 5){
 	    if(spacer.get("strand") == 1){
-		text = this.svg.text(null, left,halfint(top -8), sprintf("#%s",spacer.get("rank"))
-				    ,{fontSize:11})
+		self.texts.push({left:left,
+				top:halfint(top +15),
+				string:sprintf("#%s",spacer.get("rank")),
+				opts:{fontSize:11}})
 	    }else{
-		text = this.svg.text(null, right,halfint(top +15), sprintf("#%s",spacer.get("rank"))
-				    ,{fontSize:11,textAnchor:"end"})
+		
+		self.texts.push({left:right,
+				top:halfint(top -8),
+				string:sprintf("#%s",spacer.get("rank")),
+				opts:{fontSize:11,textAnchor:"end"}})
+
 	    }
 	}
 
@@ -242,6 +256,12 @@ JobV = Backbone.View.extend({
 	$(el).attr("cid", spacer.cid);
 	$(el).on("mouseover", spacer_mouse)
 	this.rendered_spacers[spacer.id] = el;
+    },
+    draw_query_annotations:function(){
+	var self = this;
+	_.each(self.texts,function(t){
+	    self.svg.text(null, t.left,t.top,t.string,t.opts)
+	})
     },
     update_spacer:function(spacer){	
 	color = spacer.get("active")?  "rgba(122, 122, 255, .7)" : this.spacer_color;

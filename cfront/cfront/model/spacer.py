@@ -52,7 +52,7 @@ class Spacer(Base):
     @property
     def top_hits(self):
         from cfront.models import Hit
-        return [e.toJSON() for e in Session.query(Hit).join(Spacer).filter(Spacer.id == self.id).order_by(desc(Hit.score)).limit(20).all()]
+        return [e.toJSON() for e in Session.query(Hit).join(Spacer).filter(Spacer.id == self.id).order_by(desc(Hit.score)).limit(50).all()]
 
     @property
     def genic_hits(self):

@@ -21,6 +21,7 @@ bytes_translation_dict = dict([(e,i) for i,e in enumerate([l0+l1+l2+l3 for l0 in
 open_libraries = {}
 open_references = {}
 
+
 def raw_locs_file(genome):
     if not os.path.isdir(os.path.join(RD_DATAROOT,genome)):
         os.makedirs(os.path.join(RD_DATAROOT,genome))
@@ -32,7 +33,8 @@ def create_locs_file(genome):
     tb = twobitreader.TwoBitFile(twobitfile)
     chr_names = [k for k in tb.keys() if not "_" in k]
     rc_dict ={"A":"T","T":"A","G":"C","C":"G"}
-    reverse_complement = lambda x:[reverse_complement(e) for e in x]
+    mask_regex = re.compile("[^ATGC]")
+    reverse_complement_fun = lambda x:"".join([rc_dict[e] for e in x][::-1])
 
     with open(rlf,"w") as f:
         buf = ""
@@ -43,9 +45,13 @@ def create_locs_file(genome):
                 for i in range(l-2):
                     rng = c[i:i+2]
                     if (rng == "GG" or rng == "AG")  and (i >= 21 and i < l-3):
-                        buf += "\t".join([k[3:],str(i - 21),  "+",c[i-21:i+2]]) + "\n"
+                        subs = c[i-21:i+2]
+                        if mask_regex.search(subs) is None:
+                            buf += "\t".join([k[3:],str(i - 21),  "+",subs]) + "\n"
                     if (rng == "CC" or rng == "CT") and (i < l-23):
-                        buf += "\t".join([k[3:],str(i), "-", c[i:i+23]])  + "\n"
+                        subs = c[i:i+23]
+                        if mask_regex.search(subs) is None:
+                            buf += "\t".join([k[3:],str(i), "-", reverse_complement_fun(subs)])  + "\n"
                     if i % 1e6 == 0:
                         print "{0} millions of locs written".format(i/1e6)
                         f.write(buf)
@@ -155,7 +161,7 @@ def run_sequence_vs_genome(sequence, genome):
     #loads and queries the correct genomewide library
     matches = query_library_bytes(genome, sequence)
     
-    if len(matches) > 10000:
+    if len(matches) > 5000:
         raise TooManyHits()
 
     conn = psycopg2.connect("dbname={0} user={1} password={2}"\
@@ -222,6 +228,8 @@ def main():
     if args.program == "all":
         create_locs_file(args.genome)
         init_library_bytes(args.genome)
+        init_reference_dictionary(args.genome)
+    if args.program == "ref":
         init_reference_dictionary(args.genome)
     if args.program == "create":
         create_locs_file(args.genome)

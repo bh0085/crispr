@@ -10,7 +10,7 @@
 	<dt>Submitted by:</dt><dd>{{email}}</dd><br/>
 	<dt>Date submitted:</dt><dd>{{submitted}}</dd><br/>
 	<dt>Date completed:</dt><dd>{{completed}}</dd><br/>
-	<dt>Aligns to:</dt><dd>hg19 on the <b>{{strand=="1"?"sense":"antisense"}}</b> strand of <b>{{chr}}</b> at <b>{{start}}</b> ({{locus}})</dd><br/>
+	<dt>Aligns to:</dt><dd>{{genome_name}} on the <b>{{strand=="1"?"sense":"antisense"}}</b> strand of <b>{{chr}}</b> at <b>{{start}}</b> ({{locus}})</dd><br/>
 	<dt>Sequence:</dt><dd class="seq"><span class="break-all dna">{{seq_html}}</dna></dd><br/>
 	<dt>Statistics:</dt><dd>{{sequence.length}}nt, contains {{spacers.length}} possible guide sequences</dd><br/>
       </dl>
@@ -28,9 +28,10 @@
 	<span class="text">locating guides... should take a couple of seconds</span>
       </div>
     </div>
-    
     <!-- files download area -->
+    <!--
     <div id="downloadable" class="files-area"></div>
+    -->
     
     <!-- svg drawing area -->
     <div class="header"><span class="section-name">Interactive results: </span><span class="annotation med-left-margin">mouse over a guide or explore below for details</div>
