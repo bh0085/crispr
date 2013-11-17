@@ -36,6 +36,12 @@ RD_DATAROOT = "/tmp/ramdisk/crispr"
 
 # Installation notes for
 ## Webserver
+1. clone the repo
+2. cd cfront
+3. virtualenv venv
+4. source venv/bin/activate
+5. python setup.py develop
+6. pip install numpy scipy biopython twobitreader
 
 ## Exon databases
 
