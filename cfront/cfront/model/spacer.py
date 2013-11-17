@@ -23,6 +23,7 @@ class Spacer(Base):
     n_genic_offtargets = Column(Integer, nullable = True)
     name = Column(Unicode, nullable = True)
 
+    ERR_NO_HITS = "No near matches found in the genome."
     ERR_MANY_EXACT_MATCHES = "Many unique matches found in the genome"
     ERR_FAILED_TO_RETRIEVE_HITS = "Failed to retrieve hits from the genome"
     ERR_TOOMANYHITS = "This spacer had over 10,000 similar sequences in the genome"
@@ -51,7 +52,7 @@ class Spacer(Base):
     @property
     def top_hits(self):
         from cfront.models import Hit
-        return [e.toJSON() for e in Session.query(Hit).join(Spacer).filter(Spacer.id == self.id).order_by(desc(Hit.score)).limit(20).all()]
+        return [e.toJSON() for e in Session.query(Hit).join(Spacer).filter(Spacer.id == self.id).order_by(desc(Hit.score)).limit(50).all()]
 
     @property
     def genic_hits(self):

@@ -32,6 +32,7 @@
   </div>
 </div>
 %endif
+
 <!--
 %if request.matched_route.name == "readout":
 <div class="alert alert-warning alpha-warning header">

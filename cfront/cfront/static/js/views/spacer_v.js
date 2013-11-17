@@ -107,6 +107,7 @@ SpacerListV = Backbone.View.extend({
 			  this.$el.toggleClass("active",v)
 		      },this);
 	this.$el.toggleClass("active",this.model.get("active"))
+	this.model.on("change:rank",this.render,this);
 	this.model.on("change:score",this.render, this);
     },
     render:function(){

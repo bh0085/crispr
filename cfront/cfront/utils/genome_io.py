@@ -23,11 +23,10 @@ def commence_file_io(job_id):
     job = Session.query(Job).get(job_id)    
     Session.add(job)
     
-    if  len(job.good_spacers) == 0:
+    if  len(job.good_spacers) == 0 or job.genome_name != 'hg19':
         job.files_failed = True
         job.date_failed = datetime.datetime.utcnow()
-    else:
-        job.files_computing = True
+        return 
 
     write_f4(job_id)
     write_f5_f6(job_id)
@@ -37,11 +36,11 @@ def commence_file_io(job_id):
         job.date_completed = datetime.datetime.utcnow()
     else:
         job.files_failed = True
-    job.files_computing = False
 
+    
     try:
         if job.email_complete:
-            if not cfront_settings.get("debug_mode",False):
+            if (not cfront_settings.get("debug_mode",False)) and cfront_settings.get("mails_on_completion",False):
                 mail.mail_completed_job(None, job)
     except mail.MailError as m:
         print "writing mail on complete failed for job {0}".format(job.id)
@@ -122,7 +121,6 @@ if __name__ == "__main__":
         j = Session.query(Job)\
                    .filter(Job.files_failed == False)\
                    .filter(Job.files_ready == False)\
-                   .filter(Job.files_computing == False)\
                    .join(Spacer)\
                    .group_by(Job.id)\
                    .having(func.sum(case([(Spacer.score == None,1)], else_=0)) == 0)\

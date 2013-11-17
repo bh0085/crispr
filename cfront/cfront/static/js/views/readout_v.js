@@ -21,7 +21,6 @@ JobSVGV = Backbone.View.extend({
 	$(this.svg._svg).attr("height",""+ this.canvas_h + "px");
 	$(this.svg._svg).attr("width", "100%");
 	this.draw_spacers();
-
 	var self = this
 	_.each(this.model.get("spacers").models,function(s){
 	    self.update_spacer(s)
@@ -98,7 +97,6 @@ JobSVGV = Backbone.View.extend({
 	p.moveTo(left, top_plus)
 	p.lineTo(right,top_plus)
 
-	console.log(p, opts)
 	this.svg.path(p,opts)
 
 	p = this.svg.createPath();
@@ -168,5 +166,4 @@ JobSVGV = Backbone.View.extend({
 
 NickaseV = JobSVGV.extend({
     template:$("#nickase-svg-view-template").html(),
-
 })

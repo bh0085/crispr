@@ -9,8 +9,8 @@
 	<dt>Submitted by:</dt><dd>{{email}}</dd><br/>
 	<dt>Date submitted:</dt><dd>{{submitted}}</dd><br/>
 	<dt>Date completed:</dt><dd>{{completed}}</dd><br/>
-	<dt>Aligns to:</dt><dd>hg19 on the <b>{{strand=="1"?"sense":"antisense"}}</b> strand of <b>{{chr}}</b> at <b>{{start}}</b> ({{locus}})</dd><br/>
-	<dt>Sequence:</dt><dd class="seq"><span class="break-all dna">{{seq_html}}</span></dd><br/>
+	<dt>Aligns to:</dt><dd>{{genome_name}} on the <b>{{strand=="1"?"sense":"antisense"}}</b> strand of <b>{{chr}}</b> at <b>{{start}}</b> ({{locus}})</dd><br/>
+	<dt>Sequence:</dt><dd class="seq"><span class="break-all dna">{{seq_html}}</dna></dd><br/>
 	<dt>Statistics:</dt><dd>{{sequence.length}}nt, contains {{spacers.length}} possible guide sequences</dd><br/>
       </dl>
     </div>
@@ -27,7 +27,6 @@
 	<span class="text">locating guides... should take a couple of seconds</span>
       </div>
     </div>
-
     
     <ul class="nav nav-tabs">
       <li><a href="#spacers-tab" data-toggle="tab">Spacers</a></li>
@@ -55,6 +54,7 @@
       <div id="double-nickase-tab" name="double nickase" class="tab-pane active">
 	<div class="nickase-v-container"></div>
       </div>
+>>>>>>> 40d71f3fcd62ae40d8b3f149ae5813b84742698c
     </div>
   </div>
 </script>

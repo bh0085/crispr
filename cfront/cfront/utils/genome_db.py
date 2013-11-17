@@ -55,11 +55,14 @@ def compute_hits_for_spacer(spacer_id):
             else:
                 raise e
 
+        if len(hits) == 0:
+            raise SpacerERR(Spacer.ERR_NO_HITS,spacer)
 
         translation = {"A":0,"G":1, "T":2,"C":3}
         #LIST MISMATCHES
         hits_array = np.array([[translation.get(let,4) 
                                     for let in e["sequence"]] for e in hits])
+
         spacer = Session.query(Spacer).get(spacer_id)
         spacer_array = np.array([translation.get(let,4) for let in spacer.guide])
 
@@ -70,9 +73,9 @@ def compute_hits_for_spacer(spacer_id):
         scores = [scoring_fun( mismatches_by_hit.get(i,array([])) )
                   for i in range(len(hits))]
 
-        if len(scores) > 1500:
+        if len(scores) > 500:
             if v: print "many hits; taking top 1000"
-        hits_taken_idxs = np.argsort(scores)[::-1][:1501]
+        hits_taken_idxs = np.argsort(scores)[::-1][:501]
 
         #CREATE HITS
         found_ontarget = False
