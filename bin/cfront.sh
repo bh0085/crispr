@@ -5,3 +5,9 @@ function cfront
     source venv/bin/activate
 }
 
+function cdev 
+{
+    cd ${HOME}/cdev/cfront
+    source venv/bin/activate
+}
+
