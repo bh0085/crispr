@@ -12,18 +12,32 @@ Description: cfront README
         Getting Started
         ---------------
         
-        - cd <directory containing this file>
+        SETUP
+        {cd <directory containing this file>}
         
-        - $venv/bin/python setup.py develop
+        >> source venv/bin/activate
+        >> python setup.py develop
+        >> initialize_cfront_db development.ini
+        >> initialize_genomes development.ini
         
-        - $venv/bin/initialize_cfront_db development.ini
+        RUNNING THE WEBSERVER IN DEVELOPMENT MODE
         
-        - $venv/bin/pserve development.ini
+        >> source venv/bin/activate
+        [screen] 
+        >> pserve --reload development.ini
+        [screen] 
+        >> cfront/utils/job_handler.py development.ini
+        [screen] 
+        >> cfront/utils/genome_io.py development.ini
+        
+        RUNNING THE WEBSERVER IN PRODUCTION MODE
+        
+        {configure wsgi to run venv/pyramid.wsgi}
+        {ensure that god is running}
+        >> god load god/launch-prod.god
         
         
-        
-        
-        
+        # 
         
         # Data directories
         Most data is stored on the RAMDISK of the CRISPR server

@@ -6,9 +6,9 @@ JobV = Backbone.View.extend({
     initialize:function(){
 	jv = this
 	//right now, just assumes that the spacers are initialized on launch
-	this.rendered_spacers = {}
-	this.compute_collisions()
 	this.binder = new Backbone.EventBinder()
+	this.compute_collisions();
+	this.svgv = new JobSVGV({model:this.model})
     },   
     update_status:function(){
 	var done_count = _.filter(this.model.get("spacers").models,function(e){return e.get("computed_hits")}).length
@@ -23,9 +23,9 @@ JobV = Backbone.View.extend({
 	    ndone = _.filter(this.model.get("files").models,function(m){return m.get('ready')}).length
 	    this.$(".status .text").empty().append($("<span>")
 						   .append($("<p>").text('now running primer design to generate ')
-				.append($("<a>",{href:"#downloadable"})
-					.text('Downloadable results'))
-			       )
+							   .append($("<a>",{href:"#downloadable"})
+								   .text('Downloadable results'))
+							  )
 						   .append($("<p>").text("this step may take several minutes ("+ndone + " of 2 files ready)"))
 						   .append($("<p>").text('Interactive results are ready '))
 
@@ -37,6 +37,27 @@ JobV = Backbone.View.extend({
 	this.$(".status").toggleClass("done",frac == 1) 
 	//current_job.get("files_ready")?true:false);
 	this.$(".status .progress .bar").css("width"," "+ (frac * 100)+"%");
+    },
+
+    compute_collisions:function(){
+	var ranges, spacers
+	spacers = this.model.get("spacers").models
+	this.collisions = {}
+	
+	ranges_fwd = []
+	ranges_rev = []
+
+	_.each(spacers,$.proxy(function(e){
+	    if(e.get("strand") == 1){ranges = ranges_fwd}
+	    else{ranges = ranges_rev}
+	    this.collisions[e.id] = _.filter(ranges,
+					     function(r){
+						 return !(r[0] > (e.get("start")+23) || r[1] < e.get("start"))
+					     }).length;
+	    ranges.push([e.get("start"),e.get("start")+23])
+	},this));
+	this.ranges_fwd = ranges_fwd
+	this.ranges_rev = ranges_rev
     },
     render:function(){
 	var self = this;
@@ -96,13 +117,9 @@ JobV = Backbone.View.extend({
 	$(this.svg._svg).attr("width", "100%");
 	this.update_status();
 
-	this.draw_spacers();
 	var self = this
 	_.each(this.model.get("spacers").models,function(s){
-	    self.update_spacer(s)
-	    self.binder.bindTo(s, "change:score",self.update_spacer, self);
 	    self.binder.bindTo(s, "change:score",self.update_status, self);
-	    self.binder.bindTo(s, "change:active",self.update_spacer,self);
 	});
 
 	_.each(this.model.get("files").models,function(f){
@@ -111,26 +128,10 @@ JobV = Backbone.View.extend({
 
 	self.binder.bindTo(this.model, "change:files-ready", this.update_status,this)
 	this.$(".files-area").empty().append(new FileListV({job:this.model}).render().$el);
+	this.$(".svg-container").append(this.svgv.render().$el)
 	
-	    
-
         return this;
     },
-    resize:function(){
-	//this.svg.configure({"viewBox":sprintf("%d %d",0 , 0)}) 
-	//this.svg.configure({"viewBox":sprintf("%d %d %d %d",0, 0, this.selt.width(),100)}) 
-    },
-    destroy:function(){
-	this.binder.undbindAll();
-	delete this.binder;
-    },
-    compute_collisions:function(){
-	var ranges, spacers
-	spacers = this.model.get("spacers").models
-	this.collisions = {}
-	
-	ranges_fwd = []
-	ranges_rev = []
 
 	_.each(spacers,$.proxy(function(e){
 	    if(e.get("strand") == 1){ranges = ranges_fwd}
