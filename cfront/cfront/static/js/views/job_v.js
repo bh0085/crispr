@@ -135,19 +135,6 @@ JobV = Backbone.View.extend({
         return this;
     },
 
-	_.each(spacers,$.proxy(function(e){
-	    if(e.get("strand") == 1){ranges = ranges_fwd}
-	    else{ranges = ranges_rev}
-	    this.collisions[e.id] = _.filter(ranges,
-					     function(r){
-						 return !(r[0] > (e.get("start")+23) || r[1] < e.get("start"))
-					     }).length;
-	    ranges.push([e.get("start"),e.get("start")+23])
-	},this));
-	this.ranges_fwd = ranges_fwd
-	this.ranges_rev = ranges_rev
-    },
-
     draw_spacers:function(){
 	
 	//draw functions and config
