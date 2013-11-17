@@ -10,6 +10,6 @@ def no_cache_subscriber(event):
 def http_method_override_subscriber(event):
     """Sets request.method properly using http method override if needed"""
     request = event.request
-    if 'HTTP_X_HTTP_METHOD_OVERRIDE' in request.keys():
-        request.method = request['HTTP_X_HTTP_METHOD_OVERRIDE']
+    if 'X-Http-Method-Override' in request.headers :
+        request.method = request.headers['HTTP_X_HTTP_METHOD_OVERRIDE']
 
