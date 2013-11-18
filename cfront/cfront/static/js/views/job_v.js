@@ -7,40 +7,19 @@ JobV = Backbone.View.extend({
 	jv = this
 	//right now, just assumes that the spacers are initialized on launch
 	this.binder = new Backbone.EventBinder()
-	this.svgv = new JobSVGV({model:this.model})
-	this.nsvgv = new NickaseV({model:this.model})
+	this.svgv = new SimpleSpacerSVGV({model:this.model})
+	this.nsvgv = new NickaseSVGV({model:this.model})
     },
     get_seq_html:function(){
-	var seq = this.model.get("sequence");
-	var ranges = this.ranges_fwd.concat(this.ranges_rev)
-	var occupied = new Array(seq.length)
-
-	for (var i = 0; i<seq.length;  i++){
-	    occupied[i] = 0;
-	}
-	for (var i = 0 ; i <  ranges.length ; i++){
-	    for(var j = ranges[i][0]+20; j< ranges[i][0]+23 ; j++){
-		occupied[j] = Math.max(occupied[j],2);
-	    }
-	    for(var j = ranges[i][0]; j< ranges[i][0]+20 ; j++){
-		occupied[j] = Math.max(occupied[j],1);
-	    } 
-	}
-	seq_html = ""
-	for (var i = 0 ; i < seq.length ; i++){
-	    switch(occupied[i]){
-	    case 0:seq_html+=seq[i];break;
-	    case 1:seq_html+="<span class=occupied>"+seq[i]+"</span>";break;
-	    case 2:seq_html+="<span class=nrg>"+seq[i]+"</span>";break;
-	    }
-	}
-	return seq_html;
+	return $("<span>").text(this.model.get("sequence")).html();
     },
+
     render:function(){
 
 	var self = this;
 	params = this.model.toJSON()
 	params.seq_html=this.get_seq_html();
+	console.log( params.seq_html)
 	var submitted_ms = this.model.get("submitted_ms")/1000;
 	var d = new Date(0); // The 0 there is the key, which sets the date to the epoch
 	d.setUTCSeconds(submitted_ms);
@@ -55,7 +34,7 @@ JobV = Backbone.View.extend({
 
 	this.$el.html(_.template(this.template,params))
 	this.$(".files-area").empty().append(new FileListV({job:this.model}).render().$el);
-	this.$(".svg-container").append(this.svgv.render().$el)
+	this.$(".jobsvg-v-container").append(this.svgv.render().$el)
 	this.$(".nickase-v-container").append(this.nsvgv.render().$el)
 	
         return this;

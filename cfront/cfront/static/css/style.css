@@ -123,16 +123,47 @@
       .spacer-h-v-container .spacer-h-view .hits table td.sequence, .spacer-h-v-container .spacer-h-view .hits table td.score, .spacer-h-v-container .spacer-h-view .hits table td.locus, .spacer-h-v-container .spacer-h-view .hits table td.gene {
         text-align: center; }
 
-.job-v {
-  margin-left: 20px; }
-  .job-v .svg-container {
-    margin-top: 10px;
-    margin-bottom: 20px;
-    padding-bottom: 20px;
-    display: block;
-    width: 900px;
-    margin-left: auto;
-    margin-right: auto; }
+.job-v .job-title {
+  line-height: 32px;
+  position: relative;
+  display: inline-block; }
+.job-v .show-info {
+  background-image: url(/img/info.svg);
+  width: 32px;
+  height: 32px;
+  margin-bottom: -6px;
+  position: absolute;
+  left: 0px;
+  margin-left: -48px;
+  margin-top: -16px;
+  top: 50%;
+  display: inline-block;
+  opacity: .3;
+  background-size: 100%; }
+  .job-v .show-info:hover {
+    opacity: .9; }
+.job-v .svg-container {
+  margin-top: 10px;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  display: block;
+  width: 800px;
+  margin-left: auto;
+  margin-right: auto; }
+.job-v .job-description {
+  position: fixed;
+  right: 0px;
+  left: 0px;
+  margin-left: 100px;
+  margin-right: 100px;
+  background-color: white;
+  border: 5px solid black;
+  border-radius: 12px;
+  padding: 10px;
+  box-shadow: 5px 5px 20px -10px; }
+  .job-v .job-description dl {
+    margin-bottom: 0px;
+    margin-top: 0px; }
   .job-v .job-description dd, .job-v .job-description dt {
     display: inline-block; }
   .job-v .job-description dt {
@@ -185,10 +216,10 @@
 .inline {
   display: inline; }
 
-body.submit, body.batch body.about {
+body.submit, body.batch body.about, body.readout {
   padding-left: 75px;
-  pading-right: 75px; }
-  body.submit > .header, body.batch body.about > .header {
+  padding-right: 75px; }
+  body.submit > .header, body.batch body.about > .header, body.readout > .header {
     margin-left: -75px;
     margin-right: -75px; }
 body .nav-tabs {
@@ -348,6 +379,9 @@ body .navbar li > a, body .navbar .brand {
 
 a {
   cursor: pointer; }
+
+#readout {
+  margin-top: 50px; }
 
 .status {
   width: 500px;

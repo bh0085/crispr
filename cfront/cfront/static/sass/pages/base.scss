@@ -12,9 +12,9 @@
 
 
 body{
-    &.submit, &.batch &.about{
+    &.submit, &.batch &.about, &.readout{
 	padding-left:75px;
-	pading-right:75px;
+	padding-right:75px;
 
 	>.header{
 	    margin-left:-75px;

@@ -1,29 +1,33 @@
 <script type="unknown" id="job-v-template">
-  <div class="header showing-less">
+  <div class="header">
     <!--header-->
-    <h2 style="display:inline-block;">"{{name}}"</h2>
-    <a class="show-more less med-left-margin annotation">... show info</a>
-    <a class="med-left-margin more annotation show-less">... hide info?</a>
-    <div class="job-description med-left-margin med-top-margin more">
-      <dl>
-	<dt>Submitted by:</dt><dd>{{email}}</dd><br/>
-	<dt>Date submitted:</dt><dd>{{submitted}}</dd><br/>
-	<dt>Date completed:</dt><dd>{{completed}}</dd><br/>
-	<dt>Aligns to:</dt><dd>{{genome_name}} on the <b>{{strand=="1"?"sense":"antisense"}}</b> strand of <b>{{chr}}</b> at <b>{{start}}</b> ({{locus}})</dd><br/>
-	<dt>Sequence:</dt><dd class="seq"><span class="break-all dna">{{seq_html}}</dna></dd><br/>
-	<dt>Statistics:</dt><dd>{{sequence.length}}nt, contains {{spacers.length}} possible guide sequences</dd><br/>
-      </dl>
-    </div>   
+    <div class="job-title showing-less"><h3 style="display:inline-block;">"{{name}}"</h3>
+          <a class="show-more less show-info"></a>
+          <a class="show-less more show-info"></a>    
+	  <div class="job-description med-left-margin med-top-margin more">
+	    <dl>
+	      <dt>Submitted by:</dt><dd>{{email}}</dd><br/>
+	      <dt>Date submitted:</dt><dd>{{submitted}}</dd><br/>
+	      <dt>Date completed:</dt><dd>{{completed}}</dd><br/>
+	      <dt>Aligns to:</dt><dd>{{genome_name}} on the <b>{{strand=="1"?"sense":"antisense"}}</b> strand of <b>{{chr}}</b> at <b>{{start}}</b> ({{locus}})</dd><br/>
+	      <dt>Sequence:</dt><dd class="seq"><span class="break-all dna">{{seq_html}}</span></dd><br/>
+	      <dt>Statistics:</dt><dd>{{sequence.length}}nt, contains {{spacers.length}} possible guide sequences</dd><br/>
+	    </dl>
+	  </div>   
+    </div>
+
     <ul class="nav nav-tabs">
-      <li><a href="#spacers-tab" data-toggle="tab">Spacers</a></li>
-      <li ><a href="#downloads-tab" data-toggle="tab">Downloads</a></li>
-      <li class="active"><a href="#double-nickase-tab" data-toggle="tab">Double Nickase</a></li>
+      <li class="active"><a href="#spacers-tab" data-toggle="tab">Spacers</a></li>
+      <!--
+      <li><a href="#downloads-tab" data-toggle="tab">Downloads</a></li>
+      <li><a href="#double-nickase-tab" data-toggle="tab">Double Nickase</a></li>
+      -->
     </ul>
     <div class="tab-content content-area">
-      <div id="spacers-tab" name="spacers" class="tab-pane">
+      <div id="spacers-tab" name="spacers" class="tab-pane active">
 	<!-- svg drawing area -->
 	<div class="header"><span class="section-name">Interactive results: </span><span class="annotation med-left-margin">mouse over a guide or explore below for details</div>
-	<div class="svg-container">
+	<div class="jobsvg-v-container">
 	</div>
 	<div class="spacers-area">
 	  <div class="spacer-v-container"></div>
@@ -37,7 +41,7 @@
 	<!-- files download area -->
 	<div id="downloadable" class="files-area"></div>
       </div>
-      <div id="double-nickase-tab" name="double nickase" class="tab-pane active">
+      <div id="double-nickase-tab" name="double nickase" class="tab-pane">
 	<div class="nickase-v-container"></div>
       </div>
     </div>

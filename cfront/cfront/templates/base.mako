@@ -55,6 +55,8 @@
     <script type="text/javascript" src="/js/models/hit_m.js"></script>
     <script type="text/javascript" src="/js/models/file_m.js"></script>
     <script type="text/javascript" src="/js/views/job_v.js"></script>
+    <script type="text/javascript" src="/js/views/svg_v.js"></script>
+    <script type="text/javascript" src="/js/views/nickase_v.js"></script>
     <script type="text/javascript" src="/js/views/readout_v.js"></script>
     <script type="text/javascript" src="/js/views/spacer_v.js"></script>
     <script type="text/javascript" src="/js/views/hit_v.js"></script>
