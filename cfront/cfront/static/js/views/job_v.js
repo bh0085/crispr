@@ -11,35 +11,6 @@ JobV = Backbone.View.extend({
 	this.svgv = new JobSVGV({model:this.model})
 	this.nsvgv = new NickaseV({model:this.model})
     },   
-    update_status:function(){
-	var done_count = _.filter(this.model.get("spacers").models,function(e){return e.get("computed_hits")}).length
-	var total_count = this.model.get("spacers").length
-	
-	if(done_count < total_count){
-	    this.$(".status .text").empty().append($("<span>").text("found spacers, scoring offtargets ("+ done_count + " of " + total_count +")"))
-	    frac = .33 + .67*(done_count/total_count)
-	} 
-
-	/* else if(!current_job.get("files_ready")){
-	    ndone = _.filter(this.model.get("files").models,function(m){return m.get('ready')}).length
-	    this.$(".status .text").empty().append($("<span>")
-						   .append($("<p>").text('now running primer design to generate ')
-							   .append($("<a>",{href:"#downloadable"})
-								   .text('Downloadable results'))
-							  )
-						   .append($("<p>").text("this step may take several minutes ("+ndone + " of 2 files ready)"))
-						   .append($("<p>").text('Interactive results are ready '))
-
-						  )
-	    frac = .66 + .33 * ndone /2
-	} */ else {
-	    frac = 1
-	} 
-	this.$(".status").toggleClass("done",frac == 1) 
-	//current_job.get("files_ready")?true:false);
-	this.$(".status .progress .bar").css("width"," "+ (frac * 100)+"%");
-    },
-
     compute_collisions:function(){
 	var ranges, spacers
 	spacers = this.model.get("spacers").models
@@ -106,28 +77,9 @@ JobV = Backbone.View.extend({
 	} else { params.completed = "N/A" }
 
 	this.$el.html(_.template(this.template,params))
-        this.selt = this.$(".selection-svg");  
 	this.canvas_w=900;
 
 	this.canvas_h = 100 + (16 * 2 * _.max(_.map(self.collisions,function(e){return e})))
-	
-	this.svg = this.selt.svg({}).svg("get");
-	//null, 0, 0,this.canvas_w,this.canvas_h,0,0,this.canvas_w,this.canvas_h).svg('get');
-
-	$(this.svg._svg).attr("height",""+ this.canvas_h + "px");
-	$(this.svg._svg).attr("width", "100%");
-	this.update_status();
-
-	var self = this
-	_.each(this.model.get("spacers").models,function(s){
-	    self.binder.bindTo(s, "change:score",self.update_status, self);
-	});
-
-	_.each(this.model.get("files").models,function(f){
-	    self.binder.bindTo(f, "change:ready",self.update_status, self);
-	});
-
-	self.binder.bindTo(this.model, "change:files-ready", this.update_status,this)
 	this.$(".files-area").empty().append(new FileListV({job:this.model}).render().$el);
 	this.$(".svg-container").append(this.svgv.render().$el)
 	this.$(".nickase-v-container").append(this.nsvgv.render().$el)

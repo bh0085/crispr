@@ -90,8 +90,36 @@ var JobM = Backbone.RelationalModel.extend({
     locus:function(){
 	return this.get("chr") +":"+ (this.get("strand") == -1?"-":"+")
 		+ (this.get("start") + (this.get("strand") == 1?-1:-4))
-    }
-   
+    },
+    status_frac:function(){
+
+	console.log(this.get("spacers").models)
+	var done_count = _.filter(this.get("spacers").models,function(e){return e.get("computed_hits")}).length
+	var total_count = this.get("spacers").length
+
+	if (!this.get("computed_spacers") ){
+	    frac = 0
+	} else if(done_count < total_count){
+	    frac = .25 + .75 *(done_count/total_count)
+	} else {
+	    frac = 1
+	} 
+	return frac
+    },
+    status_message:function(){
+	
+	var message
+	if (frac == 0){
+	    message = "... computing guides. this may take a few minutes jobs submitted in a batch"
+	} else if( frac < 1){
+	    var done_count = _.filter(this.get("spacers").models,function(e){return e.get("computed_hits")}).length
+	    var total_count = this.get("spacers").length
+	    message = "found guides in query sequence, scoring offtargets ("+ done_count + " of " + total_count +")";
+	} else {
+	    message = "done"
+	}
+	return message
+    }				  
 })			  
 
 

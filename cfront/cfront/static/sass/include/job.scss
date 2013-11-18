@@ -30,24 +30,4 @@
 	    }
 	}
     }
-    .status{
-	width:500px;
-	margin:0 auto;
-	padding:50px;
-	font-family:courier;
-	text-align:center;
-	overflow:hidden;
-	.progress{
-	    margin-bottom:10px;
-	    margin-top:10px;
-	}
-	&.done{
-	    display:none;
-	    .progress{
-		height:0px;
-		opacity:0;
-		transition:height 1s, opacity .5s;
-	    }
-	}	
-    }
 }
