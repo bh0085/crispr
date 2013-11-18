@@ -12,10 +12,11 @@ JobSVGV = Backbone.View.extend({
     render:function(){
 	this.$el.html(_.template(this.template, {}))
 
+	var self = this;
 	this.left_f = .25;
 	this.right_f = .75;
 	this.canvas_w=900;
-	this.canvas_h = 150
+	this.canvas_h = 100 + (16 * 2 * _.max(_.map(self.collisions,function(e){return e})))
 	
 	this.svg = this.$(".main-svg-canvas").svg({}).svg("get");
 	$(this.svg._svg).attr("height",""+ this.canvas_h + "px");
