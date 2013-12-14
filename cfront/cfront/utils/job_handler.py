@@ -53,7 +53,7 @@ def process_queue(ofs, stride):
                     .join(Spacer)\
                     .filter(Spacer.score == None)\
                     .filter(Job.failed == False)\
-                    .all()
+                     .all()
     selected_hit_jobs = [j for j in possible_hit_jobs if j.id % stride == ofs and j.genome_name != "rn5"]
 
 

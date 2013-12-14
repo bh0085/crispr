@@ -109,6 +109,7 @@ var JobM = Backbone.RelationalModel.extend({
     status_message:function(){
 	
 	var message
+	var frac = this.status_frac()
 	if (frac == 0){
 	    message = "... computing guides. this may take a few minutes jobs submitted in a batch"
 	} else if( frac < 1){

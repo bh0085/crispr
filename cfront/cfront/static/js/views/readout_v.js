@@ -44,3 +44,34 @@ ReadoutV = Backbone.View.extend({
 	this.spacer_view.render().$el.appendTo(this.$(".spacer-v-container"))	
     },
 })
+
+StatusV = Backbone.View.extend({
+    template:$("#status-v-template").html(),
+    initialize:function(){
+	this.binder = new Backbone.EventBinder()
+    },
+    render:function(){
+	this.$el.html(_.template(this.template,this.model.toJSON()))
+	var self = this
+	_.each(this.model.get("spacers").models,function(s){
+	    self.binder.bindTo(s, "change:score",self.update_status, self);
+	});
+
+	_.each(this.model.get("files").models,function(f){
+	    self.binder.bindTo(f, "change:ready",self.update_status, self);
+	});
+
+	return this
+    },
+    
+    update_status:function(){
+
+	message = this.model.status_message()
+	frac = this.model.status_frac()
+
+	this.$(".status .text").empty().append($("<span>").text(message))
+	this.$(".status").toggleClass("done",frac == 1) 
+	this.$(".status .progress .bar").css("width"," "+ (frac * 100)+"%");
+    },
+
+})
