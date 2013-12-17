@@ -61,6 +61,7 @@ StatusV = Backbone.View.extend({
 	    self.binder.bindTo(f, "change:ready",self.update_status, self);
 	});
 
+	self.update_status()
 	return this
     },
     
