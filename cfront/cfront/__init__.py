@@ -70,6 +70,7 @@ def main(global_config, **settings):
 
     config.add_route('spacer_retrieve_hits', '/s/retrieve_hits/{spacer_id}')
     config.add_route('spacer_check_hits', '/s/check_hits/{spacer_id}')
+    config.add_route('spacer_retrieve_regions', '/s/retrieve_regions/{spacer_id}')
 
     #rest routes
     config.add_route('job_rest', '/r/job/{job_key}',factory=JobResourceFactory)
