@@ -1,14 +1,31 @@
+var SpacerRegionM = Backbone.Model.extend({
+    
+})
+var SpacerRegionsC = Backbone.Collection.extend({
+    model:SpacerRegionM,
+    initialize:function(models,options){
+	this.spacer = options.spacer
+	if (!this.spacer){throw "regions collection needs input spacer"}
+    },
+    url:function(){
+	return routes.route_path("spacer_retrieve_regions",{"spacer_id":this.spacer.id})
+    }
+})
+
 /** backbone model for a spacer */
 var SpacerM = Backbone.RelationalModel.extend({
-    sequence:null,
-    id:null,
-    guide:null,
-    strand:null,
-    position:null,
-
-    computed_hits:false,
-    computing_hits:false,
-    active:false,
+    defaults:{
+	sequence:null,
+	id:null,
+	guide:null,
+	strand:null,
+	position:null,
+	computed_hits:false,
+	computing_hits:false,
+	active:false,
+	regions:null,
+	fetched_regions:false,
+    },
     relations:[
 	{
 	    key:"hits",
@@ -28,6 +45,7 @@ var SpacerM = Backbone.RelationalModel.extend({
         return routes.route_path("spacer_rest",{spacer_id:this.id?this.id:-1})
     },
     initialize:function(){
+	last_spacer = this
 	this.genic = new HitCollection()
 	this.top = new HitCollection()
 	this.set("locus",this.locus())
@@ -64,10 +82,22 @@ var SpacerM = Backbone.RelationalModel.extend({
 	    },this)
 	}
 
+
 	this.compute_quality()
 	this.on("change:score",this.compute_quality,this);
     },
-    
+    fetch_regions:function(){
+	var self  = this
+
+	if(this.regions == null){ 	
+	    this.regions = new SpacerRegionsC([], {spacer:this}) 
+	}
+	this.regions.fetch({data:{},
+			    success:function(model,data){
+				self.set("fetched_regions", true)
+			    }})	
+	
+    },
     locus:function(){
 	if(this.get("job").get("chr")){
 	    return this.get("job").get("chr") +":"

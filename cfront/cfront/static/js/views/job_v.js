@@ -41,7 +41,7 @@ JobV = Backbone.View.extend({
     },
 })
 
-JobSV = Backbone.View.extend({
+GenericSV = Backbone.View.extend({
     template:$("#job-s-v-template").html(),
     className:"job-spacer-list-v",
     initialize:function(options){
@@ -85,6 +85,34 @@ JobSV = Backbone.View.extend({
 	delete this.views_by_id[spacer.id]
 	v.remove()
     }
+})
+
+
+
+JobSV = GenericSV.extend({
+    add_one:function(spacer){
+	var view, $parent
+	view = new SpacerListV({model:spacer})
+	this.views_by_id[spacer.id] = view;
+	idx = this.spacers.indexOf(spacer)
+	prev = idx != 0 ? this.spacers.models[idx-1] : null
+	if (prev){this.views_by_id[prev.id].$el.after(view.render().$el)}
+	else {this.$(".views").prepend(view.render().$el)}
+    },
+
+})
+
+NickaseSV = GenericSV.extend({
+    add_one:function(spacer){
+	var view, $parent
+	view = new SpacerNickaseListV({model:spacer})
+	this.views_by_id[spacer.id] = view;
+	idx = this.spacers.indexOf(spacer)
+	prev = idx != 0 ? this.spacers.models[idx-1] : null
+	if (prev){this.views_by_id[prev.id].$el.after(view.render().$el)}
+	else {this.$(".views").prepend(view.render().$el)}
+    },
+
 })
 
 

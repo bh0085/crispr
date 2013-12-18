@@ -1,0 +1,23 @@
+body.nickase{
+    .spacers-nick-view-container{
+	white-space:nowrap;
+	.spacer-list{
+	    display:inline-block;
+	    width:20em;
+	    background:gray;
+	    vertical-align:top;
+	    height:800px;
+	   .job-spacer-list-v {
+	       .header{
+		   display:none; // hacky CSS
+	       }
+	   }
+	}
+	.graphics{
+	    display:inline-block;
+	    background:lightgray;
+	    vertical-align:top;
+	    height:800px;
+	}
+    }
+}

@@ -95,10 +95,7 @@ var SpacerV = Backbone.View.extend({
 })
 
 
-/** view for spacers in a single list for the overall job view */
-SpacerListV = Backbone.View.extend({
-    template: $("#spacer-list-v-template").html(),
-    className: "spacer-list-v spacer",
+SpacerGenericListV = Backbone.View.extend({
     tagName: "tr",
 
     initialize:function(){
@@ -118,6 +115,16 @@ SpacerListV = Backbone.View.extend({
 	this.$el.addClass(this.model.get("quality")+"-quality")
 	return this
     }
-    
 })
 
+/** view for spacers in a single list for the overall job view */
+SpacerListV = SpacerGenericListV.extend({
+    template: $("#spacer-list-v-template").html(),
+    className: "spacer-list-v spacer spacer-row",
+})
+
+/** view for spacers in a list that will be selected from to get nickase views */
+SpacerNickaseListV = SpacerGenericListV.extend({
+    template:$("#spacer-nickase-list-v-template").html(),
+    className: "spacer-nickase-list-v spacer spacer-row",   
+})

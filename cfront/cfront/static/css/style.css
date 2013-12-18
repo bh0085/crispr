@@ -52,19 +52,26 @@
   .job-spacer-list-v table {
     width: 100%;
     margin-right: 10px; }
-    .job-spacer-list-v table tr.spacer-list-v {
+    .job-spacer-list-v table tr.spacer-row {
       border-bottom-width: 0px;
       border-left-width: 5px;
       border-top-width: 0px; }
-      .job-spacer-list-v table tr.spacer-list-v.active {
+      .job-spacer-list-v table tr.spacer-row th, .job-spacer-list-v table tr.spacer-row td {
+        padding-left: 10px; }
+        .job-spacer-list-v table tr.spacer-row th:not(:last-child), .job-spacer-list-v table tr.spacer-row td:not(:last-child) {
+          padding-right: 10px; }
+      .job-spacer-list-v table tr.spacer-row th {
+        text-align: center; }
+    .job-spacer-list-v table tr.spacer-list-v.active {
+      border-right: 1px solid black;
+      background-color: rgba(0, 0, 0, 0.05); }
+    .job-spacer-list-v table tr.spacer-nickase-list-v {
+      cursor: pointer; }
+      .job-spacer-list-v table tr.spacer-nickase-list-v:not(.active) {
+        opacity: .25; }
+      .job-spacer-list-v table tr.spacer-nickase-list-v.active {
         border-right: 1px solid black;
         background-color: rgba(0, 0, 0, 0.05); }
-      .job-spacer-list-v table tr.spacer-list-v th, .job-spacer-list-v table tr.spacer-list-v td {
-        padding-left: 10px; }
-        .job-spacer-list-v table tr.spacer-list-v th:not(:last-child), .job-spacer-list-v table tr.spacer-list-v td:not(:last-child) {
-          padding-right: 10px; }
-      .job-spacer-list-v table tr.spacer-list-v th {
-        text-align: center; }
 
 .qscore {
   font-weight: bold;
@@ -216,10 +223,10 @@
 .inline {
   display: inline; }
 
-body.submit, body.batch body.about, body.readout {
+body.submit, body.batch body.about, body.readout, body.nickase {
   padding-left: 75px;
   padding-right: 75px; }
-  body.submit > .header, body.batch body.about > .header, body.readout > .header {
+  body.submit > .header, body.batch body.about > .header, body.readout > .header, body.nickase > .header {
     margin-left: -75px;
     margin-right: -75px; }
 body .nav-tabs {
@@ -379,6 +386,20 @@ body .navbar li > a, body .navbar .brand {
 
 a {
   cursor: pointer; }
+
+body.nickase .spacers-nick-view-container {
+  white-space: nowrap; }
+  body.nickase .spacers-nick-view-container .spacer-list {
+    display: inline-block;
+    width: 20em;
+    background: gray;
+    vertical-align: top; }
+    body.nickase .spacers-nick-view-container .spacer-list .job-spacer-list-v .header {
+      display: none; }
+  body.nickase .spacers-nick-view-container .graphics {
+    display: inline-block;
+    background: lightgray;
+    vertical-align: top; }
 
 #readout {
   margin-top: 50px; }

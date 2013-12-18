@@ -31,8 +31,29 @@ var N ={
 		       function(r){
 			   return k(consort, r)
 		       })
-	return scores
+	return _.max(scores)
 	
+    },
+    spacer_score_consort:function(spacer,consort){
+	var k = N.kernels.std;
+	if (!spacer.get('fetched_regions')){
+	    throw "spacer regions unitialized"
+	}
+	region_sequences = _.map(spacer.regions.models,
+			function(e){
+			    return e.get("sequence")
+			})
+
+	spc = spacer
+	cns = consort
+
+	scores = _.map(region_sequences,
+		       function(r){
+			   return k(consort, r)
+		       })
+
+	console.log(_.max(scores))
+	return _.max(scores)
     },
     kernels:{
 	std:function(consort, region){
@@ -46,6 +67,7 @@ var N ={
 				  return cur + (consort[i] == region[j+i]?1:0)
 			      })//ends box_smoothing
 		      })//ends scan, returning max similarity of "l" bases in region
+
 	    return _.max(sims)
 	},
     },

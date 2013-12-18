@@ -10,6 +10,8 @@ function init_page(){
 	rview.draw_status();
     }
     current_job.get("spacers").models[0].set('active',true);
+    $(document).on("mouseover", ".spacer", {},spacer_select)
+
 
 }
 

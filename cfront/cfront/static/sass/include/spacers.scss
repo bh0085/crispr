@@ -87,14 +87,10 @@ $spacer-left:400px;
     table{
 	width:100%;
 	margin-right:10px;
-	tr.spacer-list-v{
+	tr.spacer-row{
 	    border-bottom-width:0px;
 	    border-left-width:5px;
 	    border-top-width:0px;
-	    &.active{
-		border-right:1px solid black;
-		background-color:rgba(0, 0, 0, .05);
-	    }
 	    th,td{
 		padding-left:10px;
 		&:not(:last-child){padding-right:10px;}
@@ -102,6 +98,25 @@ $spacer-left:400px;
 	    th{
 		text-align:center;
 	    }
+	}
+
+	tr.spacer-list-v{
+	    &.active{
+		border-right:1px solid black;
+		background-color:rgba(0, 0, 0, .05);
+	    }
+
+	}
+	tr.spacer-nickase-list-v{
+	    &:not(.active){
+		opacity:.25;
+	    }
+
+	    &.active{
+		border-right:1px solid black;
+		background-color:rgba(0, 0, 0, .05);
+	    }
+	    cursor:pointer;
 	}
     }
 }

@@ -7,7 +7,9 @@ function init_page(){
     }
     current_job.poll()
     var rview = new NickaseV({job:current_job})
-    rview.render().$el.attr("id","nickase").appendTo($("#nickase-container"))
+    rview.render().$el.attr("id","nickase").appendTo($("#nickase-container"))	
+    $(document).on("mouseover", ".spacer", {}, spacer_select)
+
 }
 
 
@@ -18,80 +20,89 @@ NickaseV = Backbone.View.extend({
     initialize:function(){
 	this.job = current_job;
 	//initializes a new graphics (SVG) view with this job
-	this.ngraphics = new NickaseGraphicalV({
-	    model: new NickaseGraphicalM({job:this.job})
-	})
+	this.ngraphics_view = new NickaseGraphicalV(this.job)
+	this.job_spacers_view = new NickaseSV({model:this.job})
+	this.job.on("change:active_spacer",
+		    this.ngraphics_view.tryrender_current_spacer,
+		    this.ngraphics_view)
+
+
     },
     render:function(){
 	params = current_job.toJSON()
 	this.$el.html(_.template(this.template,params))
-	this.$(".graphics").append(this.ngraphics_view.render())	      
+	this.$(".graphics").append(this.ngraphics_view.$el)
+	this.job_spacers_view.render().$el.appendTo(this.$(".spacer-list"))
 	return this
     }	
 })
 
-/* graphical model for the nickase SVG, constructs and stores spans */
-NickaseGraphicalM = Backbone.RelationalModel.extend({
-    relations:[
-	{
-	    key:"spans",
-	    type:Backbone.HasMany,
-	    relatedModel:"SpanVM",
-	    reverseRelations:{
-		key:"parent",
-		type:Backbone.HasOne
-	    }
-	}
-    ],
-    initialize:function(){
-	this.set("cwidth", 600)
-	this.set("cheight", 400)
-	
-	//initialize and create span models
-	tops = _.filter(this.get("job").get("spacers").models,
-			function(e){
-			    return e.get("strand") == 1
-			})
-	bottoms = _.filter(this.get("job").get("spacers").models,
-			  function(e){
-			      return e.get("strand") == -1
-			  })
-	for(var i = 0 ; i < tops.length ; i++){
-	    for (var j = 0 ; j < bottoms.length ; j++){
-		var s = new SpanVM({top:tops[i],
-				    bottom:bottoms[j],
-				    parent:this,
-				    offset:i + j
-				   })
-	    }
-	}
-    },
-    convert_rel_base_to_x:function(base){
-	var parent = this.get("parent")
-	var j = parent.job
-	frac = (base  - j.get("start") ) / j.get("sequence").length
-	return frac = this.cwidth;
-    },
-    convert_offset_to_y:function(ofs){
-	return 20 * ofs
-    }
-})
-
 /* SVG renderer for the nickase model */
 NickaseGraphicalV = Backbone.View.extend({
-    initialize:function(){
-	this.views_list = _.map(this.model.get("spans").models,function(e){
+    convert_rel_base_to_x:function(base){
+	var j = this.job
+	frac = (base ) / j.get("sequence").length
+	return frac * this.cwidth;
+    },
+    convert_offset_to_y:function(ofs){
+	return ( this.cheight /2 ) +  10 * ofs
+    },   
+    initialize:function(job){
+	this.job = job
+	this.cwidth = 600
+	this.cheight = 400
+	gview = this;
+    },
+
+    tryrender_current_spacer:function(){
+	spacer = this.job.get("active_spacer")
+	if(spacer.get("fetched_regions")){
+	    this.render()
+	} else {
+	    spacer.fetch_regions()
+	}
+    },
+
+    render:function(){
+	this.spans = []
+	var cmodel = this.job.get('active_spacer')
+
+	
+	if(cmodel.get("strand") == 1){
+	    consorts = _.filter(this.job.get("spacers").models,
+			       function(e){
+				   return e.get("strand") == -1
+			       })
+	} else{
+	    consorts = _.filter(this.job.get("spacers").models,
+				function(e){
+				    return e.get("strand") == 1
+				})
+	}
+
+
+	for(var i = 0 ; i < consorts.length ; i++){
+	    this.spans.push( {spacer:cmodel,
+			      consort:consorts[i],
+			      parent:this,
+			      offset:(i)  * ((cmodel.get("strand")==1)?1:-1),
+			      score:N.spacer_score_consort(cmodel,consorts[i].get("sequence")) 
+			     })
+	    
+	}
+	
+	this.views_list = _.map(this.spans,function(e){
 	    return new SpanV({model:e}) 
 	})
-    },
-    render:function(){
-	this.svg = this.$el.svg({}).svg("get");
 	
+	this.svg = this.$el.svg({}).svg("get");
+	this.svg.clear()
+	svgel = this.svg
+
 	//assigns an SVG renderer to this model so that it can be accessed by
 	//child spans
-	this.model.set("svg", this.svg)
-	this.svg._svg.attr("height",this.model.get("cheight") + "px")
-	this.svg._svg.attr("width",this.model.get("cwidth") + "px")
+	$(this.svg._svg).attr("height",this.cheight + "px")
+	$(this.svg._svg).attr("width",this.cwidth + "px")
 
 	//renders subview only after this model has been assigned an SVG object
 	for (var i = 0 ; i < this.views_list.length; i++){
@@ -101,57 +112,28 @@ NickaseGraphicalV = Backbone.View.extend({
     },
 })
 
-/* model storing varying properties of a span view */
-SpanVM = Backbone.RelationalModel.extend({
-    defaults:{
-	top:null,
-	bottom:null,
-	job:null,
-    },
-    initialize:function(){
-	if(!this.get("top") || !this.get("bottom") || !this.get("offset")){
-	    throw "inadequately initialized span."
-	}
-	this.get("top").on("change:score", this.computeScore, this)
-	this.get("bottom").on("change:score", this.computeScore, this)
-	this.computeScore()
-    },
-    computeScore:function(){
-	if(this.get("bottom").get("score") == null || this.get("top").get("score") == null){
-	    this.set("score",0)
-	} else{
-	    this.set("score", this.get("bottom").get("score") *
-		     this.get("top").get("score"))
-	} 
-    }
-})
-
 /* span view rendered into a nickase graphical view */
 SpanV = Backbone.View.extend({
     initialize:function(opts){
-	if(this.model == null){ throw "null model for a span view" }
-	this.model.on("change:score",this.render())
-	this.model.on("change:offset",this.render())
+	this.model = opts.model
     },
     render:function(svg){
 	var s = this.model
-	var svg = s.get("parent").get("svg")
+	var svg = s.parent.svg
 	if (svg == null){ throw "no svg yet exists..."}
-	var y = s.get("parent").convert_offset_to_y(s.get("offset"))
-	var x0 = s.get("parent").convert_rel_base_to_x(s.get("bottom").get("start"))
-	var x1 = s.get("parent").convert_rel_base_to_x(s.get("top").get("start"))
+	var y = s.parent.convert_offset_to_y(s.offset)
+	var x0 = s.parent.convert_rel_base_to_x(s.spacer.get("start"))
+	var x1 = s.parent.convert_rel_base_to_x(s.consort.get("start"))
 
 	if(this.group == null){
 	    //first time rendered, create an element
 	    this.group = svg.group()
-	    
 	    var p = svg.createPath()
 	    p.moveTo(x0,y)
 	    p.lineTo(x1,y)
 	    var path = svg.path(this.group, p)
-	    svg.configure(path,{"strokeWidth":10,
+	    svg.configure(path,{"strokeWidth":(20- s.score),
 				"stroke":"black"})
-	    
 	}
 
     }

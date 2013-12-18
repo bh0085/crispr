@@ -122,10 +122,8 @@ var JobM = Backbone.RelationalModel.extend({
     }				  
 })			  
 
-
-function spacer_mouse(event){
+function spacer_select(event){
     var cid = $(this).attr("cid")
     spacer = current_job.get("spacers").getByCid(cid)
     spacer.set("active", true)
 }
-$(document).on("mouseover", ".spacer", {},spacer_mouse)
