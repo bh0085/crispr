@@ -1,4 +1,5 @@
 /** backbone model for a job */
+session_start = new Date().getTime()
 var JobM = Backbone.RelationalModel.extend({
     defaults:{
 	sequence:null,
@@ -52,11 +53,12 @@ var JobM = Backbone.RelationalModel.extend({
 	var self =this
 
 	self.fetch(
-	    {success:function(){
-		self.set("poll_timeout",self.get("poll_timeout") + 200);
-		window.setTimeout($.proxy(self.poll,self),
-				  self.get("poll_timeout"));
-	    }})
+	    {data: $.param({ session_age: new Date().getTime() - session_start}),
+	     success:function(){
+		 self.set("poll_timeout",self.get("poll_timeout") * 2);
+		 window.setTimeout($.proxy(self.poll,self),
+				   self.get("poll_timeout"));
+	     }})
 	    
     },
     activateOne:function(s,val){
@@ -80,9 +82,7 @@ var JobM = Backbone.RelationalModel.extend({
 		_.each(self.get("spacers").models,
 		       function(s,i){
 			   s.compute_rank_in_job(self);
-			   console.log("done")
 		       });
-		console.log("doneall")
 	    })
 	    s.compute_rank_in_job(self);
 	});

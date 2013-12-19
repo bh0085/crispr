@@ -8,10 +8,8 @@
     <div class="row med-margin-top">
       <div class="span6 offset2">
 	<h1>CRISPR Design is Undergoing Maintenance</h1>
-	<h4>Update 10/3/2013</h4>
-	<p>Fixes are complete, submitting old jobs and running tests.</p>
-	<h4>Update 10/2/2013</h4>
-	<p>Please bear with us while we fix up a bug resulting in inconsistent offtargets for reverse strands of non-human genomes.</p>
+	<h4>Update 12/18/2013</h4>
+	<p>We're resolving some server load issues and will be back online shortly! For info and help, please see our <a href="https://groups.google.com/forum/#!topic/crispr/JBXNBoC0dE4">Announcement on the CRISPR Forum</a>.</p>
       </div>
     </div>
   </body>
