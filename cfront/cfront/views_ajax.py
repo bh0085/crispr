@@ -13,16 +13,12 @@ def spacer_check_hits(request):
     spacer_id =  request.matchdict['spacer_id']
     spacer = Session.query(Spacer).get(spacer_id)
     return spacer.computed_hits
-
+    # NOT USED WITH NEW NICKASE VIEW MODE
 @view_config(route_name='spacer_retrieve_regions',renderer='json')
 def spacer_retrieve_regions(request):
     import twobitreader
-
-
-
     spacer_id = request.matchdict['spacer_id']
     spacer= Session.query(Spacer).get(spacer_id)
-
     genome = spacer.job.genome_name
     genome_path = "/tmp/ramdisk/genomes/{0}.2bit".format(spacer.job.genome_name)
     tbf = twobitreader.TwoBitFile(genome_path)
