@@ -10,7 +10,6 @@ body.nickase{
     }
     .pane1{
 	width:100%;
-	display:block;
     }
     .pane2{
 	width:270px;
@@ -20,19 +19,18 @@ body.nickase{
 	z-index:2;
     }
     .pane3{
-	min-height:200px;
-	display:block;
 	vertical-align:top;
-	width:100%;
-	box-sizing:border-box;
-	margin-left:-270px;
-	padding-left:290px;
-	position:relative;
 
     }
     .panes{
 	&.right{
 	    display:inline-block;
+	    margin-left:25px;
+	    margin-left:-270px;
+	    padding-left:290px;
+	    width:100%;
+	    box-sizing:border-box;
+	    position:relative;
 	}
     }
     table{

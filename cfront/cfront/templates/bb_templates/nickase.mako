@@ -4,6 +4,8 @@
     <div class="page-header">
       <h3>Double Nickase Design</h3>
       <div>Find double nicking pairs within your query input.<span class="right" style="float:right;"><a class="export export-all-pairs" target="_blank" href="{{export_gb_nicks_url}}">Export all pairs to Genbank</a></span></div>
+      <div class="hover-helper">
+      </div>
     </div>
 
     <div class="pane pane2 nick-list-container">
@@ -12,31 +14,19 @@
 	<div>Sorted by score.</div>
 	<div><a class="explain-scores">See how scores are computed </a></div>
 	
-	<div style="display:none;" class="scores-explanation">
-	  Scores for each pair gX<-->gY are a product of three factors.<br/>
-				    S(gX,gY) = s(gX) * s(gY) * OT(gX,gY)<br/>
-				    Where s(gX/Y) are standard offtarget scores, computed per guide see <a href="/about">/about</a><br/>
-				    And OT(g1,g2) is a weighting factor which penalizes guide pairs having potential double-nicking offtargets.
-				    </div>
+	<div style="display:none;" class="scores-explanation">"explanation temporarily removed"</div>
 
-				    </div>
-				    <div class="click-grabber"> </div>				
-				    <div class="nicks-list">
-				    </div>
-				    </div>
-				    
+      </div>
+      <div class="click-grabber"> </div>				
+      <div class="nicks-list">
+      </div>
+    </div>
+    
 
-				    <div class="hover-helper">
-				    </div>
-				    <div class="right panes">
+
+    <div class="right panes">
       <div class="pane1 pane">
-
-	<div class="page-header">
-	  <h4>Top Pairs</h4>
-	  <div>Filtered by region</div>
-	</div>
-
-
+	<h4>Top Pairs</h4>
 	<div class="nickase-tl-options-container">
 	</div>
 	<div class="main graphics">
