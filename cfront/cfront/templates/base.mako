@@ -52,6 +52,7 @@
     <script type="text/javascript" src="/js/app/init.js"></script>
     <script type="text/javascript" src="/js/models/job_m.js"></script>
     <script type="text/javascript" src="/js/models/spacer_m.js"></script>
+    <script type="text/javascript" src="/js/models/nickase_m.js"></script>
     <script type="text/javascript" src="/js/models/hit_m.js"></script>
     <script type="text/javascript" src="/js/models/file_m.js"></script>
     <script type="text/javascript" src="/js/views/job_v.js"></script>

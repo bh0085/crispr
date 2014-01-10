@@ -1,140 +1,131 @@
-current_job = null;
+scurrent_job = null;
+var APP
 function init_page(){
+    APP.fetch_spacers = false
+
     //if we have a subdomain prefix in the pathname, this will cause problems.
+    init_state.job.nicks = init_state.nicks
     current_job = new JobM(init_state.job)
+    APP = new AppM({job:current_job, id:1})
     if(!current_job.get("start")){
 	$("#nickase-container").text("job is not mapped to the genome")
     }
-    current_job.poll()
+    //polling is disabled for the nickase view... for now...
+    //current_job.poll()
+
+ 
+    $(document).on("click",".explain-this-view",function(){
+	$(".explanation").toggle(!$(".explanation").is(":visible"));
+    });
+
+    $(document).on("click",".explain-scores",function(){
+	$(".scores-explanation").toggle(!$(".scores-explanation").is(":visible"));
+    });
+    
+    /*
+    $(document).on("click",".export",function(){
+	alert("apologies, but export is not yet complete")
+    });
+    */
+    
+
+    current_job.on("change:active_region_nicks_count", function(){$(".active-region-nicks-count-display").text(current_job.get("active_region_nicks_count" ))})
+
+
+
+    //CLICK STEALING LOGIC
+    current_job.on("change:hover_locked",
+		   function(){
+		       $(".graphics").toggleClass("locked", current_job.get("hover_locked")) 
+		       $("body").toggleClass("locked", current_job.get("hover_locked")) 
+		       $(".pane2").toggleClass("locked", current_job.get("hover_locked")) 
+		       
+		   })    
+
+    $(document).on("mouseenter",".click-grabber",function(){
+	$(".hover-helper").text("click to deselect Pair "+APP.get_active_nick_name())
+    })
+    
+    $(document).on("click",".click-grabber",function(){
+	current_job.set("hover_locked",false)
+    })
+
+    $(document).on("mouseleave",".click-grabber",function(){
+	$(".hover-helper").text("")
+    })
+    
+
+
     var rview = new NickaseV({job:current_job})
     rview.render().$el.attr("id","nickase").appendTo($("#nickase-container"))	
-    $(document).on("mouseover", ".spacer", {}, spacer_select)
+    $(document).on("mouseover", ".nick", {}, nick_select)
 
 }
 
 
-/* html view for the nickase model */
-NickaseV = Backbone.View.extend({
-    className:"nickase-view",
-    template:$("#nickase-v-template").html(),
+
+var AppM  = Backbone.RelationalModel.extend({
+    relations:[
+	{
+	    key:"included_nicks",
+	    type:Backbone.HasMany,
+	    relatedModel:"NickM",
+	    collectionType:"NickC",
+	    reverseRelation:{
+		key:"included",
+		relatedModel:AppM,
+		type:Backbone.HasOne
+	    }
+	},
+    ],
     initialize:function(){
-	this.job = current_job;
-	//initializes a new graphics (SVG) view with this job
-	this.ngraphics_view = new NickaseGraphicalV(this.job)
-	this.job_spacers_view = new NickaseSV({model:this.job})
-	this.job.on("change:active_spacer",
-		    this.ngraphics_view.tryrender_current_spacer,
-		    this.ngraphics_view)
-
-
+	current_job.on("change:active_region_hash",this.changed_region, this)
+	this.compute_nicks();
     },
-    render:function(){
-	params = current_job.toJSON()
-	this.$el.html(_.template(this.template,params))
-	this.$(".graphics").append(this.ngraphics_view.$el)
-	this.job_spacers_view.render().$el.appendTo(this.$(".spacer-list"))
-	return this
-    }	
-})
-
-/* SVG renderer for the nickase model */
-NickaseGraphicalV = Backbone.View.extend({
-    convert_rel_base_to_x:function(base){
-	var j = this.job
-	frac = (base ) / j.get("sequence").length
-	return frac * this.cwidth;
+    changed_region:function(){
+	this.compute_nicks()
+	this.trigger("changed_region_or_nicks")
     },
-    convert_offset_to_y:function(ofs){
-	return ( this.cheight /2 ) +  10 * ofs
-    },   
-    initialize:function(job){
-	this.job = job
-	this.cwidth = 600
-	this.cheight = 400
-	gview = this;
-    },
+    compute_nicks:function(){
+	var all_nicks = current_job.get("nicks").models
+	var rb = current_job.region_bounds()
+	var changed = false;
+	for (var i = 0; i < all_nicks.length ; i++){
+	    var n = all_nicks[i]
+	    start = Math.min(n.get("spacerfwd").cut_site(),n.get("spacerrev").cut_site())
+	    end = Math.max(n.get("spacerfwd").cut_site(),n.get("spacerrev").cut_site())
 
-    tryrender_current_spacer:function(){
-	spacer = this.job.get("active_spacer")
-	if(spacer.get("fetched_regions")){
-	    this.render()
-	} else {
-	    spacer.fetch_regions()
-	}
-    },
-
-    render:function(){
-	this.spans = []
-	var cmodel = this.job.get('active_spacer')
-
-	
-	if(cmodel.get("strand") == 1){
-	    consorts = _.filter(this.job.get("spacers").models,
-			       function(e){
-				   return e.get("strand") == -1
-			       })
-	} else{
-	    consorts = _.filter(this.job.get("spacers").models,
-				function(e){
-				    return e.get("strand") == 1
-				})
-	}
-
-
-	for(var i = 0 ; i < consorts.length ; i++){
-	    this.spans.push( {spacer:cmodel,
-			      consort:consorts[i],
-			      parent:this,
-			      offset:(i)  * ((cmodel.get("strand")==1)?1:-1),
-			      score:N.spacer_score_consort(cmodel,consorts[i].get("sequence")) 
-			     })
 	    
+	    if ( rb == null || ( start < rb[0]	&& end > rb[1] ) ){
+		if(n.get("included") != this.id){
+		    n.set("included",this.id)
+		    changed = true
+		}
+	    } else {
+		if(n.get("included") == this){
+		    n.set("included",null)
+		    changed = true
+		    if(n.get("active")){
+			current_job.activateNick(n,false)
+		    }
+		}
+	    }
 	}
-	
-	this.views_list = _.map(this.spans,function(e){
-	    return new SpanV({model:e}) 
-	})
-	
-	this.svg = this.$el.svg({}).svg("get");
-	this.svg.clear()
-	svgel = this.svg
-
-	//assigns an SVG renderer to this model so that it can be accessed by
-	//child spans
-	$(this.svg._svg).attr("height",this.cheight + "px")
-	$(this.svg._svg).attr("width",this.cwidth + "px")
-
-	//renders subview only after this model has been assigned an SVG object
-	for (var i = 0 ; i < this.views_list.length; i++){
-	    this.views_list[i].render()
+	current_job.set("active_region_nicks_count", this.get("included_nicks").length)
+	if(changed){
+	    this.trigger("changed_nicks")
 	}
-	return this
     },
-})
 
-/* span view rendered into a nickase graphical view */
-SpanV = Backbone.View.extend({
-    initialize:function(opts){
-	this.model = opts.model
-    },
-    render:function(svg){
-	var s = this.model
-	var svg = s.parent.svg
-	if (svg == null){ throw "no svg yet exists..."}
-	var y = s.parent.convert_offset_to_y(s.offset)
-	var x0 = s.parent.convert_rel_base_to_x(s.spacer.get("start"))
-	var x1 = s.parent.convert_rel_base_to_x(s.consort.get("start"))
-
-	if(this.group == null){
-	    //first time rendered, create an element
-	    this.group = svg.group()
-	    var p = svg.createPath()
-	    p.moveTo(x0,y)
-	    p.lineTo(x1,y)
-	    var path = svg.path(this.group, p)
-	    svg.configure(path,{"strokeWidth":(20- s.score),
-				"stroke":"black"})
+    get_included_nicks:function(){
+	if(this.get("included_nicks") == null){
+	    this.compute_nicks()
 	}
-
+	return this.get("included_nicks").models
+    },
+    get_active_nick_name:function(){
+	var n = current_job.get("active_nick")
+	if (n == null){ return "--"}
+	return "" + n.get("spacerfwd").get("rank") + "<-->" + n.get("spacerrev").get("rank")
     }
 })

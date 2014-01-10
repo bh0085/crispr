@@ -13,7 +13,12 @@ var JobM = Backbone.RelationalModel.extend({
 	computing_spacers:false,
 	computed_spacers:false,	
 	poll_timeout:1000,
-	active_spacer:null
+	active_spacer:null,
+	active_nick:null,
+	active_region_start:null,
+	active_region_end:null,
+
+	hover_locked:false,
     },
     relations:[
 	{
@@ -47,6 +52,10 @@ var JobM = Backbone.RelationalModel.extend({
     url: function () {
         return routes.route_path("job_rest",{job_key:this.get("key")})
     },
+    compute_export_urls:function(){
+	this.set("export_gb_nicks_url", 
+		 routes.route_path("gb_all_nicks",{job_key:this.get("key")}))
+    },
     //waiting for hits, polls. true when done.
     poll:function(){
 	var self =this
@@ -59,7 +68,7 @@ var JobM = Backbone.RelationalModel.extend({
 	    }})
 	    
     },
-    activateOne:function(s,val){
+    activateSpacer:function(s,val){
 	if( val){
 	    _.each(this.get("spacers").models,function(s2, i2){
 		if (s2.id != s.id)
@@ -68,32 +77,68 @@ var JobM = Backbone.RelationalModel.extend({
 	    this.set("active_spacer",s);
 	}
     },
+    activateNick:function(s,val){
+	if( val){
+	    _.each(this.get("nicks").models,function(s2, i2){
+		if (s2.id != s.id)
+		{s2.set("active",false)}
+	    });
+	    s.set("active",true)
+	    this.set("active_nick",s);
+	} else {
+	    s.set("active", false)
+	    this.set("active_nick",null)
+	}
+    },
     initialize:function(){
 	var self = this
+	this.compute_export_urls()
 	this.set("locus", this.locus())
 	this.binder = new Backbone.EventBinder()
 	_.each(self.get("spacers").models, function(s,i){
-	    s.on("change:active",self.activateOne,self)
+	    s.on("change:active",self.activateSpacer,self)
 	    s.on("change:score",function(m,v){
 		self.get("spacers").sort()
 		//order is important here
 		_.each(self.get("spacers").models,
 		       function(s,i){
 			   s.compute_rank_in_job(self);
-			   console.log("done")
 		       });
-		console.log("doneall")
 	    })
 	    s.compute_rank_in_job(self);
 	});
+
+	_.each(self.get("nicks").models, function(s,i){
+	    //NICKS do not autupdate...
+	    //would copy code from above as appropriate
+	    s.on("change:active",self.activateNick,self)
+	    s.compute_rank_in_job(self);
+	});
+
+    },
+    update_region:function(start,end){
+	this.set("active_region_start",start)
+	this.set("active_region_end",end)
+	if(this.get("active_region_start") != null){
+	    this.set("active_region_hash", "["+this.get("active_region_start") + ":" + (this.get("active_region_end") !== null ? this.get("active_region_end") : this.get("active_region_start"))+"]")
+	} else {
+	    this.set("active_region_hash", "--")
+	}
+    },
+    region_bounds:function(){
+	if(this.get("active_region_start") == null){
+	    return null
+	} else if (this.get("active_region_end") === null){
+	    return [this.get("active_region_start"),this.get("active_region_start")]
+	} else {
+	    return [this.get("active_region_start"),this.get("active_region_end")]
+	}
     },
     locus:function(){
 	return this.get("chr") +":"+ (this.get("strand") == -1?"-":"+")
 		+ (this.get("start") + (this.get("strand") == 1?-1:-4))
     },
     status_frac:function(){
-
-	console.log(this.get("spacers").models)
 	var done_count = _.filter(this.get("spacers").models,function(e){return e.get("computed_hits")}).length
 	var total_count = this.get("spacers").length
 
@@ -126,4 +171,10 @@ function spacer_select(event){
     var cid = $(this).attr("cid")
     spacer = current_job.get("spacers").getByCid(cid)
     spacer.set("active", true)
+}
+
+function nick_select(event){
+    var cid = $(this).attr("cid")
+    nick = current_job.get("nick").getByCid(cid)
+    nick.set("active", true)
 }

@@ -25,7 +25,7 @@ ReadoutV = Backbone.View.extend({
     draw_job:function(){
 	this.jobview = new JobV({model:this.job})
 	this.jobview.render().$el.appendTo(this.$(".job-header-area").empty())
-	this.job_spacers_view = new JobSV({model:this.job})
+	this.job_spacers_view = new SpacerListView({model:this.job})
 	this.job_spacers_view.render().$el.appendTo(this.$(".spacers-container"))
     },
     draw_status:function(){

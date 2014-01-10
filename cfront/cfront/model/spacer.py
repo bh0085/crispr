@@ -28,12 +28,23 @@ class Spacer(Base):
     ERR_FAILED_TO_RETRIEVE_HITS = "Failed to retrieve hits from the genome"
     ERR_TOOMANYHITS = "This spacer had over 10,000 similar sequences in the genome"
     @property
+    def cut_site(self):
+        if self.strand == 1:
+            return self.start + 20
+        else :
+            return self.start + 3
+
+    @property
     def guide(self):
         return self.sequence[:-3]
 
     @property
     def nrg(self):
         return self.sequence[-3:]
+
+    @property
+    def formatted_score(self):
+        return "{0:0.0f}%".format(self.score * 100)
     
     @property
     def computed_hits(self):

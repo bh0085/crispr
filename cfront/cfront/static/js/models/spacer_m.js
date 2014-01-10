@@ -1,17 +1,3 @@
-var SpacerRegionM = Backbone.Model.extend({
-    
-})
-var SpacerRegionsC = Backbone.Collection.extend({
-    model:SpacerRegionM,
-    initialize:function(models,options){
-	this.spacer = options.spacer
-	if (!this.spacer){throw "regions collection needs input spacer"}
-    },
-    url:function(){
-	return routes.route_path("spacer_retrieve_regions",{"spacer_id":this.spacer.id})
-    }
-})
-
 /** backbone model for a spacer */
 var SpacerM = Backbone.RelationalModel.extend({
     defaults:{
@@ -23,8 +9,6 @@ var SpacerM = Backbone.RelationalModel.extend({
 	computed_hits:false,
 	computing_hits:false,
 	active:false,
-	regions:null,
-	fetched_regions:false,
     },
     relations:[
 	{
@@ -72,7 +56,7 @@ var SpacerM = Backbone.RelationalModel.extend({
 	    }
 	    
 	}
-	if(this.get("computed_hits")){
+	if(this.get("computed_hits") && APP.fetch_spacers){
 	    $.getJSON(routes.route_path("spacer_retrieve_hits",{spacer_id:this.id}),{},
 		      $.proxy(parse_hits,this))
 	} else {
@@ -85,18 +69,6 @@ var SpacerM = Backbone.RelationalModel.extend({
 
 	this.compute_quality()
 	this.on("change:score",this.compute_quality,this);
-    },
-    fetch_regions:function(){
-	var self  = this
-
-	if(this.regions == null){ 	
-	    this.regions = new SpacerRegionsC([], {spacer:this}) 
-	}
-	this.regions.fetch({data:{},
-			    success:function(model,data){
-				self.set("fetched_regions", true)
-			    }})	
-	
     },
     locus:function(){
 	if(this.get("job").get("chr")){
@@ -126,23 +98,23 @@ var SpacerM = Backbone.RelationalModel.extend({
 	} else {
 	    this.set("quality","no")
 	}
+    },
+    cut_site:function(){
+	return this.get("strand") == 1 ? this.get("start") + 20 : this.get("start") + 3
+    },
+    quality_color:function(){
+	if (this.get("quality") == "high"){return "green"}
+	else if (this.get("quality") == "medium"){return "yellow"}
+	else if (this.get("quality") == "low"){return "red"}
+	else{return "black"}
     }
 })
 
 SpacerM.high_quality_threshold = .5;
 SpacerM.low_quality_threshold = .2;
- 
-
-
 
 
 SpacerC = Backbone.Collection.extend({
-    model:SpacerM,
-    comparator:function(m){
-	return -1 * m.get("score")
-    }
-})
-SpacersDisplayC = Backbone.Collection.extend({
     model:SpacerM,
     comparator:function(m){
 	return -1 * m.get("score")

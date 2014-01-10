@@ -167,7 +167,7 @@ SimpleSpacerSVGV = JobSVGV.extend({
 	opts = {fill:this.spacer_color,stroke:"rgba(0, 0, 0, 1);",strokeWidth:1};
 	el = this.svg.path(p,opts);
 	$(el).attr("cid", spacer.cid);
-	$(el).on("mouseover", spacer_mouse)
+	$(el).on("mouseover", spacer_select)
 	this.rendered_spacers[spacer.id] = el;
     },
     update_spacer:function(spacer){	

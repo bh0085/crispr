@@ -1,5 +1,7 @@
 current_job = null;
 function init_page(){
+    APP.fetch_spacers=true
+    
     //if we have a subdomain prefix in the pathname, this will cause problems.
     current_job = new JobM(init_state.job)
     current_job.poll()

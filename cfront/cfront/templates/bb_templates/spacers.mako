@@ -80,10 +80,3 @@
 </script>
 
 
-
-<!-- A view for a single spacer element in Left Column-list view -->
-<script type="unknown" id="spacer-nickase-list-v-template">
-  <td>{{ name == null? "G<span class=rank>"+rank+"</span>" : name}}</td>
-  <td class="center"><span class="qscore">{{sprintf("%d",score*100)}}</span></td>
-  <td><span class="guide dna">{{guide}}</span></td>
-</script>

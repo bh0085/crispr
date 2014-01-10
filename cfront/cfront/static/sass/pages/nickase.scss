@@ -1,23 +1,178 @@
 body.nickase{
-    .spacers-nick-view-container{
+    .content-area{
 	white-space:nowrap;
-	.spacer-list{
-	    display:inline-block;
-	    width:20em;
-	    background:gray;
+	>*{
 	    vertical-align:top;
-	    height:800px;
-	   .job-spacer-list-v {
-	       .header{
-		   display:none; // hacky CSS
-	       }
-	   }
 	}
-	.graphics{
+    }
+    .pane{
+	position:relative;
+    }
+    .pane1{
+	width:100%;
+	display:block;
+    }
+    .pane2{
+	width:270px;
+	display:inline-block;
+	vertical-align:top;
+	padding-left:15px;
+	z-index:2;
+    }
+    .pane3{
+	min-height:200px;
+	display:block;
+	vertical-align:top;
+	width:100%;
+	box-sizing:border-box;
+	margin-left:-270px;
+	padding-left:290px;
+	position:relative;
+
+    }
+    .panes{
+	&.right{
 	    display:inline-block;
-	    background:lightgray;
-	    vertical-align:top;
-	    height:800px;
 	}
+    }
+    table{
+    	white-space:nowrap;
+    }
+    .nickase-tl-options{
+	width:100%; 
+	margin-top:30px;
+	margin-bottom:5px;
+	white-space:normal;
+
+	.controls{
+	    margin-left:10px;
+	}
+	.full-width-bottom{
+	    position:relative;
+	    width:100%;
+	    .right{
+		position:absolute;
+		right:0px;
+	    }
+	}
+    }
+    .hover-helper{
+	height:10px;
+	color:rgba(0,0,0,.5);
+    }
+
+    
+}
+.scores-explanation{
+    padding-top:10px;
+    white-space:normal;
+}
+.graphics{
+    height:300px;
+    display:block;
+    position:relative;
+    width:100%;
+
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+    &:not(.locked){
+	border:lightgray solid 1px;
+    }
+    &.locked{
+	.svg-container{
+	    pointer-events:none;
+	    opacity:.5;
+	}
+
+    }
+    
+
+}
+
+
+body.locked{
+    .click-grabber{
+	display:block;
+    }
+    
+}
+.click-grabber{
+    display:none;
+    cursor:pointer;
+    position:absolute;
+    z-index:10;
+    top:0px;
+    left:0px;
+    right:0px;
+    bottom:0px;
+    background-color:rgba(255, 255, 255, .75);
+}
+
+.nick-active-highlight{
+    opacity:0;
+    &[active=true]{
+	opacity:.05;
+    }
+}
+.nick-svg-view-group{
+    &:not([active=true])>text{
+	opacity:0;
+    }
+
+    &:not([active=true])>line{
+	opacity:.1;
+    }
+    &[active=true]{
+	opacity:.9;
+    }
+}
+
+
+.nickase-detail-view{
+    &:not(.locked){
+	//opacity:.3;
+    }
+    .spacer{
+	dt{
+	    display:inline-block;
+	    width:200px;
+	}
+	dd{
+	    display:inline-block;
+	}
+    }
+    .sequence-details-container{
+	margin-bottom:25px;
+    }
+    .sequence{
+	font-family:courier;
+	&.selected{
+	    color:blue;
+	}
+    }
+}
+
+.job-list-v{
+    &.nicks-list{
+	.header{
+	    padding:1em;
+	    padding-bottom:0em;
+	    font-style:italic;
+	}
+	table{
+	}
+    }
+}
+
+
+
+.nickase.list-row{
+    &:not(.included){
+	display:none;
     }
 }

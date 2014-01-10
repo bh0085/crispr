@@ -29,7 +29,7 @@
 	<div class="header"><span class="section-name">Interactive results: </span><span class="annotation med-left-margin">mouse over a guide or explore below for details</div>
 	<div class="jobsvg-v-container">
 	</div>
-	<div class="spacers-area">
+	<div class="col-tables-area">
 	  <div class="spacer-v-container"></div>
 	  <div class="col left">
 	    <div class="spacers-container"></div>
@@ -53,7 +53,7 @@
 
 
 <!-- A view containing all spacers in the left column -->
-<script type="unknown" id="job-s-v-template">
+<script type="unknown" id="job-spacer-list-v-template">
   <div class="header showing-less">
     <div><h4>all guides</h4></div>
     <div>scored by inverse likelihood of offtarget binding</div>

@@ -94,37 +94,3 @@ var SpacerV = Backbone.View.extend({
     }
 })
 
-
-SpacerGenericListV = Backbone.View.extend({
-    tagName: "tr",
-
-    initialize:function(){
-	this.model.on("change:active",
-		      function(m,v){
-			  this.$el.toggleClass("active",v)
-		      },this);
-	this.$el.toggleClass("active",this.model.get("active"))
-	this.model.on("change:rank",this.render,this);
-	this.model.on("change:score",this.render, this);
-    },
-    render:function(){
-	mjson = this.model.toJSON()
-	this.$el.html(_.template(this.template,mjson))
-	this.$el.attr("cid", this.model.cid)
-	this.$el.removeClass("medium-quality high-quality low-quality no-quality")
-	this.$el.addClass(this.model.get("quality")+"-quality")
-	return this
-    }
-})
-
-/** view for spacers in a single list for the overall job view */
-SpacerListV = SpacerGenericListV.extend({
-    template: $("#spacer-list-v-template").html(),
-    className: "spacer-list-v spacer spacer-row",
-})
-
-/** view for spacers in a list that will be selected from to get nickase views */
-SpacerNickaseListV = SpacerGenericListV.extend({
-    template:$("#spacer-nickase-list-v-template").html(),
-    className: "spacer-nickase-list-v spacer spacer-row",   
-})

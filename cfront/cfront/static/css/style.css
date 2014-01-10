@@ -26,50 +26,50 @@
 .spacer-v-container {
   margin-left: 20px; }
 
-.spacers-area {
+.col-tables-area {
   white-space: nowrap; }
-  .spacers-area .col {
+  .col-tables-area .col {
     box-sizing: border-box;
     position: relative;
     height: 100%;
     display: inline-block;
     vertical-align: text-top; }
-    .spacers-area .col.left {
+    .col-tables-area .col.left {
       width: 400px;
       padding-left: 20px;
       z-index: 1; }
-    .spacers-area .col.right {
+    .col-tables-area .col.right {
       width: 100%;
       margin-left: -400px;
       padding-right: 20px;
       padding-left: 420px;
       z-index: 0; }
 
-.job-spacer-list-v {
+.job-list-v {
   border-right: 1px dotted rgba(0, 0, 0, 0.1);
   box-sizing: border-box;
   min-height: 600px; }
-  .job-spacer-list-v table {
+  .job-list-v table {
     width: 100%;
     margin-right: 10px; }
-    .job-spacer-list-v table tr.spacer-row {
+    .job-list-v table tr.list-row {
       border-bottom-width: 0px;
       border-left-width: 5px;
       border-top-width: 0px; }
-      .job-spacer-list-v table tr.spacer-row th, .job-spacer-list-v table tr.spacer-row td {
+      .job-list-v table tr.list-row th, .job-list-v table tr.list-row td {
         padding-left: 10px; }
-        .job-spacer-list-v table tr.spacer-row th:not(:last-child), .job-spacer-list-v table tr.spacer-row td:not(:last-child) {
+        .job-list-v table tr.list-row th:not(:last-child), .job-list-v table tr.list-row td:not(:last-child) {
           padding-right: 10px; }
-      .job-spacer-list-v table tr.spacer-row th {
+      .job-list-v table tr.list-row th {
         text-align: center; }
-    .job-spacer-list-v table tr.spacer-list-v.active {
+    .job-list-v table tr.spacer-list-v.active {
       border-right: 1px solid black;
       background-color: rgba(0, 0, 0, 0.05); }
-    .job-spacer-list-v table tr.spacer-nickase-list-v {
+    .job-list-v table tr.nickase-list-v {
       cursor: pointer; }
-      .job-spacer-list-v table tr.spacer-nickase-list-v:not(.active) {
+      .job-list-v table tr.nickase-list-v:not(.active) {
         opacity: .25; }
-      .job-spacer-list-v table tr.spacer-nickase-list-v.active {
+      .job-list-v table tr.nickase-list-v.active {
         border-right: 1px solid black;
         background-color: rgba(0, 0, 0, 0.05); }
 
@@ -387,19 +387,117 @@ body .navbar li > a, body .navbar .brand {
 a {
   cursor: pointer; }
 
-body.nickase .spacers-nick-view-container {
+body.nickase .content-area {
   white-space: nowrap; }
-  body.nickase .spacers-nick-view-container .spacer-list {
-    display: inline-block;
-    width: 20em;
-    background: gray;
+  body.nickase .content-area > * {
     vertical-align: top; }
-    body.nickase .spacers-nick-view-container .spacer-list .job-spacer-list-v .header {
-      display: none; }
-  body.nickase .spacers-nick-view-container .graphics {
-    display: inline-block;
-    background: lightgray;
-    vertical-align: top; }
+body.nickase .pane {
+  position: relative; }
+body.nickase .pane1 {
+  width: 100%;
+  display: block; }
+body.nickase .pane2 {
+  width: 270px;
+  display: inline-block;
+  vertical-align: top;
+  padding-left: 15px;
+  z-index: 2; }
+body.nickase .pane3 {
+  min-height: 200px;
+  display: block;
+  vertical-align: top;
+  width: 100%;
+  box-sizing: border-box;
+  margin-left: -270px;
+  padding-left: 290px;
+  position: relative; }
+body.nickase .panes.right {
+  display: inline-block; }
+body.nickase table {
+  white-space: nowrap; }
+body.nickase .nickase-tl-options {
+  width: 100%;
+  margin-top: 30px;
+  margin-bottom: 5px;
+  white-space: normal; }
+  body.nickase .nickase-tl-options .controls {
+    margin-left: 10px; }
+  body.nickase .nickase-tl-options .full-width-bottom {
+    position: relative;
+    width: 100%; }
+    body.nickase .nickase-tl-options .full-width-bottom .right {
+      position: absolute;
+      right: 0px; }
+body.nickase .hover-helper {
+  height: 10px;
+  color: rgba(0, 0, 0, 0.5); }
+
+.scores-explanation {
+  padding-top: 10px;
+  white-space: normal; }
+
+.graphics {
+  height: 300px;
+  display: block;
+  position: relative;
+  width: 100%;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none; }
+  .graphics:not(.locked) {
+    border: lightgrey solid 1px; }
+  .graphics.locked .svg-container {
+    pointer-events: none;
+    opacity: .5; }
+
+body.locked .click-grabber {
+  display: block; }
+
+.click-grabber {
+  display: none;
+  cursor: pointer;
+  position: absolute;
+  z-index: 10;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  background-color: rgba(255, 255, 255, 0.75); }
+
+.nick-active-highlight {
+  opacity: 0; }
+  .nick-active-highlight[active=true] {
+    opacity: .05; }
+
+.nick-svg-view-group:not([active=true]) > text {
+  opacity: 0; }
+.nick-svg-view-group:not([active=true]) > line {
+  opacity: .1; }
+.nick-svg-view-group[active=true] {
+  opacity: .9; }
+
+.nickase-detail-view .spacer dt {
+  display: inline-block;
+  width: 200px; }
+.nickase-detail-view .spacer dd {
+  display: inline-block; }
+.nickase-detail-view .sequence-details-container {
+  margin-bottom: 25px; }
+.nickase-detail-view .sequence {
+  font-family: courier; }
+  .nickase-detail-view .sequence.selected {
+    color: blue; }
+
+.job-list-v.nicks-list .header {
+  padding: 1em;
+  padding-bottom: 0em;
+  font-style: italic; }
+
+.nickase.list-row:not(.included) {
+  display: none; }
 
 #readout {
   margin-top: 50px; }

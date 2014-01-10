@@ -6,35 +6,17 @@ $annotation-alpha:.4;
 
 .high-quality{
     border-left:5px solid $high-green;
-    &.color-text{
-	//color:$high-green;
-	//color:$annotation-text-color;
-    }
 }
 .medium-quality{
     border-left:5px solid $medium-yellow;
-    &.color-text{
-	//color:$medium-yellow;
-	//color:$annotation-text-color;
-
-    }
 }
 .low-quality{
     border-left:5px solid $low-red;
-    &.color-text{
-	//color:$low-red;
-	//color:$annotation-text-color;
-
-    }
 }
 .no-quality{
     border-left:5px solid lightgray;
-    &.color-text{
-	//color:$low-red;
-	//color:$annotation-text-color;
-
-    }
 }
+
 .guide-quality{
     box-sizing:border-box;
     width:100%;
@@ -57,7 +39,7 @@ $spacer-left:400px;
 }
 
 
-.spacers-area{
+.col-tables-area{
     white-space:nowrap;
     .col{
 	box-sizing:border-box;
@@ -80,14 +62,19 @@ $spacer-left:400px;
     }
 }
 
-.job-spacer-list-v{
+.job-list-v{
     border-right:1px dotted rgba(0, 0, 0, .1);
     box-sizing:border-box;
     min-height:600px;
+
+    &.spacers-list{
+
+    }
+    
     table{
 	width:100%;
 	margin-right:10px;
-	tr.spacer-row{
+	tr.list-row{
 	    border-bottom-width:0px;
 	    border-left-width:5px;
 	    border-top-width:0px;
@@ -107,7 +94,7 @@ $spacer-left:400px;
 	    }
 
 	}
-	tr.spacer-nickase-list-v{
+	tr.nickase-list-v{
 	    &:not(.active){
 		opacity:.25;
 	    }
@@ -119,6 +106,7 @@ $spacer-left:400px;
 	    cursor:pointer;
 	}
     }
+    
 }
 
 

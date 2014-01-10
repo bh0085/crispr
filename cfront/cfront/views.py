@@ -1,6 +1,6 @@
 from pyramid.response import Response
 from pyramid.view import view_config
-from cfront.utils import genome_db, webserver_db
+from cfront.utils import genome_db, webserver_db, nickase
 from cfront.models import JobERR, JobNOTFOUND, JobFAILED, BatchNOTFOUND
 from cfront import genomes_settings
 
@@ -17,7 +17,9 @@ def nickase_view(request):
     jj = request.job.toJSON()
     spacers = [s.toJSON() for s in request.job.spacers]
     jj["spacers"] = spacers
-    return {"init_state":{"job":jj},
+    nicks = [n.toJSON() for n in nickase.compute_nickase_matrix(request.job.id)]
+    return {"init_state":{"job":jj,
+                          "nicks":nicks},
             "sessionInfo":{"routes":routes_dict(request)}}
 
 @view_config(route_name="batch", renderer="base.mako")

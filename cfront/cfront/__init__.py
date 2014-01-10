@@ -59,6 +59,10 @@ def main(global_config, **settings):
     config.add_route('readout', '/job/{job_key}',factory=PageResourceFactory)
     config.add_route('nickase', '/nick/{job_key}',factory=PageResourceFactory)
     
+    #export routes
+    config.add_route('gb_all_nicks', '/export/nicks_gb/{job_key}',factory=JobResourceFactory)
+    config.add_route('gb_one_nick', '/export/nicks_gb/{job_key}/{spacerfwdid}/{spacerrevid}',factory=JobResourceFactory)
+    
 
     #ajax routes
     config.add_route('job_check_spacers','/j/check_spacers/{job_key}',factory=JobResourceFactory)

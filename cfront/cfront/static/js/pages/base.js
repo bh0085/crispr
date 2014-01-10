@@ -11,3 +11,4 @@ exceptions = {
     nospacers:{"message":"no spacers in input sequence"}
 }
 
+APP ={}
