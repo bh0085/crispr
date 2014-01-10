@@ -26,8 +26,11 @@
 
     <div class="right panes">
       <div class="pane1 pane">
-	<h4>Top Pairs</h4>
-	<div class="nickase-tl-options-container">
+	<div class="page-header">
+
+	  <h4>Top Pairs</h4>
+	  <div class="nickase-tl-options-container">
+	  </div>
 	</div>
 	<div class="main graphics">
 	</div>

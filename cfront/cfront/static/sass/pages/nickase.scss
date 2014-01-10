@@ -7,6 +7,11 @@ body.nickase{
     }
     .pane{
 	position:relative;
+	.page-header{
+	    &:not(h4){
+		margin-top:0px;
+	    }
+	}
     }
     .pane1{
 	width:100%;
