@@ -394,8 +394,7 @@ body.nickase .content-area {
 body.nickase .pane {
   position: relative; }
 body.nickase .pane1 {
-  width: 100%;
-  display: block; }
+  width: 100%; }
 body.nickase .pane2 {
   width: 270px;
   display: inline-block;
@@ -403,16 +402,15 @@ body.nickase .pane2 {
   padding-left: 15px;
   z-index: 2; }
 body.nickase .pane3 {
-  min-height: 200px;
-  display: block;
-  vertical-align: top;
-  width: 100%;
-  box-sizing: border-box;
+  vertical-align: top; }
+body.nickase .panes.right {
+  display: inline-block;
+  margin-left: 25px;
   margin-left: -270px;
   padding-left: 290px;
+  width: 100%;
+  box-sizing: border-box;
   position: relative; }
-body.nickase .panes.right {
-  display: inline-block; }
 body.nickase table {
   white-space: nowrap; }
 body.nickase .nickase-tl-options {
