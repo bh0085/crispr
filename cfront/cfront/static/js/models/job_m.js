@@ -55,6 +55,19 @@ var JobM = Backbone.RelationalModel.extend({
     compute_export_urls:function(){
 	this.set("export_gb_nicks_url", 
 		 routes.route_path("gb_all_nicks",{job_key:this.get("key")}))
+
+	this.set("export_gb_guides_url", 
+		 routes.route_path("gb_all_guides",{job_key:this.get("key")}))
+    },
+    compute_page_urls:function(){
+	this.set("job_page_url",
+		 routes.route_path("job", {job_key:this.get("key")}))
+
+	this.set("readout_page_url",
+		 routes.route_path("readout", {job_key:this.get("key")}))
+
+	this.set("nickase_page_url",
+		 routes.route_path("nickase", {job_key:this.get("key")}))
     },
     //waiting for hits, polls. true when done.
     poll:function(){
@@ -93,6 +106,7 @@ var JobM = Backbone.RelationalModel.extend({
     initialize:function(){
 	var self = this
 	this.compute_export_urls()
+	this.compute_page_urls()
 	this.set("locus", this.locus())
 	this.binder = new Backbone.EventBinder()
 	_.each(self.get("spacers").models, function(s,i){
