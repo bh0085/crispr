@@ -38,6 +38,7 @@
     <%include file="backbone.mako"/>
     <%include file="bb_templates/spacers.mako"/>
     <%include file="bb_templates/job.mako"/>
+    <%include file="bb_templates/guides.mako"/>
     <%include file="bb_templates/batch.mako"/>
     <%include file="bb_templates/readout.mako"/>
     <%include file="bb_templates/submit.mako"/>

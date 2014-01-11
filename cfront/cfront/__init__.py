@@ -55,6 +55,7 @@ def main(global_config, **settings):
     config.add_route('about', '/about', factory=PageResourceFactory)
     config.add_route('batch', '/batch/{batch_key}', factory = BatchResourceFactory)
     config.add_route('submit', '/', factory=PageResourceFactory)
+    config.add_route('job', '/main/{job_key}', factory=PageResourceFactory)
     config.add_route('readonly', '/readonly',factory=PageResourceFactory)
     config.add_route('readout', '/job/{job_key}',factory=PageResourceFactory)
     config.add_route('nickase', '/nick/{job_key}',factory=PageResourceFactory)

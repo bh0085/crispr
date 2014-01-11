@@ -30,6 +30,12 @@ def batch_view(request):
     return {"init_state":{"batch":bj},
             "sessionInfo":{"routes":routes_dict(request)}}
 
+@view_config(route_name="job", renderer="base.mako")
+def job_view(request):
+    jj = request.job.toJSON()
+    return {"init_state":{"job":jj},
+            "sessionInfo":{"routes":routes_dict(request)}}
+
 @view_config(route_name="submit", renderer="base.mako")
 def submit_view(request):
     return { "sessionInfo":
