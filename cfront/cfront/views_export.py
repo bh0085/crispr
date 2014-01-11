@@ -42,3 +42,23 @@ def gb_one_nick_view(request):
     # a target=_blank
     return response
 
+
+
+@view_config(route_name="csv_one_spacer")
+def csv_one_spacer_view(request):
+    tf = tempfile.NamedTemporaryFile(prefix='csv_export_one_spacer_%s' % request.job.key,
+                                     suffix='.csv', delete=True)
+        # this is where I usually put stuff in the file
+
+
+    job = request.job
+    spacer = Session.query(Spacer).get(request.matchdict["spacerid"])
+
+    tf.write(genbank.one_spacer_to_CSV(job,spacer))
+    tf.seek(0)
+
+    response = Response(content_type='application/csv')
+    response.app_iter = tf
+    response.headers['Content-Disposition'] = ("attachment; filename=offtargets.csv")
+    return response
+

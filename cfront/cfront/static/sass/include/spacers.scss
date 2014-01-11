@@ -63,7 +63,6 @@ $spacer-left:400px;
 }
 
 .job-list-v{
-    border-right:1px dotted rgba(0, 0, 0, .1);
     box-sizing:border-box;
     min-height:600px;
 
@@ -73,7 +72,9 @@ $spacer-left:400px;
     
     table{
 	width:100%;
-	margin-right:10px;
+	margin-right:10px;	   
+	border-right:1px dotted rgba(0, 0, 0, .1);
+
 	tr.list-row{
 	    border-bottom-width:0px;
 	    border-left-width:5px;

@@ -26,8 +26,7 @@ def compute_nickase_matrix(jobid):
                 bottom_spacer = sorted_spacers[i] if sorted_spacers[i].strand == -1 else sorted_spacers[j]
                 delta = (top_spacer.start + 20) - (bottom_spacer.start+3) 
                 
-                if delta > -5:
-                    print delta
+                if delta > 40 and delta < 70:
                     nicks[(sorted_spacers[j].id,
                            sorted_spacers[i].id)] = Nick(nick_id_counter, 
                                                          sorted_spacers[j],
@@ -38,13 +37,18 @@ def compute_nickase_matrix(jobid):
     global dist_cutoff
     #not sure if we should really be using the "start"s here.
     #also, how do we handle reversed spacers
+    loops = 0
+    hits = 0
     for k,v in hits_by_chr.iteritems():
         hsrt = sorted(v, key = lambda x:x.start)
         for i,e in enumerate(hsrt):
             for j in range(i+1, len(hsrt)):
+                loops += 1
+
                 if abs(hsrt[j].start - hsrt[i].start) > dist_cutoff:
                     break
                 else:
+                    hits+=1
                     h1 = hsrt[i]
                     h2 = hsrt[j]
                     if nicks.get((h1.spacer.id,h2.spacer.id),False):
@@ -53,6 +57,9 @@ def compute_nickase_matrix(jobid):
                         nicks.get((h2.spacer.id,h1.spacer.id)).add_pair(h1,h2)
                     else:
                         pass
+
+    print "LOOPS {0} ".format(loops)
+    print "hits {0} ".format(hits)
         
     for n in nicks.values():
         n.compute_score()
@@ -106,6 +113,7 @@ class Nick(object):
             self.unorm_score = 100 * 100 / (100. + sum([s for s in self.individual_scores]))
             self.score = score_constant * self.unorm_score
         else:
+            self.unorm_score = 0
             self.score = 0
             
     def ot_hit_score(self, h1, h2):

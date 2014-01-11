@@ -95,3 +95,10 @@ def one_nick_to_GB(job, sfwd, srev):
     nick.compute_score()
                      
     return seq_record.format("genbank")
+
+
+def one_spacer_to_CSV(job,spacer):
+    return "\n".join(
+        ["chr, strand, position, sequence, n_mismatches, score, ontarget, gene"] + 
+        [ ", ".join(["{0}".format(e2) for e2 in [e.chr,e.strand,e.start,e.sequence,e.n_mismatches,e.score, e.ontarget, e.gene]]) 
+                       for e in sorted(spacer.hits, key = lambda x:-1*x.score)])

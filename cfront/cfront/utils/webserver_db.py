@@ -117,7 +117,7 @@ def compute_spacers(sequence):
         letters = rev[m.start() - 23: m.start()]
         infos.append(dict(sequence = letters,
                           strand = -1,
-                          position = len(sequence) - (m.start()-23) ))
+                          position = len(sequence) - m.start()))
 
     
     #marks job complete, returns status

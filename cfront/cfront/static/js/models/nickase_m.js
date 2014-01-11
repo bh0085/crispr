@@ -38,20 +38,34 @@ var NickM = Backbone.RelationalModel.extend({
    
     initialize:function(){
 	this.compute_quality()
-	this.compute_name()
 	this.compute_export_urls()
 	this.get("spacerfwd").on("change:rank",this.compute_name, this)
 	this.get("spacerrev").on("change:rank",this.compute_name, this)
+	
+	var cuts = [this.get("spacerfwd").cut_site(), this.get("spacerrev").cut_site()]
+	this.set("start", Math.min(cuts[0],cuts[1]))
+	this.set("end", Math.max(cuts[0], cuts[1]))
+	this.compute_name()
 
+	
     },
     compute_export_urls:function(){
 	this.set("export_gb_url", 
 		 routes.route_path("gb_one_nick",{job_key:this.get("job").get("key"),
 						 spacerfwdid:this.get("spacerfwd").id,
 						 spacerrevid:this.get("spacerrev").id}))
+
+	this.set("export_csv_forward_guide_url", 
+		 routes.route_path("csv_one_spacer",{job_key:this.get("job").get("key"),
+						     spacerid:this.get("spacerfwd").id}))
+	this.set("export_csv_reverse_guide_url", 
+		 routes.route_path("csv_one_spacer",{job_key:this.get("job").get("key"),
+						     spacerid:this.get("spacerrev").id}))
     },
     compute_name:function(){
 	this.set("name","g" + this.get("spacerfwd").get("rank") + "<-->g" + this.get("spacerrev").get("rank"))
+	this.set("range_name",this.get("start") + ".." + this.get("end"))
+
     },
     //computes rank by score
     compute_rank_in_job:function(job){

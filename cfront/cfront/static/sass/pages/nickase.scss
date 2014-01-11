@@ -1,33 +1,52 @@
 body.nickase{
     .content-area{
-	white-space:nowrap;
-	>*{
-	    vertical-align:top;
+    }
+    .page-header{
+	&:not(h4){
+	    margin-top:0px;
 	}
     }
-    .pane{
-	position:relative;
-	.page-header{
-	    &:not(h4){
-		margin-top:0px;
-	    }
-	}
-    }
+    
     .pane1{
 	width:100%;
+	label{
+	    text-overflow:ellipsis;
+	    overflow:hidden;
+	    white-space:nowrap;
+	}
+	.radio{
+	    padding-left:25px;
+	}
+	.main.graphics{
+	    overflow:hidden;
+	}
+	display:inline-block;
     }
     .pane2{
-	width:270px;
-	display:inline-block;
-	vertical-align:top;
-	padding-left:15px;
 	z-index:2;
+	display:inline-block;
+	.nicks-list{
+	    position:relative;
+	    max-height:300px;
+	    padding-top: 5px;
+	    max-height: 351px;
+	    overflow-x:visible;
+	    overflow-y:auto;
+	}
     }
     .pane3{
 	vertical-align:top;
+	padding-top:30px;
+	
 
     }
-    .panes{
+    .pane{
+	&.left{
+	position:relative;
+	width:270px;
+	display:inline-block;
+	vertical-align:top;
+	}
 	&.right{
 	    display:inline-block;
 	    margin-left:25px;
@@ -38,14 +57,26 @@ body.nickase{
 	    position:relative;
 	}
     }
+    .panes{
+	&.top{
+	    position:relative;
+	    white-space:nowrap;
+	    >*{
+		white-space:normal;
+	    }
+	}
+    }
     table{
     	white-space:nowrap;
     }
     .nickase-tl-options{
 	width:100%; 
-	margin-top:30px;
 	margin-bottom:5px;
 	white-space:normal;
+
+	form{
+	    margin-left: 20px;
+	}
 
 	.controls{
 	    margin-left:10px;
@@ -60,8 +91,10 @@ body.nickase{
 	}
     }
     .hover-helper{
-	height:10px;
+	margin-left:33%;
+	position:relative;
 	color:rgba(0,0,0,.5);
+	vertical-align:text-bottom;
     }
 
     
@@ -82,10 +115,8 @@ body.nickase{
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-
-    &:not(.locked){
-	border:lightgray solid 1px;
-    }
+    border:lightgray solid 1px;
+ 
     &.locked{
 	.svg-container{
 	    pointer-events:none;
@@ -97,23 +128,35 @@ body.nickase{
 
 }
 
+body{
+    &.locked{
+	.top.panes{
+	    opacity:.25;
+	}
 
-body.locked{
     .click-grabber{
 	display:block;
+	pointer-events:auto;
+    }
+    }
+    &:not(.locked){
+	.bottom.panes{
+	    opacity:.25;
+	}
     }
     
 }
 .click-grabber{
-    display:none;
+
+    pointer-events:none;
     cursor:pointer;
     position:absolute;
+    display:none;
     z-index:10;
     top:0px;
-    left:0px;
     right:0px;
+    left:0px;
     bottom:0px;
-    background-color:rgba(255, 255, 255, .75);
 }
 
 .nick-active-highlight{
@@ -140,26 +183,121 @@ body.locked{
     &:not(.locked){
 	//opacity:.3;
     }
-    .spacer{
-	dt{
-	    display:inline-block;
+    .page-header{
+	padding-bottom:3px;
+    }
+    //SETS UP THE TITLE
+    .full-width.header{
+	width:100%;
+	margin-bottom:20px;
+	>*{
+	    vertical-align:text-bottom;
+	    margin-top:0px;
+	    margin-bottom:0px;
+	}
+    .nickase-detail-title{
+	display:inline-block;
+	
+    }
+    }
+    .cards{
+	
+	.card{
+	    .header{
+		position:absolute;
+		top:-40px;
+		left:0px;
+	    }
+	    vertical-align:top;
 	    width:200px;
+	    min-height:50px;
+	    position:relative;
+	    display:inline-block;
+	    border:1px solid black;
+	    margin: 25px;
+	    padding: 10px;
+	    padding-top:50px;
+	    
+	    &.sequence-section{
+		padding-top:10px;
+		
+		.sequence{color:rgba(0, 0, 0, .25);
+			  &.selected{
+			      color:black;
+			  }
+			 }
+	    }
+	    .qbox{
+		position:absolute;
+		top:0px;
+		left:0px;
+		right:0px;
+		height:40px;
+		padding-top:5px;
+		padding-bottom:5px;
+		padding-right:5px;
+		border-bottom:1px dotted black;
+		>span{
+		    
+		    display: block;
+		    line-height: 40px;
+		    color:white;
+		    text-align:right;
+		    font-size:300%;
+		}
+	    }
+	    &.high{ .qbox{
+		    background-color:rgba(desaturate(green, 25%), .25);
+		    }
+		    background-color:rgba(desaturate(green, 75%), .05);
+		  }
+	    &.medium{ .qbox{
+		    background-color:rgba(desaturate(yellow, 25%), .25);
+	    }
+		    background-color:rgba(desaturate(yellow, 75%), .05);
+
+		    }
+	    &.bad{
+		.qbox{
+	    		    background-color:rgba(desaturate(red, 25%), .25);
+	    }
+	    		    background-color:rgba(desaturate(red, 75%), .05);
+
+	    }
+
+	    &.sequence-section{
+		.sequence{
+		    word-break:break-all;
+		}
+	    }
+	}
+    }
+    .spacer{
+	display:inline-block;
+	width:auto;
+	dt{
 	}
 	dd{
-	    display:inline-block;
-	}
+	    margin-left:10px;
+	}	
+    }
+    .details-svg-container{
+	margin-top:20px;
+	margin-bottom:30px;
     }
     .sequence-details-container{
 	margin-bottom:25px;
     }
     .sequence{
 	font-family:courier;
-	&.selected{
-	    color:blue;
-	}
     }
 }
 
+body.nickase{
+    .nicks-list{
+	border-bottom:1px dotted rgba(0, 0, 0, 0.1);
+    }
+} 
 .job-list-v{
     &.nicks-list{
 	.header{

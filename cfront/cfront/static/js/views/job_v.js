@@ -162,7 +162,7 @@ NickaseItemView = GenericItemView.extend({
 	    if(!current_job.get("hover_locked")){
 		current_job.activateNick(nick, true)
 	    }
-	    $(".hover-helper").text("click to select guide #"+nick.get("name"))
+	    $(".hover-helper").text("(click to select "+nick.get("range_name")+")")
 	});
 
 	this.$el.on("mouseleave",function(){

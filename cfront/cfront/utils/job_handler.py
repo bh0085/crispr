@@ -9,7 +9,6 @@ from pyramid.paster import bootstrap
 from cfront import cfront_settings
 import argparse, os
 
-
 def init_env(p):
     env = bootstrap(p)
 
@@ -19,8 +18,8 @@ def queue_loop(ofs,stride):
         time.sleep(1)
         
 def process_queue(ofs, stride):
-    #start a transaction to compute spacers for any jobs which lack them
-    #NOTE this is the second place in our code where spacers can be created
+    # start a transaction to compute spacers for any jobs which lack them
+    # NOTE this is the second place in our code where spacers can be created
     # this should be fixed as we don't do the same checks here that we do in
     # the first -- at views_ajax/post_new.
     #

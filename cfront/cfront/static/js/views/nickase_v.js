@@ -97,167 +97,11 @@ NickaseV = Backbone.View.extend({
     }	
 })
 
-NickaseDetailView = Backbone.View.extend({
-    className:"nickase-detail-view",
-    template:$("#nickase-detail-v-template").html(),
-    initialize:function(){
-	this.model.on("change:active_nick",this.render,this)
-	this.model.on("change:hover_locked",this.render,this)
-	$(document).on("scroll",$.proxy(function(){
-	    
-	    var $d = $(document)
-	    if($d.scrollTop() > this.$el.offset().top){
-		this.$el.css("padding-top",$d.scrollTop() - this.$el.offset().top)
-	    } else {
-		this.$el.css("padding-top",0)
-	    }
-	    
-	},this))
-    },
-    render:function(){
-	var nick = this.model.get("active_nick")
-	if(nick == null){return this}
-	this.nick =nick
-	
-	params = nick.toJSON()
-	params.locked = this.model.get("hover_locked")
-
-	params.forward_guide = nick.get("spacerfwd").toJSON()
-	params.forward_guide.cut_site = nick.get("spacerfwd").cut_site()
-	params.reverse_guide = nick.get("spacerrev").toJSON()
-	params.reverse_guide.cut_site = nick.get("spacerrev").cut_site()
-
-
-	this.$el.html(_.template(this.template,params))
-	this.$el.toggleClass("locked",this.model.get("hover_locked"))
-
-
-	$(window).on("resize", $.proxy(this.draw_dsvg, this))
-	this.draw_dsvg()
-	window.setTimeout($.proxy(this.draw_dsvg,this),1)
-
-
-	return this;
-    },
-    draw_dsvg:function(){
-	this.$(".details-svg-container").empty().append($("<div>").addClass("details-svg"))
-	this.dsvg = $(this.$(".details-svg")).svg({}).svg("get")
-	var ds = this.dsvg
-	
-	this.dw = this.$el.width()
-	this.dh = 100
-
-	//assigns an SVG renderer to this model so that it can be accessed by
-	//child spans
-	$(ds._svg).attr("height",this.dh + "px")
-	$(ds._svg).attr("width",this.dw + "px")
-	var hi = halfint
-	var n = this.nick
-	var midpoint= this.dh/2
-	var spacers =[ this.nick.get("spacerfwd"),
-		       this.nick.get("spacerrev")]
-	var sorted_cuts = [Math.min(spacers[0].cut_site(),spacers[1].cut_site()),
-			   Math.max(spacers[0].cut_site(),spacers[1].cut_site())]
-	var width = sorted_cuts[1] - sorted_cuts[0] + 1
-	var drawrange = [sorted_cuts[0] - 20, 
-			 sorted_cuts[1] + 20]
-	var xmargin = 25
-	//converts a base to an x coord
-	var dw = this.dw
-	var b2x = function(base){
-	    return xmargin + (base - drawrange[0])
-		/(drawrange[1] - drawrange[0]) * (dw-xmargin*2)
-	}
-	//gets y center of a spacer s
-	var s2y = function(s){
-	    return s.get("strand")  == 1? midpoint - 20: midpoint+20;
-	}
-	
-	var xcs = []
-	//draws a spacer s
-	var drawn_guide = function(s){
-	    var p = ds.createPath()
-	    var y = s2y(s)
-	    var y0 = hi(y - 4)
-	    var y1 = hi(y + 4)
-	    if(s.get("strand") == 1){
-		var x0 = hi(b2x(s.get("start")))
-		var x1 = hi(b2x(s.get("start") + 23))
-		var xa = hi(x1 - 4 )
-		var xc = hi(b2x(s.cut_site()))
-	    } else { 
-		var x1 = hi(b2x(s.get("start")))
-		var x0 = hi(b2x(s.get("start") + 23))
-		var xa = hi(x1 + 4)
-		var xc = hi(b2x(s.cut_site()))	
-	    }
-	    xcs.push(xc)
-
-	    p.moveTo(xc, s.get("strand") == -1 ? y0 : y1)
-	    p.lineTo(xc,midpoint)
-
-	    p.moveTo(x0,y0)
-	    p.lineTo(xa,y0)
-	    p.lineTo(x1,(y0+y1)/2)
-	    p.lineTo(xa,y1)
-	    p.lineTo(x0,y1)
-	    p.lineTo(x0,y0)
-
-	    var path = ds.path(null, p)
-	    ds.configure(path,{stroke:"black",
-			       strokeWidth:"1",
-			       fill:s.quality_color()})
-	    return path
-	}
-
-	
-	var l0 = ds.line(null, b2x(drawrange[0]),hi( midpoint) , 
-			 b2x(drawrange[1]),hi( midpoint))
-	//var l1 = ds.line(null, b2x(drawrange[0]),hi(midpoint+4) , 
-	//		 b2x(drawrange[1]),hi(midpoint+4))
-
-	
-
-	ds.configure(l0,{"stroke":"black", strokeWidth:1})
-
-	sp1 = drawn_guide(spacers[0])
-	sp2 = drawn_guide(spacers[1])
-	var l2 = ds.line(null,xcs[0],hi(midpoint+.5) , 
-			 xcs[1],hi(midpoint+.5))
-	ds.configure(l2,{"stroke":"blue", strokeWidth:1})
-
-	var sd = this.$(".sequence-details-container")
-	str1 = current_job.get("sequence").slice(drawrange[0],sorted_cuts[0])
-	str2 = current_job.get("sequence").slice(sorted_cuts[0],sorted_cuts[1])
-	str3 = current_job.get("sequence").slice(sorted_cuts[1],drawrange[1])
-	sd.empty()
-	    .append($("<span>",{class:"sequence"}).text(str1))
-	    .append($("<span>",{class:"selected sequence"}).text(str2))
-	    .append($("<span>",{class:"sequence"}).text(str3))
-
-
-	var inc = 10
-	var b = drawrange[0] + 10 - drawrange[0] % 10 
-	while(b < drawrange[1]){
-	    var x0 = b2x(b)
-	    var y0 = hi(midpoint)
-	    var y1 = hi(midpoint +4)
-	    var cl= ds.line(x0,y0,x0,y1)
-	    ds.configure(cl,{stroke:"rgba(0, 0, 0, 1)",
-				  strokeWidth:"1"})
-	    var t = ds.text(null, x0+5, y1+5, ""+b)
-	    ds.configure(t, {color:"rgba(0, 0, 0, 1)"})
-	    b+= inc;
-	}
-
-	ds.text(null,5, this.dh-5, "Query bases "+drawrange[0]+" -  " +drawrange[1] + " shown. g"+spacers[0].get("rank") + " and g" + spacers[1].get("rank")+ " will nick at positions "  + spacers[0].cut_site() + ", and " + spacers[1].cut_site() + " respectively.")
-    },
-})
 
 
 /* SVG renderer for the nickase model */
 NickaseGraphicalV = Backbone.View.extend({
-    className:"svg-container",
+    className:"svg-container nickase-graphical-view",
     base_to_x:function(base){
 	var j = this.job
 	frac = (base ) / j.get("sequence").length
@@ -278,7 +122,7 @@ NickaseGraphicalV = Backbone.View.extend({
 	return base
     },
     offset_to_y:function(ofs){
-	return ( this.cheight  - 60 ) +  -1 * 20 * ofs
+	return ( this.default_height  - 60 ) +  -1 * 20 * ofs
     },   
     initialize:function(){
 	this.job = this.model
@@ -286,13 +130,15 @@ NickaseGraphicalV = Backbone.View.extend({
 	
 	gview = this
 	this.cwidth = $(window).width() - 100 /// temporary HACK!!
+	this.cheight = 300
+	this.default_height = 300
+
 	this.$el.on("mousedown",$.proxy(this.on_mousedown, this))
 	this.$el.on("mousemove",$.proxy(this.on_mousemove, this))
 	this.$el.on("mouseup",$.proxy(this.on_mouseup, this))
 	APP.on("changed_region_or_nicks",this.render, this)
 	$(window).on("resize",$.proxy(this.render,this))
 	this.job.on("change:active_nick",this.draw_spacers, this)
-
     },
     on_mousedown:function(ev){
 	var sequence_y = this.offset_to_y(0)
@@ -343,12 +189,11 @@ NickaseGraphicalV = Backbone.View.extend({
 	this.svg.clear()
 
 	this.cwidth = this.$el.width()
-	this.cheight = 300
 
 	//assigns an SVG renderer to this model so that it can be accessed by
 	//child spans
-	$(this.svg._svg).attr("height",this.cheight + "px")
 	$(this.svg._svg).attr("width",this.cwidth + "px")
+	$(this.svg._svg).attr("height", 300+ "px")
 
 	this.draw_strands()
 	this.draw_scales()
@@ -366,6 +211,8 @@ NickaseGraphicalV = Backbone.View.extend({
 		this.views_list[i].render()
 	    }
 	}
+
+
 	return this
     },
     draw_strands:function(){
@@ -408,7 +255,8 @@ NickaseGraphicalV = Backbone.View.extend({
 	    this.svg.text(null, x0+5, y1+ 5, ""+b)
 	    b+= inc;
 	}
-	this.svg.text(null, 5, this.cheight-5, "top ten of " + APP.get("included_nicks").length + " filtered NICKs out of " + current_job.get("nicks").length + " total. (lower positions are better pairs)")
+	/*
+	this.svg.text(null, 5, this.cheight-5, "top ten of " + APP.get("included_nicks").length + " filtered NICKs out of " + current_job.get("nicks").length + " total. (lower positions are better pairs)") */
     },
     draw_spacers:function(){
 	
@@ -467,11 +315,15 @@ NickaseGraphicalV = Backbone.View.extend({
 			      .5+this.offset_to_y(0),
 			      1 +  this.base_to_x(current_job.region_bounds()[1]),
 			      .5+ this.offset_to_y(0))
+	    this.svg.configure(l,{stroke:"rgba(0, 0, 255, .25)",strokeWidth:5})
+
 	} else {
+	    /*
 	    l = this.svg.line(null, this.base_to_x(0),.5+ this.offset_to_y(0),this.base_to_x(current_job.get("sequence").length),.5+this.offset_to_y(0));
+	    */
+	    
 	}
 
-	this.svg.configure(l,{stroke:"rgba(0, 0, 255, .25)",strokeWidth:5})
 	
 	
     }
@@ -522,7 +374,7 @@ SpanV = Backbone.View.extend({
 	    if(!current_job.get("hover_locked")){
 		current_job.activateNick(s.nick, true)
 	    }
-	    $(".hover-helper").text("click to select guide #"+s.nick.id)
+	    $(".hover-helper").text("(click to select "+s.nick.get("range_name")+")")
 	});
 
 	$g.on("mouseleave",function(){

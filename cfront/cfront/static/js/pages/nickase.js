@@ -28,6 +28,32 @@ function init_page(){
     });
     */
     
+    
+
+    /*
+    $(document).on("scroll",$.proxy(function(){
+	
+	var $d = $(document)
+	var $offset_el = $(".nickase-tl-header")
+	var scroll_distance = $d.scrollTop() - ($offset_el.offset().top + $offset_el.height() )
+
+	if(scroll_distance > 1){
+	    $offset_el.css("margin-bottom",scroll_distance)
+	    var csh =  Math.max(100, 300 - scroll_distance)
+	    APP.set("current_svgheight",csh)
+	    $(".hasSVG.nickase-graphical-view")
+		.css("margin-top", -1 * (300 - csh)).parent().css("height", csh)
+	} else {
+	    $offset_el.css("margin-bottom",0)
+	    APP.set("current_svgheight",300)
+	    $(".hasSVG.nickase-graphical-view")
+		.css("margin-top", 0).parent().css("height", 300)
+	    
+
+	}
+    },this))
+    */
+
 
     current_job.on("change:active_region_nicks_count", function(){$(".active-region-nicks-count-display").text(current_job.get("active_region_nicks_count" ))})
 
@@ -43,7 +69,7 @@ function init_page(){
 		   })    
 
     $(document).on("mouseenter",".click-grabber",function(){
-	$(".hover-helper").text("click to deselect Pair "+APP.get_active_nick_name())
+	$(".hover-helper").text("(click to select a new pair)")
     })
     
     $(document).on("click",".click-grabber",function(){
@@ -78,6 +104,10 @@ var AppM  = Backbone.RelationalModel.extend({
 	    }
 	},
     ],
+    defaults:{
+	pacman:false,
+	current_svgheight:300,
+    },
     initialize:function(){
 	current_job.on("change:active_region_hash",this.changed_region, this)
 	this.compute_nicks();
@@ -96,7 +126,7 @@ var AppM  = Backbone.RelationalModel.extend({
 	    end = Math.max(n.get("spacerfwd").cut_site(),n.get("spacerrev").cut_site())
 
 	    
-	    if ( rb == null || ( start < rb[0]	&& end > rb[1] ) ){
+	    if ( rb == null || ( end > rb[0]	&& start < rb[1] ) ){
 		if(n.get("included") != this.id){
 		    n.set("included",this.id)
 		    changed = true
