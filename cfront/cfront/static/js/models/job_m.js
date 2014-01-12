@@ -13,6 +13,7 @@ var JobM = Backbone.RelationalModel.extend({
 	computing_spacers:false,
 	computed_spacers:false,	
 	poll_timeout:1000,
+	poll_count:0,
 	active_spacer:null,
 	active_nick:null,
 	active_region_start:null,
@@ -68,6 +69,19 @@ var JobM = Backbone.RelationalModel.extend({
 
 	this.set("nickase_page_url",
 		 routes.route_path("nickase", {job_key:this.get("key")}))
+
+	this.set("downloads_page_url",
+		 routes.route_path("downloads", {job_key:this.get("key")}))
+    },
+    compute_stats:function(){
+	this.set("n_spacers_done",_.filter(this.get("spacers").models,
+					   function(e){return e.get("computed_hits")}).length)
+	this.set("status_hash","" +this.get("n_spacers_done"))
+    },
+    compute_all:function(){
+	this.compute_export_urls()
+	this.compute_page_urls()
+	this.compute_stats()
     },
     //waiting for hits, polls. true when done.
     poll:function(){
@@ -75,11 +89,21 @@ var JobM = Backbone.RelationalModel.extend({
 
 	self.fetch(
 	    {success:function(){
-		self.set("poll_timeout",self.get("poll_timeout") + 200);
-		window.setTimeout($.proxy(self.poll,self),
-				  self.get("poll_timeout"));
+		self.compute_stats()
+		if(self.stop_polling()){
+		    console.log("STOPPED POLLING!!")
+		} else {
+		    self.set("poll_count",self.get("poll_count")+1)
+		    self.set("poll_timeout",self.get("poll_timeout") * 1.15);
+		    
+		    window.setTimeout($.proxy(self.poll,self),
+				      self.get("poll_timeout"));
+		}
 	    }})
-	    
+	
+    },
+    stop_polling:function(){
+	return this.get("poll_count") > 2000 || this.status_frac() >= 1
     },
     activateSpacer:function(s,val){
 	if( val){
@@ -105,8 +129,7 @@ var JobM = Backbone.RelationalModel.extend({
     },
     initialize:function(){
 	var self = this
-	this.compute_export_urls()
-	this.compute_page_urls()
+	this.compute_all()
 	this.set("locus", this.locus())
 	this.binder = new Backbone.EventBinder()
 	_.each(self.get("spacers").models, function(s,i){
@@ -152,30 +175,33 @@ var JobM = Backbone.RelationalModel.extend({
 	return this.get("chr") +":"+ (this.get("strand") == -1?"-":"+")
 		+ (this.get("start") + (this.get("strand") == 1?-1:-4))
     },
+    get_n_spacers_done:function(){
+	return this.get("n_spacers_done");
+    },
     status_frac:function(){
-	var done_count = _.filter(this.get("spacers").models,function(e){return e.get("computed_hits")}).length
+	var done_count = this.get_n_spacers_done()
 	var total_count = this.get("spacers").length
 
 	if (!this.get("computed_spacers") ){
 	    frac = 0
 	} else if(done_count < total_count){
-	    frac = .25 + .75 *(done_count/total_count)
+	    frac = .1 + .8 *(done_count/total_count)
 	} else {
 	    frac = 1
 	} 
 	return frac
     },
     status_message:function(){
-	
+	var frac = this.status_frac();
 	var message
 	if (frac == 0){
-	    message = "... computing guides. this may take a few minutes jobs submitted in a batch"
+	    message = "finding guides in the query."
 	} else if( frac < 1){
-	    var done_count = _.filter(this.get("spacers").models,function(e){return e.get("computed_hits")}).length
+	    var done_count = this.get_n_spacers_done();
 	    var total_count = this.get("spacers").length
-	    message = "found guides in query sequence, scoring offtargets ("+ done_count + " of " + total_count +")";
+	    message = "about " +( total_count - done_count ) * 20 + " seconds left, analyzed"+ done_count + " of " + total_count + " guides.";
 	} else {
-	    message = "done"
+	    message = "job is completed"
 	}
 	return message
     }				  

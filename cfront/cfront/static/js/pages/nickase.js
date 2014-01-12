@@ -10,10 +10,20 @@ function init_page(){
     if(!current_job.get("start")){
 	$("#nickase-container").text("job is not mapped to the genome")
     }
-    //polling is disabled for the nickase view... for now...
-    //current_job.poll()
 
- 
+    
+    //SETUP BREADCRUMBS
+    $(".breadcrumb").append($("<li>")
+			    .append($("<a>",{"href":current_job.get("job_page_url")})
+				    .text('Job "'+current_job.get("name")+'"'))
+			    .append($("<span>",{"class":"divider"}))
+			   )
+
+    $(".breadcrumb").append($("<li>",{"class":"active"})
+			    .text('Job "'+current_job.get("name")+'"'))
+    
+
+
     $(document).on("click",".explain-this-view",function(){
 	$(".explanation").toggle(!$(".explanation").is(":visible"));
     });
@@ -22,14 +32,6 @@ function init_page(){
 	$(".scores-explanation").toggle(!$(".scores-explanation").is(":visible"));
     });
     
-    /*
-    $(document).on("click",".export",function(){
-	alert("apologies, but export is not yet complete")
-    });
-    */
-    
-    
-
     /*
     $(document).on("scroll",$.proxy(function(){
 	

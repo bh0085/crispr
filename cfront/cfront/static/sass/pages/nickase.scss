@@ -195,29 +195,15 @@ body{
 	    margin-top:0px;
 	    margin-bottom:0px;
 	}
-    .nickase-detail-title{
-	display:inline-block;
-	
-    }
+	.nickase-detail-title{
+	    display:inline-block;
+	    
+	}
     }
     .cards{
 	
 	.card{
-	    .header{
-		position:absolute;
-		top:-40px;
-		left:0px;
-	    }
-	    vertical-align:top;
-	    width:200px;
-	    min-height:50px;
-	    position:relative;
-	    display:inline-block;
-	    border:1px solid black;
-	    margin: 25px;
-	    padding: 10px;
-	    padding-top:50px;
-	    
+	    padding-top:50px;	
 	    &.sequence-section{
 		padding-top:10px;
 		

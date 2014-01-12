@@ -72,7 +72,7 @@ var SubmitV = Backbone.View.extend({
 				   if (data.status == "success"){
 				       if(data.job_key != null){
 					   window.location.assign(
-					       routes.route_path("readout",
+					       routes.route_path("job",
 								 {job_key:data.job_key}))
 
 				       } else if( data.batch_key != null){

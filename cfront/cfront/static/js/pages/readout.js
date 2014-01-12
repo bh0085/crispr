@@ -8,9 +8,6 @@ function init_page(){
     var rview = new ReadoutV({job:current_job})
     rview.render().$el.attr("id","readout").appendTo($("#readout-container"))
     rview.draw_job()
-    if(current_job.status_frac() < 1){
-	rview.draw_status();
-    }
     current_job.get("spacers").models[0].set('active',true);
     $(document).on("mouseover", ".spacer", {},spacer_select)
 

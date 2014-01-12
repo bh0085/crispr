@@ -28,10 +28,6 @@ ReadoutV = Backbone.View.extend({
 	this.job_spacers_view = new SpacerListView({model:this.job})
 	this.job_spacers_view.render().$el.appendTo(this.$(".spacers-container"))
     },
-    draw_status:function(){
-	this.statusview = new StatusV({model:this.job})
-	this.statusview.render().$el.appendTo(this.$(".status-header-area").empty())
-    },
     show_spacer:function(job,spacer_m){
 	if(this.spacer_h_view){
 	    this.spacer_h_view.destroy()

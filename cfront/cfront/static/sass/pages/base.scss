@@ -10,9 +10,14 @@
 }
 
 
+.full-width{
+    box-sizing:border-box;
+    position:relative;
+    width:100%;
+}
 
 body{
-    &.submit, &.batch &.about, &.readout, &.nickase{
+    &.submit, &.batch &.about, &.readout, &.nickase, &.job{
 	padding-left:75px;
 	padding-right:75px;
 

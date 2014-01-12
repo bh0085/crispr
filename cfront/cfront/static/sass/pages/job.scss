@@ -1,0 +1,84 @@
+body.job{
+    #job-container{
+	margin-top:50px;
+    }
+    .status{
+
+	box-sizing:border-box;
+	font-family:courier;
+	text-align:center;
+	overflow:hidden;
+
+	position:relative;
+	width:100%;
+	
+	margin-top:0px;
+	margin-bottom:30px;
+
+	.progress{
+	    margin-top:10px;
+	    margin-bottom:10px;
+	}
+	&.done{
+	    .progress{
+		height:1px;
+		transition:height 1s, opacity .5s;
+	    }
+	}	
+    }
+
+
+    .right{
+	position:absolute;
+	right:0px;
+    }
+    .cards{
+    .card .footer{
+	padding-top:4px;
+	width:100%;
+	text-align:right;
+    }
+    .card{
+	min-height:0px;
+	height:100px;
+    }
+    #email-complete{
+	margin:0px;
+    }
+    .card{
+	border-color:lightgray;
+	.background{
+	    background-repeat: no-repeat;
+	    background-position:center;
+	    opacity:.7;
+	    position:absolute;
+	    left:0px;
+	    top:0px;
+	    right:0px;
+	    bottom:0px;
+	}
+	&:hover {
+	    border-color:black;
+	.background{
+	    opacity:1;
+	}}
+	&.nickase{
+	    .background{
+	    background-image: url("/img/nickase-preview.svg");
+	    }
+	}
+	&.guides{
+	    .background{
+	    background-image: url("/img/crispr-logo.jpg");
+	    }
+	}
+    }
+    }
+
+
+    
+    h2{
+	margin-top:20px;
+	margin-bottom:0px;
+    }
+}

@@ -1,3 +1,7 @@
+.navbar .breadcrumb {
+  margin-bottom: 0px;
+  background: none; }
+
 .high-quality {
   border-left: 5px solid green; }
 
@@ -214,6 +218,32 @@
         .file-list-v .files .file-v:not(.ready) a {
           color: rgba(0, 0, 0, 0.3); }
 
+.cards .card {
+  vertical-align: top;
+  width: 200px;
+  min-height: 200px;
+  position: relative;
+  display: inline-block;
+  border: 1px solid black;
+  margin: 25px;
+  padding: 10px; }
+  .cards .card .header {
+    position: absolute;
+    bottom: 100%;
+    left: 0px; }
+  .cards .card .footer {
+    margin-top: 0px;
+    position: absolute;
+    top: 100%;
+    left: 0px;
+    border-top: none; }
+  .cards .card .covering-link {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px; }
+
 .footer {
   margin-top: 2em;
   border-top: 1px solid #efefef;
@@ -223,10 +253,15 @@
 .inline {
   display: inline; }
 
-body.submit, body.batch body.about, body.readout, body.nickase {
+.full-width {
+  box-sizing: border-box;
+  position: relative;
+  width: 100%; }
+
+body.submit, body.batch body.about, body.readout, body.nickase, body.job {
   padding-left: 75px;
   padding-right: 75px; }
-  body.submit > .header, body.batch body.about > .header, body.readout > .header, body.nickase > .header {
+  body.submit > .header, body.batch body.about > .header, body.readout > .header, body.nickase > .header, body.job > .header {
     margin-left: -75px;
     margin-right: -75px; }
 body .nav-tabs {
@@ -516,19 +551,7 @@ body:not(.locked) .bottom.panes {
   .nickase-detail-view .full-width.header .nickase-detail-title {
     display: inline-block; }
 .nickase-detail-view .cards .card {
-  vertical-align: top;
-  width: 200px;
-  min-height: 50px;
-  position: relative;
-  display: inline-block;
-  border: 1px solid black;
-  margin: 25px;
-  padding: 10px;
   padding-top: 50px; }
-  .nickase-detail-view .cards .card .header {
-    position: absolute;
-    top: -40px;
-    left: 0px; }
   .nickase-detail-view .cards .card.sequence-section {
     padding-top: 10px; }
     .nickase-detail-view .cards .card.sequence-section .sequence {
@@ -592,23 +615,6 @@ body.nickase .nicks-list {
 #readout {
   margin-top: 50px; }
 
-.status {
-  width: 500px;
-  margin: 0 auto;
-  padding: 50px;
-  font-family: courier;
-  text-align: center;
-  overflow: hidden; }
-  .status .progress {
-    margin-bottom: 10px;
-    margin-top: 10px; }
-  .status.done {
-    display: none; }
-    .status.done .progress {
-      height: 0px;
-      opacity: 0;
-      transition: height 1s, opacity 0.5s; }
-
 .left {
   text-align: left; }
 
@@ -671,3 +677,55 @@ svg {
       opacity: .5; }
     #submit form.submitted input[type='file'] {
       width: 95px; }
+
+body.job #job-container {
+  margin-top: 50px; }
+body.job .status {
+  box-sizing: border-box;
+  font-family: courier;
+  text-align: center;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  margin-top: 0px;
+  margin-bottom: 30px; }
+  body.job .status .progress {
+    margin-top: 10px;
+    margin-bottom: 10px; }
+  body.job .status.done .progress {
+    height: 1px;
+    transition: height 1s, opacity 0.5s; }
+body.job .right {
+  position: absolute;
+  right: 0px; }
+body.job .cards .card .footer {
+  padding-top: 4px;
+  width: 100%;
+  text-align: right; }
+body.job .cards .card {
+  min-height: 0px;
+  height: 100px; }
+body.job .cards #email-complete {
+  margin: 0px; }
+body.job .cards .card {
+  border-color: lightgray; }
+  body.job .cards .card .background {
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: .7;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    right: 0px;
+    bottom: 0px; }
+  body.job .cards .card:hover {
+    border-color: black; }
+    body.job .cards .card:hover .background {
+      opacity: 1; }
+  body.job .cards .card.nickase .background {
+    background-image: url("/img/nickase-preview.svg"); }
+  body.job .cards .card.guides .background {
+    background-image: url("/img/crispr-logo.jpg"); }
+body.job h2 {
+  margin-top: 20px;
+  margin-bottom: 0px; }

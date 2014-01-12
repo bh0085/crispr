@@ -1,0 +1,34 @@
+
+.cards{
+    .card{
+	.header{
+	    position:absolute;
+	    bottom:100%;
+	    left:0px;
+	}
+
+	.footer{
+	    margin-top:0px;
+	    position:absolute;
+	    top:100%;
+	    left:0px;
+	    border-top:none;
+	}
+	
+	.covering-link{
+	    position:absolute;
+	    top:0px;
+	    left:0px;
+	    right:0px;
+	    bottom:0px;
+	}
+	vertical-align:top;
+	width:200px;
+	min-height:200px;
+	position:relative;
+	display:inline-block;
+	border:1px solid black;
+	margin: 25px;
+	padding: 10px;
+    }
+}

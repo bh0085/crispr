@@ -56,6 +56,8 @@ var SpacerM = Backbone.RelationalModel.extend({
 	    }
 	    
 	}
+
+	
 	if(this.get("computed_hits") && APP.fetch_spacers){
 	    $.getJSON(routes.route_path("spacer_retrieve_hits",{spacer_id:this.id}),{},
 		      $.proxy(parse_hits,this))
@@ -65,7 +67,7 @@ var SpacerM = Backbone.RelationalModel.extend({
 			  $.proxy(parse_hits,this))
 	    },this)
 	}
-
+	
 
 	this.compute_quality()
 	this.on("change:score",this.compute_quality,this);

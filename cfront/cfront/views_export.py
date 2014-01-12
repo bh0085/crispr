@@ -6,18 +6,22 @@ from models import Spacer, Job, Session
 
 @view_config(route_name="gb_all_nicks")
 def gb_all_nicks_view(request):
-    #response = Response(content_type='application/csv')
     tf = tempfile.NamedTemporaryFile(prefix='genbank_export_nick_%s' % request.job.key,
                                      suffix='.gb', delete=True)
-        # this is where I usually put stuff in the file
     tf.write(genbank.all_nicks_to_GB(request.job.id))
     tf.seek(0)
-
-    #response = Response(content_type='application/csv')
     response = Response(content_type='text/plain')
     response.app_iter = tf
-    # response.headers['Content-Disposition'] = ("attachment; filename=nickase_export.gb")
-    # a target=_blank
+    return response
+
+@view_config(route_name="gb_all_guides")
+def gb_all_guides_view(request):
+    tf = tempfile.NamedTemporaryFile(prefix='genbank_export_guide_%s' % request.job.key,
+                                     suffix='.gb', delete=True)
+    tf.write(genbank.all_guides_to_GB(request.job.id))
+    tf.seek(0)
+    response = Response(content_type='text/plain')
+    response.app_iter = tf
     return response
 
 @view_config(route_name="gb_one_nick")
@@ -41,6 +45,7 @@ def gb_one_nick_view(request):
     # response.headers['Content-Disposition'] = ("attachment; filename=nickase_export.gb")
     # a target=_blank
     return response
+
 
 
 

@@ -16,6 +16,9 @@ JPView = Backbone.View.extend({
 	this.$el.html(_.template(this.template,this.model.toJSON()))
 	this.$(".status-view-container").html(this.jpsv.render().$el)
 	this.$(".pages-view-container").html(this.jppv.render().$el)
+
+	$(".breadcrumb").append($("<li>",{"class":"active"})
+				.text('Job "'+this.model.get("name")+'"'))		       
 	return this
     }
 })
@@ -25,10 +28,22 @@ JPStatusView = Backbone.View.extend({
     template:$("#job-page-status-view-template").html(),
     render:function(){
 	this.$el.html(_.template(this.template,this.model.toJSON()))
+	this.model.on("change:status_hash",this.update_status,this)
+	this.update_status()
 	return this
+    },
+   update_status:function(){
+	message = this.model.status_message()
+	frac = this.model.status_frac()
+	this.$(".status-text").empty().append($("<span>").text(message))
+       if(frac == 1){
+	   this.$(".status").toggleClass("done",true)
+	   this.$(".bar").toggleClass("bar-success",true)
+	   this.$(".progress").toggleClass("active",false)
+	   this.$(".email").hide()
+       }
+	this.$(".status .progress .bar").css("width"," "+ (frac * 100)+"%");
     }
-    
-    
 })
 
 JPPagesView = Backbone.View.extend({

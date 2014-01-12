@@ -1,16 +1,23 @@
 <div class="navbar unselectable">
   <div class=""><!--removed navbar inner styling -->
     <div class="container"> 
-      <a class="brand" href="/">CRISPR Design</a>
+      <ol class="breadcrumb brand">
+	<li><a href="/">CRISPR Design</a><span class="divider">/</span></li>
+      </ol>
+
       <!-- Everything you want hidden at 940px or less, place within here -->
       <ul class="nav pull-right">
-        <li><a href="/about">About</a></li>        
-        <li><a href="mailto:crispr.design@gmail.com">Contact</a></li>        
+        <li><a href="/about">Help</a></li>        
+        <li><a href="https://groups.google.com/forum/#!forum/crispr">Forum</a></li>        
       </ul>
     </div>
   </div>
 </div>
-%if request.matched_route.name == "submit":
+
+
+
+<!--
+    %if request.matched_route.name == "submit":
 <div class="alert alert-success alpha-warning header">
   <button type="button" class="close" data-dismiss="alert">&times;</button>
   <div class="content showing-less">
@@ -33,7 +40,6 @@
 </div>
 %endif
 
-<!--
 %if request.matched_route.name == "readout":
 <div class="alert alert-warning alpha-warning header">
   <button type="button" class="close" data-dismiss="alert">&times;</button>

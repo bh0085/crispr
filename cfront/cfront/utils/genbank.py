@@ -40,6 +40,36 @@ def all_nicks_to_GB(jobid):
 
     return seq_record.format("genbank")
 
+
+def all_guides_to_GB(jobid):
+    job = Session.query(Job).get(jobid)
+    gb_seq = Seq.Seq(job.sequence,alphabet=Seq.Alphabet.DNAAlphabet())
+    
+    description = """guides analysis for job {0}, by {1} on the web at crispr.mit.edu/main/{2}""".format(job.name, job.email, job.key)
+
+    seq_record = SeqRecord.SeqRecord(gb_seq, id=job.key ,
+                                     name = job.genome_name , 
+                                     description=description)
+    
+    for s in job.spacers:
+        seq_record.features.append(SeqFeature.SeqFeature(
+            location = SeqFeature.FeatureLocation(s.start,s.start+23, strand = s.strand),
+            type="protein_bind",
+            strand = s.strand,
+
+            qualifiers={
+                "bound_moiety":"CAS9",
+                "note":json.dumps(dict(score = s.formatted_score,
+                                       sequence = s.sequence,
+                                       n_offtargets = s.n_offtargets,
+                                       n_genic_offtargets = s.n_genic_offtargets))
+            }
+        )) 
+            
+
+    return seq_record.format("genbank")
+
+
 def one_nick_to_GB(job, sfwd, srev):
     gb_seq = Seq.Seq(job.sequence,
                      alphabet = Seq.Alphabet.DNAAlphabet())
