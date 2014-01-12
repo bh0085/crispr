@@ -16,11 +16,11 @@ function init_page(){
     $(".breadcrumb").append($("<li>")
 			    .append($("<a>",{"href":current_job.get("job_page_url")})
 				    .text('Job "'+current_job.get("name")+'"'))
-			    .append($("<span>",{"class":"divider"}))
+			    .append($("<span>",{"class":"divider"}).text("/"))
 			   )
 
     $(".breadcrumb").append($("<li>",{"class":"active"})
-			    .text('Job "'+current_job.get("name")+'"'))
+			    .text("Nickase"))
     
 
 
