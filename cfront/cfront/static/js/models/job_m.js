@@ -195,13 +195,20 @@ var JobM = Backbone.RelationalModel.extend({
 	var frac = this.status_frac();
 	var message
 	if (frac == 0){
-	    message = "finding guides in the query."
+	    message = "Finding guides in the query."
 	} else if( frac < 1){
 	    var done_count = this.get_n_spacers_done();
 	    var total_count = this.get("spacers").length
-	    message = "about " +( total_count - done_count ) * 20 + " seconds left, analyzed"+ done_count + " of " + total_count + " guides.";
+	    var remaining_string = ""
+	    var seconds = ( total_count - done_count ) * 20 
+	    if(seconds > 60){
+		remaining_string =""+ Math.round(seconds / 60) + " minutes"
+	    } else {
+		remaining_string = "" + seconds + " seconds"
+	    }
+	    message = "About " + remaining_string + " remaining. (Analyzed "+ done_count + " of " + total_count + " guides.)";
 	} else {
-	    message = "job is completed"
+	    message = "Job is complete."
 	}
 	return message
     }, 

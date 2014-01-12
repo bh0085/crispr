@@ -3,8 +3,9 @@
   <div class="pages-view-container"></div>
 </script>
 <script type="unknown" id="job-page-status-view-template">
+  <h3>CRISPR Job Submission "{{name}}"</h3>
   <div class="">
-    <h2>Status</h2>
+    <h4>Status</h4>
     <div class="status-text full-width">about ?? minutes left<span class="right"><control class="email"><input id="email-complete" class="inline v-middle" {{email_complete?"checked":""}} type="checkbox"></input><label class="unselectable inline v-middle med-left-margin" for="email-complete">Email when done</label></control></span></div>
   </div>
 
@@ -20,8 +21,8 @@
 </script>
 <script type="unknown" id="job-page-pages-view-template">
   <div class="page-header">
-    <h2>Results</h2>
-    <div class="full-width">view results online<span class="right">or see <a href="{{downloads_page_url}}">available downloads</a></span></div>
+    <h4>Results</h4>
+    <div class="full-width">View results online<span class="right">or see <a href="{{downloads_page_url}}">available downloads</a></span></div>
   </div>
   <div class="cards">
     <div class="card guides">

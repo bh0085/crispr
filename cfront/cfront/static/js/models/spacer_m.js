@@ -33,6 +33,39 @@ var SpacerM = Backbone.RelationalModel.extend({
 	this.genic = new HitCollection()
 	this.top = new HitCollection()
 	this.set("locus",this.locus())
+	function parse_hits(data){
+	    var top, genic
+	    top = data.top
+	    genic = data.genic
+
+	    var h
+	    
+	    for (var i = 0 ; i < top.length ; i++){
+		var hjson = top[i]
+		if (! this.get("hits").get(hjson.id)){ h = new HitM(hjson);}
+		else { h = this.get("hits").get(hjson.id) }
+		this.top.add(h)
+		if(h.get("ontarget")){this.set("locus",this.locus())}
+	    }
+
+	    for (var i = 0 ; i < genic.length; i++){
+		var hjson = genic[i]
+		if (! this.get("hits").get(hjson.id)){ h = new HitM(hjson);}
+		else { h = this.get("hits").get(hjson.id) }
+		this.genic.add(h)
+	    }
+	    
+	}
+
+	if(this.get("computed_hits") && APP.fetch_spacers){
+	    $.getJSON(routes.route_path("spacer_retrieve_hits",{spacer_id:this.id}),{},
+		      $.proxy(parse_hits,this))
+	} else {
+	    this.on("change:computed_hits",function(){
+		$.getJSON(routes.route_path("spacer_retrieve_hits",{spacer_id:this.id}),{},
+			  $.proxy(parse_hits,this))
+	    },this)
+	}	
 
 	this.compute_quality()
 	this.on("change:score",this.compute_quality,this);

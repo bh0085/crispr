@@ -33,6 +33,8 @@ def batch_view(request):
 @view_config(route_name="job", renderer="base.mako")
 def job_view(request):
     jj = request.job.toJSON()
+    spacers = [s.toJSON() for s in request.job.spacers]
+    jj["spacers"] = spacers
     return {"init_state":{"job":jj},
             "sessionInfo":{"routes":routes_dict(request)}}
 

@@ -21,9 +21,10 @@
       <div class="pane1 right pane">
 	<div class=" nickase-tl-header">
 	  <h4>Top Pairs</h4>
-	  <div>View top pairs by overhang subregion.<span class="right" style="float:right;"><a class="explain-this-view">Explain this View</a></span></div>
+	  <div>View top pairs by overhang subregion.</div>
 	  <div class="nickase-tl-options-container">
 	  </div>
+	  <div class="full-width"><span class="right" style="float:right;"><a class="explain-this-view">Explain this View</a></span></div>
 	</div>
 	<div class="main graphics">
 	</div>

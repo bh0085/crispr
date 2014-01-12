@@ -3,6 +3,7 @@ function init_page(){
     current_job = new JobM(init_state.job)
     jpv = new JPView({model:current_job})
     jpv.render().$el.appendTo($("#job-container"))
+    current_job.poll()
 }
 
 JPView = Backbone.View.extend({

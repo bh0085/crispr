@@ -278,6 +278,10 @@ body .disabled {
   opacity: .4;
   color: black; }
 
+.navbar.navbar.navbar a, .navbar.navbar.navbar .brand {
+  padding-top: 5px;
+  padding-bottom: 5px; }
+
 body.submit .navbar > * {
   padding-left: 75px;
   padding-right: 75px; }
@@ -422,6 +426,8 @@ body .navbar li > a, body .navbar .brand {
 a {
   cursor: pointer; }
 
+body.nickase #nickase-container {
+  padding-top: 35px; }
 body.nickase .page-header:not(h4) {
   margin-top: 0px; }
 body.nickase .pane1 {
@@ -473,7 +479,10 @@ body.nickase .nickase-tl-options {
   margin-bottom: 5px;
   white-space: normal; }
   body.nickase .nickase-tl-options form {
-    margin-left: 20px; }
+    margin-left: 20px;
+    margin-bottom: 0px; }
+    body.nickase .nickase-tl-options form .control-group {
+      margin-bottom: 0px; }
   body.nickase .nickase-tl-options .controls {
     margin-left: 10px; }
   body.nickase .nickase-tl-options .full-width-bottom {
@@ -613,7 +622,7 @@ body.nickase .nicks-list {
   display: none; }
 
 #readout {
-  margin-top: 50px; }
+  margin-top: 35px; }
 
 .left {
   text-align: left; }
@@ -679,7 +688,7 @@ svg {
       width: 95px; }
 
 body.job #job-container {
-  margin-top: 50px; }
+  margin-top: 35px; }
 body.job .status {
   box-sizing: border-box;
   font-family: courier;
@@ -726,6 +735,6 @@ body.job .cards .card {
     background-image: url("/img/nickase-preview.svg"); }
   body.job .cards .card.guides .background {
     background-image: url("/img/crispr-logo.jpg"); }
-body.job h2 {
+body.job h3 {
   margin-top: 20px;
   margin-bottom: 0px; }
