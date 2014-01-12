@@ -72,7 +72,6 @@ def process_queue(ofs, stride):
         if not top_job in Session: top_job = Session.merge(j)
         #spacers may be deleted from the session in the interior of this loop
         for i,s in enumerate([s for s in top_job.spacers if s.score is None][:2]):
-            print "batched? {0}".format(j.batch)
             if not s in Session: s = Session.merge(s)
             with transaction.manager:
                     try:
