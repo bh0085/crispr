@@ -127,7 +127,7 @@ body.nickase{
     &.locked{
 	.svg-container{
 	    pointer-events:none;
-	    opacity:.5;
+	    //opacity:.5;
 	}
 
     }
@@ -138,7 +138,7 @@ body.nickase{
 body{
     &.locked{
 	.top.panes{
-	    opacity:.25;
+	    //opacity:.25;
 	}
 
     .click-grabber{
@@ -148,7 +148,7 @@ body{
     }
     &:not(.locked){
 	.bottom.panes{
-	    opacity:.25;
+	    //opacity:.25;
 	}
     }
     

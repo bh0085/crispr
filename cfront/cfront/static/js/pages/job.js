@@ -4,6 +4,11 @@ function init_page(){
     jpv = new JPView({model:current_job})
     jpv.render().$el.appendTo($("#job-container"))
     current_job.poll()
+    
+    current_job.on("change:status_hash",function(){
+	$("body").toggleClass("done",current_job.status_frac()==1)
+    })
+    $("body").toggleClass("done",current_job.status_frac()==1)
 }
 
 JPView = Backbone.View.extend({

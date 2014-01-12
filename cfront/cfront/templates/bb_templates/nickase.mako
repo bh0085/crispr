@@ -31,8 +31,8 @@
       </div>
     </div><!-- top panes end -->
     <div class="bottom panes">
-    <div class="main details details pane pane3">
-    </div>
+      <div class="main details details pane pane3">
+      </div>
     </div>
     </div>
   </div>

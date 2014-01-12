@@ -245,7 +245,7 @@
     bottom: 0px; }
 
 .footer {
-  margin-top: 2em;
+  margin-top: 100px;
   border-top: 1px solid #efefef;
   padding-top: 1em;
   text-align: center; }
@@ -258,10 +258,10 @@
   position: relative;
   width: 100%; }
 
-body.submit, body.batch body.about, body.readout, body.nickase, body.job {
+body.submit, body.batch body.about, body.readout, body.nickase, body.job, body.downloads {
   padding-left: 75px;
   padding-right: 75px; }
-  body.submit > .header, body.batch body.about > .header, body.readout > .header, body.nickase > .header, body.job > .header {
+  body.submit > .header, body.batch body.about > .header, body.readout > .header, body.nickase > .header, body.job > .header, body.downloads > .header {
     margin-left: -75px;
     margin-right: -75px; }
 body .nav-tabs {
@@ -298,6 +298,9 @@ body .navbar {
     border-radius: 0px;
     border-bottom: 1px solid #dddddd; }
 
+.alert.header {
+  margin-bottom: 0px; }
+
 .alert .content {
   max-width: 500px;
   margin: 0 auto; }
@@ -308,6 +311,8 @@ body .navbar {
     text-overflow: ellipsis;
     display: inline-block;
     opacity: .7; }
+  .alert .content > * {
+    vertical-align: text-bottom; }
 
 .med-left-margin {
   margin-left: 20px; }
@@ -514,16 +519,11 @@ body.nickase .hover-helper {
   user-select: none;
   border: lightgrey solid 1px; }
   .graphics.locked .svg-container {
-    pointer-events: none;
-    opacity: .5; }
+    pointer-events: none; }
 
-body.locked .top.panes {
-  opacity: .25; }
 body.locked .click-grabber {
   display: block;
   pointer-events: auto; }
-body:not(.locked) .bottom.panes {
-  opacity: .25; }
 
 .click-grabber {
   pointer-events: none;
@@ -689,21 +689,23 @@ svg {
 
 body.job #job-container {
   margin-top: 35px; }
-body.job .status {
-  box-sizing: border-box;
-  font-family: courier;
-  text-align: center;
-  overflow: hidden;
-  position: relative;
-  width: 100%;
-  margin-top: 0px;
-  margin-bottom: 30px; }
-  body.job .status .progress {
-    margin-top: 10px;
-    margin-bottom: 10px; }
-  body.job .status.done .progress {
-    height: 1px;
-    transition: height 1s, opacity 0.5s; }
+body.job .job-page-status-view {
+  margin-bottom: 35px; }
+  body.job .job-page-status-view .status {
+    box-sizing: border-box;
+    font-family: courier;
+    text-align: center;
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+    margin-top: 0px;
+    margin-bottom: 0px; }
+    body.job .job-page-status-view .status .progress {
+      margin-top: 10px;
+      margin-bottom: 10px; }
+    body.job .job-page-status-view .status.done .progress {
+      height: 1px;
+      transition: height 1s, opacity 0.5s; }
 body.job .right {
   position: absolute;
   right: 0px; }
@@ -735,6 +737,21 @@ body.job .cards .card {
     background-image: url("/img/nickase-preview.svg"); }
   body.job .cards .card.guides .background {
     background-image: url("/img/crispr-logo.jpg"); }
+body.job:not(.done) .nickase {
+  cursor: wait;
+  opacity: .25; }
+  body.job:not(.done) .nickase > * {
+    pointer-events: none; }
+body.job:not(.done) .download-container {
+  cursor: wait; }
+  body.job:not(.done) .download-container a {
+    color: rgba(0, 0, 0, 0.5);
+    pointer-events: none; }
+body.job.done .wait-for-nickase {
+  display: none; }
 body.job h3 {
   margin-top: 20px;
   margin-bottom: 0px; }
+
+body.downloads #downloads-container {
+  padding-top: 35px; }

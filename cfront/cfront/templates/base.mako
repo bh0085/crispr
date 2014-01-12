@@ -41,6 +41,7 @@
     <%include file="bb_templates/guides.mako"/>
     <%include file="bb_templates/batch.mako"/>
     <%include file="bb_templates/readout.mako"/>
+    <%include file="bb_templates/downloads.mako"/>
     <%include file="bb_templates/submit.mako"/>
     <%include file="bb_templates/file.mako"/>
     <%include file="bb_templates/about.mako"/>

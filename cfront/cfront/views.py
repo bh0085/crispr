@@ -38,6 +38,14 @@ def job_view(request):
     return {"init_state":{"job":jj},
             "sessionInfo":{"routes":routes_dict(request)}}
 
+@view_config(route_name="downloads", renderer="base.mako")
+def downloads_view(request):
+    jj = request.job.toJSON()
+    spacers = [s.toJSON() for s in request.job.spacers]
+    jj["spacers"] = spacers
+    return {"init_state":{"job":jj},
+            "sessionInfo":{"routes":routes_dict(request)}}
+
 @view_config(route_name="submit", renderer="base.mako")
 def submit_view(request):
     return { "sessionInfo":

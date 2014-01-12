@@ -2,6 +2,7 @@ body.job{
     #job-container{
 	margin-top:35px;
     }
+    .job-page-status-view{
     .status{
 
 	box-sizing:border-box;
@@ -13,7 +14,7 @@ body.job{
 	width:100%;
 	
 	margin-top:0px;
-	margin-bottom:30px;
+	margin-bottom:0px;
 
 	.progress{
 	    margin-top:10px;
@@ -26,55 +27,79 @@ body.job{
 	    }
 	}	
     }
+     margin-bottom:35px;
+    }
 
     .right{
 	position:absolute;
 	right:0px;
     }
     .cards{
-    .card .footer{
-	padding-top:4px;
-	width:100%;
-	text-align:right;
-    }
-    .card{
-	min-height:0px;
-	height:100px;
-    }
-    #email-complete{
-	margin:0px;
-    }
-    .card{
-	border-color:lightgray;
-	.background{
-	    background-repeat: no-repeat;
-	    background-position:center;
-	    opacity:.7;
-	    position:absolute;
-	    left:0px;
-	    top:0px;
-	    right:0px;
-	    bottom:0px;
+	.card .footer{
+	    padding-top:4px;
+	    width:100%;
+	    text-align:right;
 	}
-	&:hover {
-	    border-color:black;
-	.background{
-	    opacity:1;
-	}}
-	&.nickase{
+	.card{
+	    min-height:0px;
+	    height:100px;
+	}
+	#email-complete{
+	    margin:0px;
+	}
+	.card{
+	    border-color:lightgray;
 	    .background{
-	    background-image: url("/img/nickase-preview.svg");
+		background-repeat: no-repeat;
+		background-position:center;
+		opacity:.7;
+		position:absolute;
+		left:0px;
+		top:0px;
+		right:0px;
+		bottom:0px;
+	    }
+	    &:hover {
+		border-color:black;
+		.background{
+		    opacity:1;
+		}}
+	    &.nickase{
+		.background{
+		    background-image: url("/img/nickase-preview.svg");
+		}
+	    }
+	    &.guides{
+		.background{
+		    background-image: url("/img/crispr-logo.jpg");
+		}
 	    }
 	}
-	&.guides{
-	    .background{
-	    background-image: url("/img/crispr-logo.jpg");
+    }
+
+    &:not(.done){
+	.nickase{
+	    cursor:wait;
+	    opacity:.25;
+	    >*{
+		pointer-events:none;
 	    }
 	}
-    }
-    }
+	.download-container{
+	    a{
+		color:rgba(0, 0, 0, .5);
+		pointer-events:none;
+	    }
+	    cursor:wait;
+	    //opacity:.1;
+	}
 
-
+    }
+    &.done{
+	.wait-for-nickase{
+	    display:none;
+	}
+    }
     
     h3{
 	margin-top:20px;

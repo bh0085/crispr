@@ -65,6 +65,7 @@ def main(global_config, **settings):
     config.add_route('gb_all_nicks', '/export/nicks_gb/{job_key}',factory=JobResourceFactory)
     config.add_route('gb_one_nick', '/export/nicks_gb/{job_key}/{spacerfwdid}/{spacerrevid}',factory=JobResourceFactory)
     config.add_route('csv_one_spacer', '/export/spacer_csv/{job_key}/{spacerid}',factory=JobResourceFactory)
+    config.add_route('csv_all_guides', '/export/csv_all_guides/{job_key}',factory=JobResourceFactory)
     config.add_route('gb_all_guides', '/export/guides_gb/{job_key}',factory=JobResourceFactory)
     
 

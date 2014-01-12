@@ -110,7 +110,9 @@ class Nick(object):
                                       for e in self.hit_pairs 
                                       if not e[0].ontarget and not e[1].ontarget]
 
-            self.unorm_score = 100 * 100 / (100. + sum([s for s in self.individual_scores]))
+            ##IMPLEMENTS A COMPLETELY TRIVIAL SCORING SYSTEM
+            ##PENALTY OF 100 FOR ALL GUIDES WITH MISMATCHES OF ANY KIND
+            self.unorm_score = 100 * 100 / (100. + sum([100 for s in self.individual_scores]))
             self.score = score_constant * self.unorm_score
         else:
             self.unorm_score = 0

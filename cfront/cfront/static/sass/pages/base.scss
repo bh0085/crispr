@@ -1,5 +1,5 @@
 .footer{
-    margin-top:2em;
+    margin-top:100px;
     border-top: 1px solid #efefef;
     padding-top:1em;
     text-align:center;
@@ -17,9 +17,9 @@
 }
 
 body{
-    &.submit, &.batch &.about, &.readout, &.nickase, &.job{
+    &.submit, &.batch &.about, &.readout, &.nickase, &.job, &.downloads{
 	padding-left:75px;
-	padding-right:75px;
+	padding-right:75px; 
 
 	>.header{
 	    margin-left:-75px;
@@ -79,7 +79,9 @@ body{
 	}
     }
 }
-
+.alert.header{
+    margin-bottom:0px;
+}
 .alert .content{
     &.showing-less{ .text-fixed-width-content{
 	max-width:400px;
@@ -89,6 +91,9 @@ body{
 	display:inline-block;
 	opacity:.7;
     }}
+    >*{
+	vertical-align:text-bottom;
+    }
     &:not(.showing-more){
     }
     &.showing-more{

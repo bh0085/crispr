@@ -59,6 +59,9 @@ var JobM = Backbone.RelationalModel.extend({
 
 	this.set("export_gb_guides_url", 
 		 routes.route_path("gb_all_guides",{job_key:this.get("key")}))
+
+	this.set("export_all_csv_offtargets_url", 
+		 routes.route_path("csv_all_guides",{job_key:this.get("key")}))
     },
     compute_page_urls:function(){
 	this.set("job_page_url",

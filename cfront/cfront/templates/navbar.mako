@@ -13,6 +13,22 @@
     </div>
   </div>
 </div>
+<!--
+
+%if request.matched_route.name == "nickase" or request.matched_route.name == "downloads":
+<div class="alert alert-warning alpha-warning header">
+  <button type="button" class="close" data-dismiss="alert">&times;</button>
+  <div class="content showing-less">
+    <span class="text-fixed-width-content">Heads up -- this page is brand new and is still having the kinks worked out of it. If anything seems to be amiss, please head over to the <a href="https://groups.google.com/forum/#!forum/crispr">discussion forum</a> and let us know!
+    </span>
+    <a class=" less show-more">show more</a>
+    <span class="more"></span>
+    <a class="med-left-margin more show-less">... show less</a> 
+  </div>
+</div>
+%endif
+
+-->
 
 
 

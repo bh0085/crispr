@@ -58,7 +58,7 @@ def all_guides_to_GB(jobid):
             strand = s.strand,
 
             qualifiers={
-                "bound_moiety":"CAS9",
+                "bound_moiety":"CRISPR {0}-strand guide #{2} {1}".format("forward" if s.strand == 1 else "reverse", s.sequence,s.id),
                 "note":json.dumps(dict(score = s.formatted_score,
                                        sequence = s.sequence,
                                        n_offtargets = s.n_offtargets,
@@ -96,7 +96,7 @@ def one_nick_to_GB(job, sfwd, srev):
         location = SeqFeature.FeatureLocation(sfwd.start,sfwd.start+23),
         type="protein_bind",
         qualifiers={
-            "bound_moiety":"forward guide",
+            "bound_moiety":"CRISPR forward-strand guide {0}".format( s.sequence),
             "note":json.dumps(dict(score = sfwd.formatted_score))
         }
     ))
@@ -105,25 +105,13 @@ def one_nick_to_GB(job, sfwd, srev):
         location = SeqFeature.FeatureLocation(srev.start,srev.start+23),
         type="protein_bind",
         qualifiers={
-            "bound_moiety":"reverse guide",
+            "bound_moiety":"CRISPR reverse-strand guide {0}".format( s.sequence),
             "note":json.dumps(dict(score = srev.formatted_score))
         }
     ))
     
-    
-
     nick = nickase.compute_nick_of_spacers(-1,sfwd,srev)
-    #for hp in nick.hit_pairs:
-    #    qualifiers = {
-    #        "score":nick.ot_hit_score(hp[0],hp[1])
-    #    }
-    #    
-    #    seq_record.features.append( 
-    #        SeqFeature.SeqFeature( 
-    #            location= SeqFeature.FeatureLocation(span_left, span_right), 
-    #            qualifiers = {"spacer1_score":}))
     nick.compute_score()
-                     
     return seq_record.format("genbank")
 
 
@@ -132,3 +120,9 @@ def one_spacer_to_CSV(job,spacer):
         ["chr, strand, position, sequence, n_mismatches, score, ontarget, gene"] + 
         [ ", ".join(["{0}".format(e2) for e2 in [e.chr,e.strand,e.start,e.sequence,e.n_mismatches,e.score, e.ontarget, e.gene]]) 
                        for e in sorted(spacer.hits, key = lambda x:-1*x.score)])
+
+def all_spacers_to_CSV(job):
+    return "\n".join(
+        ["guide id, chr, strand, position, sequence, # mismatches, score, ontarget, gene"] + 
+        [ ", ".join(["{0}".format(e2) for e2 in [e.id, e.chr,e.strand,e.start,e.sequence,e.n_mismatches,e.score, e.ontarget, e.gene]]) 
+                       for spacer in job.spacers for e in sorted(spacer.hits, key = lambda x:-1*x.score)])
