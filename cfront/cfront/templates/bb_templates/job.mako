@@ -24,20 +24,20 @@
 <script type="unknown" id="job-page-pages-view-template">
   <div class="page-header">
     <h4>Results</h4>
-    <div class="full-width">View results online<span class="right">Or view <span class="download-container"><a href="{{downloads_page_url}}">Downloadable Results</a></span></div>
+    <div class="full-width">View results online<span class="right">... or view <span class="download-container"><a href="{{downloads_page_url}}">downloadable results</a>.</span></div>
   </div>
   <div class="cards">
     <div class="card guides">
       <div class="background"></div>
       <a class="covering-link" href="{{readout_page_url}}"></a>
       <div class="header"><h4>Guides and offtargets</h4></div>
-      <div class="footer"><span class="download-container"><a href="{{export_gb_guides_url}}" target="_blank">download as genbank</a></span></div>
+      <div class="footer"><span class="download-container"><a href="{{export_gb_guides_url}}" target="_blank">Download as genbank</a></span></div>
     </div>
     <div class="card nickase">
       <div class="background"></div>
       <a class="covering-link" href="{{nickase_page_url}}"></a>
       <div class="header"><h4>Nickase analysis</h4></div>
-      <div class="footer"><span class="download-container"><a class="download" href="{{export_gb_nicks_url}}" target="_blank">download as genbank</a></span></div>
+      <div class="footer"><span class="download-container"><a class="download" href="{{export_gb_nicks_url}}" target="_blank">Download as genbank</a></span></div>
     </div>
   </div>
 </script>
