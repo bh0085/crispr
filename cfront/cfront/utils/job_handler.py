@@ -52,7 +52,7 @@ def process_queue(ofs, stride):
                     .join(Spacer)\
                     .filter(Spacer.score == None)\
                     .filter(Job.failed == False)\
-                    .all()
+                     .all()
     selected_hit_jobs = [j for j in possible_hit_jobs if j.id % stride == ofs and j.genome_name != "rn5"]
 
 
@@ -60,9 +60,12 @@ def process_queue(ofs, stride):
         batched_jobs = [j for j in selected_hit_jobs if j.batch is not None]
         #sorts jobs to process recent submissions and non-batch jobs first
         def priority(j):
-            return -1 * j.id
-            #if j.batch is not None: return 100
-            #else: return -1* j.id 
+            #return 1 * j.id
+            from random import random
+            f = 1 if random() > .5 else -1
+            if j.key == "7956546276189290" : return -100000
+            if j.batch is not None: return 100000000
+            else: return f* j.id 
             
         
         top_job = sorted(selected_hit_jobs, key = priority)[0]

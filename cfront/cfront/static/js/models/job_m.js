@@ -1,4 +1,5 @@
 /** backbone model for a job */
+session_start = new Date().getTime()
 var JobM = Backbone.RelationalModel.extend({
     defaults:{
 	sequence:null,
@@ -105,21 +106,19 @@ var JobM = Backbone.RelationalModel.extend({
     //waiting for hits, polls. true when done.
     poll:function(){
 	var self =this
-
 	self.fetch(
 	    {success:function(){
 		self.compute_stats()
 		if(self.stop_polling()){
-		    console.log("STOPPED POLLING!!")
 		} else {
 		    self.set("poll_count",self.get("poll_count")+1)
-		    self.set("poll_timeout",self.get("poll_timeout") * 1.15);
+		    self.set("poll_timeout",self.get("poll_timeout") * 1.25);
 		    
 		    window.setTimeout($.proxy(self.poll,self),
 				      self.get("poll_timeout"));
 		}
-	    }})
-	
+	    }}
+	)
     },
     stop_polling:function(){
 	return this.get("poll_count") > 2000 || this.status_frac() >= 1
@@ -213,6 +212,8 @@ var JobM = Backbone.RelationalModel.extend({
     status_message:function(){
 	var frac = this.status_frac();
 	var message
+	var frac = this.status_frac()
+	console.log("printing frac: ", frac)
 	if (frac == 0){
 	    message = "Finding guides in the query."
 	} else if( frac < 1){
