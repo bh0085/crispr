@@ -2,6 +2,9 @@ body.job{
     #job-container{
 	margin-top:35px;
     }
+    .job-page-pages-view{
+	margin-bottom:25px;
+    }
     .job-page-status-view{
     .status{
 
@@ -35,6 +38,9 @@ body.job{
 	right:0px;
     }
     .cards{
+	padding-left:25px;
+	padding-top:50px;
+	padding-bottom:50px;
 	.card .footer{
 	    padding-top:4px;
 	    width:100%;
@@ -42,7 +48,7 @@ body.job{
 	}
 	.card{
 	    min-height:0px;
-	    height:100px;
+	    height:200px;
 	}
 	#email-complete{
 	    margin:0px;

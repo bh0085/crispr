@@ -80,11 +80,27 @@ var JobM = Backbone.RelationalModel.extend({
 	this.set("n_spacers_done",_.filter(this.get("spacers").models,
 					   function(e){return e.get("computed_hits")}).length)
 	this.set("status_hash","" +this.get("n_spacers_done"))
+
+	var submitted_ms = this.get("submitted_ms")/1000;
+	var d = new Date(0); // The 0 there is the key, which sets the date to the epoch
+	d.setUTCSeconds(submitted_ms);
+	this.set("date_submitted", sprintf("%s",d));
+
+	var completed_ms = this.get("completed_ms")/1000;
+	if(completed_ms != 0){
+	    var d = new Date(0); // The 0 there is the key, which sets the date to the epoch
+	    d.setUTCSeconds(completed_ms);
+	    this.set("date_completed", sprintf("%s",d));
+	} else { this.set("date_completed",  "N/A") }
+	
     },
     compute_all:function(){
 	this.compute_export_urls()
 	this.compute_page_urls()
 	this.compute_stats()
+
+	
+
     },
     //waiting for hits, polls. true when done.
     poll:function(){

@@ -1,6 +1,17 @@
 <script type="unknown" id="job-page-view-template">
   <div class="status-view-container"></div>
   <div class="pages-view-container"></div>
+  <div class="info-view">
+    <h4 class="page-header">Job Info</h4>
+    <dl>
+      <dt>Submitted by:</dt><dd>{{email}}</dd><br/>
+      <dt>Date submitted:</dt><dd>{{date_submitted}}</dd><br/>
+      <dt>Date completed:</dt><dd>{{date_completed}}</dd><br/>
+      <dt>Aligns to:</dt><dd>{{genome_name}} on the <b>{{strand=="1"?"sense":"antisense"}}</b> strand of <b>{{chr}}</b> at <b>{{start}}</b> ({{locus}})</dd><br/>
+      <dt>Sequence:</dt><dd class="seq"><span class="break-all dna">{{sequence}}</span></dd><br/>
+      <dt>Statistics:</dt><dd>{{sequence.length}}nt, contains {{spacers.length}} possible guide sequences</dd><br/>
+    </dl>
+  </div>
 </script>
 <script type="unknown" id="job-page-status-view-template">
   <h3>CRISPR Job Submission "{{name}}"</h3>

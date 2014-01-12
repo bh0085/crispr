@@ -8,7 +8,7 @@ def all_nicks_to_GB(jobid):
     job = Session.query(Job).get(jobid)
     gb_seq = Seq.Seq(job.sequence,alphabet=Seq.Alphabet.DNAAlphabet())
     
-    description = """double nickase analysis for job "{0}" submitted by "{1}", with URL: crispr.mit.edu/{2}""".format(job.name, job.email, job.key)
+    description = """double nickase analysis for job "{0}" submitted by "{1}", with URL: crispr.mit.edu/job/{2}""".format(job.name, job.email, job.key)
 
     seq_record = SeqRecord.SeqRecord(gb_seq, id=job.key , name = job.genome_name , 
                                      description=description)
@@ -45,7 +45,7 @@ def all_guides_to_GB(jobid):
     job = Session.query(Job).get(jobid)
     gb_seq = Seq.Seq(job.sequence,alphabet=Seq.Alphabet.DNAAlphabet())
     
-    description = """guides analysis for job {0}, by {1} on the web at crispr.mit.edu/main/{2}""".format(job.name, job.email, job.key)
+    description = """guides analysis for job {0}, by {1} on the web at crispr.mit.edu/job/{2}""".format(job.name, job.email, job.key)
 
     seq_record = SeqRecord.SeqRecord(gb_seq, id=job.key ,
                                      name = job.genome_name , 

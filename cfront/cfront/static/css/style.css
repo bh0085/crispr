@@ -689,6 +689,8 @@ svg {
 
 body.job #job-container {
   margin-top: 35px; }
+body.job .job-page-pages-view {
+  margin-bottom: 25px; }
 body.job .job-page-status-view {
   margin-bottom: 35px; }
   body.job .job-page-status-view .status {
@@ -709,34 +711,38 @@ body.job .job-page-status-view {
 body.job .right {
   position: absolute;
   right: 0px; }
-body.job .cards .card .footer {
-  padding-top: 4px;
-  width: 100%;
-  text-align: right; }
-body.job .cards .card {
-  min-height: 0px;
-  height: 100px; }
-body.job .cards #email-complete {
-  margin: 0px; }
-body.job .cards .card {
-  border-color: lightgray; }
-  body.job .cards .card .background {
-    background-repeat: no-repeat;
-    background-position: center;
-    opacity: .7;
-    position: absolute;
-    left: 0px;
-    top: 0px;
-    right: 0px;
-    bottom: 0px; }
-  body.job .cards .card:hover {
-    border-color: black; }
-    body.job .cards .card:hover .background {
-      opacity: 1; }
-  body.job .cards .card.nickase .background {
-    background-image: url("/img/nickase-preview.svg"); }
-  body.job .cards .card.guides .background {
-    background-image: url("/img/crispr-logo.jpg"); }
+body.job .cards {
+  padding-left: 25px;
+  padding-top: 50px;
+  padding-bottom: 50px; }
+  body.job .cards .card .footer {
+    padding-top: 4px;
+    width: 100%;
+    text-align: left; }
+  body.job .cards .card {
+    min-height: 0px;
+    height: 200px; }
+  body.job .cards #email-complete {
+    margin: 0px; }
+  body.job .cards .card {
+    border-color: lightgray; }
+    body.job .cards .card .background {
+      background-repeat: no-repeat;
+      background-position: center;
+      opacity: .7;
+      position: absolute;
+      left: 0px;
+      top: 0px;
+      right: 0px;
+      bottom: 0px; }
+    body.job .cards .card:hover {
+      border-color: black; }
+      body.job .cards .card:hover .background {
+        opacity: 1; }
+    body.job .cards .card.nickase .background {
+      background-image: url("/img/nickase-preview.svg"); }
+    body.job .cards .card.guides .background {
+      background-image: url("/img/crispr-logo.jpg"); }
 body.job:not(.done) .nickase {
   cursor: wait;
   opacity: .25; }

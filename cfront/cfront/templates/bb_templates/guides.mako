@@ -2,18 +2,6 @@
   <div class="header">
     <!--header-->
     <div class="job-title showing-less"><h3 style="display:inline-block;">"{{name}}"</h3>
-          <a class="show-more less show-info"></a>
-          <a class="show-less more show-info"></a>    
-	  <div class="job-description med-left-margin med-top-margin more">
-	    <dl>
-	      <dt>Submitted by:</dt><dd>{{email}}</dd><br/>
-	      <dt>Date submitted:</dt><dd>{{submitted}}</dd><br/>
-	      <dt>Date completed:</dt><dd>{{completed}}</dd><br/>
-	      <dt>Aligns to:</dt><dd>{{genome_name}} on the <b>{{strand=="1"?"sense":"antisense"}}</b> strand of <b>{{chr}}</b> at <b>{{start}}</b> ({{locus}})</dd><br/>
-	      <dt>Sequence:</dt><dd class="seq"><span class="break-all dna">{{seq_html}}</span></dd><br/>
-	      <dt>Statistics:</dt><dd>{{sequence.length}}nt, contains {{spacers.length}} possible guide sequences</dd><br/>
-	    </dl>
-	  </div>   
     </div>
 
     <ul class="nav nav-tabs">
