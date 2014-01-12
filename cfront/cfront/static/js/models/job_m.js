@@ -204,7 +204,38 @@ var JobM = Backbone.RelationalModel.extend({
 	    message = "job is completed"
 	}
 	return message
-    }				  
+    }, 
+    fetch_all_hits:function(){
+	/*
+
+	 //was called after fetch_spacer_hits ....
+	function parse_hits(data){
+	    var top, genic
+	    top = data.top
+	    genic = data.genic
+
+	    var h
+	    
+	    for (var i = 0 ; i < top.length ; i++){
+		var hjson = top[i]
+		if (! this.get("hits").get(hjson.id)){ h = new HitM(hjson);}
+		else { h = this.get("hits").get(hjson.id) }
+		this.top.add(h)
+		if(h.get("ontarget")){this.set("locus",this.locus())}
+	    }
+
+	    for (var i = 0 ; i < genic.length ; i++){
+		var hjson = genic[i]
+		if (! this.get("hits").get(hjson.id)){ h = new HitM(hjson);}
+		else { h = this.get("hits").get(hjson.id) }
+		this.genic.add(h)
+	    }
+	    
+	}
+	*/
+
+    }		
+		  
 })			  
 
 function spacer_select(event){
