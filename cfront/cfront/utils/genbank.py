@@ -96,7 +96,7 @@ def one_nick_to_GB(job, sfwd, srev):
         location = SeqFeature.FeatureLocation(sfwd.start,sfwd.start+23),
         type="protein_bind",
         qualifiers={
-            "bound_moiety":"CRISPR forward-strand guide {0}".format( s.sequence),
+            "bound_moiety":"CRISPR forward-strand guide {0}".format( sfwd.sequence),
             "note":json.dumps(dict(score = sfwd.formatted_score))
         }
     ))
@@ -105,7 +105,7 @@ def one_nick_to_GB(job, sfwd, srev):
         location = SeqFeature.FeatureLocation(srev.start,srev.start+23),
         type="protein_bind",
         qualifiers={
-            "bound_moiety":"CRISPR reverse-strand guide {0}".format( s.sequence),
+            "bound_moiety":"CRISPR reverse-strand guide {0}".format( srev.sequence),
             "note":json.dumps(dict(score = srev.formatted_score))
         }
     ))

@@ -30,9 +30,9 @@ class Spacer(Base):
     @property
     def cut_site(self):
         if self.strand == 1:
-            return self.start + 20
+            return self.start + 17
         else :
-            return self.start + 3
+            return self.start + 6
 
     @property
     def guide(self):

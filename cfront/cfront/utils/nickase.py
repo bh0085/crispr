@@ -24,9 +24,9 @@ def compute_nickase_matrix(jobid):
             if sorted_spacers[i].strand != sorted_spacers[j].strand:
                 top_spacer = sorted_spacers[i] if sorted_spacers[i].strand == 1 else sorted_spacers[j]
                 bottom_spacer = sorted_spacers[i] if sorted_spacers[i].strand == -1 else sorted_spacers[j]
-                delta = (top_spacer.start + 20) - (bottom_spacer.start+3) 
+                offset = (top_spacer.cut_site ) - (bottom_spacer.cut_site) 
                 
-                if delta > 40 and delta < 70:
+                if delta > 0 and delta < 31:
                     nicks[(sorted_spacers[j].id,
                            sorted_spacers[i].id)] = Nick(nick_id_counter, 
                                                          sorted_spacers[j],

@@ -106,7 +106,7 @@
 	  <dt>sequence</dt><dd class="sequence">{{reverse_guide.sequence}}</dd>
 	  <dt># offtargets</dt><dd>{{reverse_guide.n_offtargets}}</dd>
 	  <dt># genic offtargets</dt><dd>{{reverse_guide.n_genic_offtargets}}</dd>
-	  <div><a class="export export-one-guide" target="_blank" href="{{export_csv_reverse_guide_url}}">Guide A offtargets as a CSV</a></div>
+	  <div><a class="export export-one-guide" target="_blank" href="{{export_csv_reverse_guide_url}}">Export off-targets to .csv</a></div>
 
 	</dl>
     </div>
@@ -115,12 +115,12 @@
 
       <h5 class="header">Guide B</h5>
 	<dl>
-	  <dt>quality</dt><dd>{{reverse_guide.quality}}</dd>
+	  <dt>quality</dt><dd>{{forward_guide.quality}}</dd>
 	  <dt>cut at</dt><dd>{{forward_guide.cut_site}}</dd>
 	  <dt>sequence</dt><dd class="sequence">{{forward_guide.sequence}}</dd>
 	  <dt># offtargets</dt><dd>{{forward_guide.n_offtargets}}</dd>
 	  <dt># genic offtargets</dt><dd>{{forward_guide.n_genic_offtargets}}</dd>
-	  <div><a class="export export-one-guide" target="_blank" href="{{export_csv_forward_guide_url}}">Guide B offtargets as a CSV</a></div>
+	  <div><a class="export export-one-guide" target="_blank" href="{{export_csv_forward_guide_url}}">Export off-targets to .csv</a></div>
 	</dl>
     </div>
     <div class="score card {{quality}}">
@@ -128,8 +128,8 @@
       <div class='qbox'><span>{{Math.round(score)}}</span></div>
 	<dl>
 	  <dt>quality</dt><dd>{{quality}}</dd>
-	  <dt># offtargets pairs of A & B</dt><dd class="sequence">{{n_offtargets}}</dd>
-	  <dt># genic offtargets</dt><dd class="sequence">{{n_genic_offtargets}}</dd>
+	  <dt># offtarget pairs of A & B</dt><dd class="sequence">{{n_offtargets}}</dd>
+	  <dt># genic OT pairs of A & B</dt><dd class="sequence">{{n_genic_offtargets}}</dd>
 	</dl>
     </div>
 
