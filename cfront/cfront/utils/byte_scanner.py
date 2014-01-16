@@ -1,5 +1,18 @@
 #!/usr/bin/env python
 
+
+"""toplevel interface for this utility
+1/16/2014 -- modified to use shared mem arrays.
+
+1. get a pointer to the shm array storing the genome sequence
+2. run the query using shmarray as input
+
+EG:
+        shm_library_bytes = get_library_bytes_shm(args.genome)
+        run_sequence_vs_genome_shm("GGCTGCTGTCAGGGAGCTCA",args.genome, shm_library_bytes)
+
+"""
+
 import psycopg2
 from scipy import sparse
 import argparse
@@ -10,6 +23,9 @@ import twobitreader
 from pyramid.paster import bootstrap
 from cfront import genomes_settings
 
+import sharedmem as shm
+import numpy as np
+import multiprocessing as mp
 
 RD_DATAROOT = "/tmp/ramdisk/crispr"
 if not os.path.isdir(RD_DATAROOT):
@@ -147,7 +163,7 @@ class TooManyHits(Exception):
     pass
 
     
-def run_sequence_vs_genome(sequence, genome):
+def run_sequence_vs_genome_shm(sequence, genome, shm_genome_bytes):
     if not len(sequence) == 20:
         raise Exception("wrong length input sequence")
     
@@ -159,7 +175,7 @@ def run_sequence_vs_genome(sequence, genome):
         raise Exception("genome has no library set: {0} ({1})".format(genome, lfpath))
                         
     #loads and queries the correct genomewide library
-    matches = query_library_bytes(genome, sequence)
+    matches = query_library_bytes_shm(genome, sequence, shm_genome_bytes)
     
     if len(matches) > 5000:
         raise TooManyHits()
@@ -179,7 +195,7 @@ def run_sequence_vs_genome(sequence, genome):
     print "done scanning for matches in postgres!"
     
     conn.close()
-    return results    
+    return results
 
 def sample_sequence():
     tests = []
@@ -189,13 +205,25 @@ def sample_sequence():
         tests.append(match.groupdict())
     return tests[0]["guide"]
 
-def query_library_bytes(genome, sequence):  
+
+## NEW CODE RETURNING SHARED MEM ARRAYS PER GENOME
+def needs_init_library_bytes_shm(genome):
+    return not genome in open_libraries
+
+def init_library_bytes_shm(genome):
+    global open_libraries
     lfpath  = library_file(genome)
-    if not genome in open_libraries:
-        with open(lfpath) as f:
-            open_libraries[genome] = np.load(f)
+    with open(lfpath) as f:
+        open_libraries[genome] = shm.fromfile(f,dtype = np.dtype("uint8"))
     
-    library_bytes = open_libraries[genome]
+def get_library_bytes_shm(genome):
+    if needs_init_library_bytes_shm(genome):
+        init_library_bytes_shm(genome)
+    return open_libraries[genome]
+
+## NOW TAKES THE SHM ARRAY AS INPUT
+def query_library_bytes_shm(genome, sequence, shm_genome_bytes):
+    library_bytes = shm_genome_bytes
     query_bytes = np.array([ bytes_translation_dict.get(sequence[(j)*4:(j)*4+4],0) 
                            for j in range(5)],
                            dtype=np.dtype("uint8"))
@@ -207,7 +235,10 @@ def query_library_bytes(genome, sequence):
 
     import bc
     n_matches = bc.striding_8bit_comparison(f,g,h,mismatches_threshold)
+
     matches_list = h[:n_matches]
+    print "N MATCHES: ", len(matches_list)
+    #return matches_list[:100]
     return matches_list
 
 def main():
@@ -217,7 +248,7 @@ def main():
                         default='save', type=str,
                         help="program to run -- default, save, allowed: [create, init, test, query]")
     parser.add_argument('--genome', '-g', dest = "genome",
-                        default="hg19", type = str,
+                        default="mm9", type = str,
                         help = "target genomic library")
 
     parser.add_argument('inifile')
@@ -234,7 +265,8 @@ def main():
     if args.program == "create":
         create_locs_file(args.genome)
     if args.program == "test":
-        run_sequence_vs_genome("GGCTGCTGTCAGGGAGCTCA",args.genome)
+        shm_library_bytes = get_library_bytes_shm(args.genome)
+        run_sequence_vs_genome_shm("GGCTGCTGTCAGGGAGCTCA",args.genome, shm_library_bytes)
     if args.program == "init":
         init_library_bytes(args.genome)
         init_reference_dictionary(args.genome)

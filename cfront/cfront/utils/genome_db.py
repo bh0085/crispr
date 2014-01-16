@@ -33,30 +33,39 @@ def scoring_fun(mismatches):
             score = max([score,0])
     return score
 
-def compute_hits_for_spacer(spacer_id):
+
+#
+# test_for_ontargets(spacer_id)
+# fetch_hits_in_thread()
+# process_hits_for_spacer
+def test_for_ontargets(spacer_id):
         spacer = Session.query(Spacer).get(spacer_id)
-
-        v = cfront_settings.get("debug_mode",False)
-
-        if v: print "computing hits for spacer with id {0}".format(spacer_id)
         #FILTER SPACERS
         #check to make sure that spacers do not have huge number of perfect matches
         exact_matches = webserver_db.check_genome(spacer.sequence,spacer.job.genome_name)
         if len(exact_matches) > 5:
-            raise SpacerERR(Spacer.ERR_MANY_EXACT_MATCHES,spacer)
-        try:
-            #BYTE SCAN FOR HITS
-            hits = byte_scanner.run_sequence_vs_genome(spacer.guide, spacer.job.genome_name)
-        except byte_scanner.TooManyHits, e:
-            raise SpacerERR(Spacer.ERR_TOOMANYHITS, spacer)
-        except Exception, e:
-            if not cfront_settings.get("debug_mode",False):
-                raise SpacerERR(Spacer.ERR_FAILED_TO_RETRIEVE_HITS,spacer)
-            else:
-                raise e
+            raise SpacerERR(Spacer.ERR_MANY_EXACT_MATCHES,spacer)    
 
+import json
+def fetch_hits_in_thread_shm(guide_sequence,genome_name,shm_genome_array):
+    rval = None
+    try:
+        #BYTE SCAN FOR HITS
+        hits = byte_scanner.run_sequence_vs_genome_shm(guide_sequence, genome_name, shm_genome_array)
         if len(hits) == 0:
-            raise SpacerERR(Spacer.ERR_NO_HITS,spacer)
+            rval = (False, "no_hits")
+        rval =  (True, hits[:10])
+    except byte_scanner.TooManyHits, e:
+        rval =  (False, "too_many_hits")
+    except Exception, e:
+        rval =  (False, "failed")
+    
+    return rval
+
+def process_hits_for_spacer(spacer_id, hits):
+    with transaction.manager:
+        v = True
+        spacer = Session.query(Spacer).get(spacer_id)
 
         translation = {"A":0,"G":1, "T":2,"C":3}
         #LIST MISMATCHES
@@ -134,4 +143,3 @@ def compute_hits_for_spacer(spacer_id):
         spacer.n_genic_offtargets = len([h for h in spacer.hits if h.gene is not None])
         Session.add(spacer)
         print "done with spacer: {1} from (J{0}) -- {2} score is {4} with {3} offtargets.".format(spacer.jobid, spacer.id, spacer.score, len(spacer.hits) - 1, ot_sum)
-    
