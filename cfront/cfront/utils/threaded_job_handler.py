@@ -6,7 +6,7 @@ import sys, shutil
 import time
 import transaction
 from pyramid.paster import bootstrap
-from cfront import cfront_settings
+from cfront import cfront_settings, genomes_settings as genomes_settings
 import argparse, os
 from Queue import Empty
 import multiprocessing as mp
@@ -20,7 +20,7 @@ def init_env(p):
 def queue_loop(ofs,stride):
     while True:
         process_queue(ofs,stride)
-        time.sleep(1)
+        time.sleep(2)
             
 
 def worker(jobs_q,**genomes):
@@ -77,10 +77,15 @@ def process_queue(ofs, stride):
     max_procs = 6
     manager = Manager()
     jobs_q = JoinableQueue()
+
+
     for i in range(max_procs):
+        print("loading {0}".format(i))
+        genomes_dict =dict([n,byte_scanner.get_library_bytes_shm(n) ]
+                           for n in genomes_settings["genome_names"])
         proc = mp.Process(target=worker, args=[jobs_q],
-                          kwargs = dict(mm9= byte_scanner.get_library_bytes_shm("mm9"), 
-                                        hg19= byte_scanner.get_library_bytes_shm("hg19")))
+                          kwargs = genomes_dict
+                            )
         proc.daemon=True
         proc.start()
         procs.append(proc)

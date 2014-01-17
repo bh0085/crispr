@@ -139,6 +139,7 @@ def init_reference_dictionary(genome):
             d["nrg"] = d["sequence"][-3:]
             d["sequence"] = d["sequence"][:-3]
             d["chr"] = d["chr"] if d["chr"][0:3] == "chr" else "chr" + d["chr"]
+            if len(d["chr"])> 23 : continue
             d["strand"] = 1 if d["strand"] == "+" else -1
         
             buffered_row = "\t".join([str(i)] + [str(d[key]) for key in cols[1:]]) + "\n"

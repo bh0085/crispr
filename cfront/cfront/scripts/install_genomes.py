@@ -44,4 +44,7 @@ def main(argv=sys.argv):
             print "ERROR no exons file exists at: {0}".format(exons_file)
         else: print "found exons file for {0}".format(g)
         
-        
+        #import cfront.utils.exons as exons
+        #import cfront.utils.byte_scanner as byte_scanner
+
+        print "please run exons -g {0}".format(g)     

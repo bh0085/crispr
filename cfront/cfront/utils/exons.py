@@ -137,6 +137,7 @@ def populate_exons(genome_name):
     cur.copy_from(buf,"exon_{0}".format(genome_name))
     buf.close()
     conn.commit()
+    print "populated exons for {0}".format(genome_name)
 
 def create_indexes(genome_name):
     conn = psycopg2.connect("dbname={0} user={1} password={2}"\
@@ -153,6 +154,8 @@ def create_indexes(genome_name):
     CREATE INDEX {0}_strand_idx ON exon_{0}(strand);
     """.format(genome_name))
     conn.commit()
+    print "created indexes for {0}".format(genome_name)
+
     return
                 
 if __name__ =="__main__":
