@@ -98,8 +98,9 @@ def process_hits_for_spacer(spacer_id, hits):
                     found_ontarget = True
             else: ontarget = False
             
+
             Session.add(Hit(spacer = spacer,
-                            chr = hit["chr"],
+                            chr = hit["chr"][:6],
                             sequence = hit["sequence"] +hit["nrg"],
                             n_mismatches = len(mismatches),
                             start = hit["start"],

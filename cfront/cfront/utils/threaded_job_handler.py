@@ -106,14 +106,15 @@ def process_queue(ofs, stride):
 
             batched_jobs = [j for j in selected_hit_jobs if j.batch is not None]
             #sorts jobs to process recent submissions and non-batch jobs first        
-            top_job = sorted(selected_hit_jobs, key = priority)[0]
-            if not top_job in Session: top_job = Session.merge(j)
+            top_jobs = sorted(selected_hit_jobs, key = priority)[:4]
+            for top_job in top_jobs:
+                if not top_job in Session: top_job = Session.merge(top_job)
 
-            #spacers may be deleted from the session in the interior of this loop
-            for i,s in enumerate([s for s in top_job.spacers if s.score is None][:6]):
-                jobs_q.put({"genome_name":s.job.genome_name,
-                       "guide":s.guide,
-                       "spacerid":s.id})
+                #spacers may be deleted from the session in the interior of this loop
+                for i,s in enumerate([s for s in top_job.spacers if s.score is None][:3]):
+                    jobs_q.put({"genome_name":s.job.genome_name,
+                                "guide":s.guide,
+                                "spacerid":s.id})
                 
                 
     for i in range(max_procs):
