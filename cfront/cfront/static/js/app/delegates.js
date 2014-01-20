@@ -14,3 +14,10 @@ $(document).on("click","#email-complete",function(){
 		  console.log("new value: ", data)
 	      })
 })
+
+
+$(document).on("click",".nav-tabs",function(ev){
+    console.log($(ev.currentTarget).find(".active").text())
+    $(ev.currentTarget).find(".tabs-label").text($(ev.currentTarget).find(".active").text())
+    console.log("clicked")
+})
