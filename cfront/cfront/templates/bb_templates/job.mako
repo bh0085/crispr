@@ -40,7 +40,7 @@
     <div class="card guides">
       <div class="background"></div>
       <a class="covering-link" href="{{readout_page_url}}"></a>
-      <div class="header"><h4>Guides and offtargets</h4></div>
+      <div class="header"><h4>Guides & offtargets</h4></div>
       <div class="footer"><span class="download-container"><a href="{{export_gb_guides_url}}" target="_blank">Download as genbank</a></span></div>
     </div>
     <div class="card nickase">
