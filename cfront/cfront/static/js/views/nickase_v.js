@@ -1,3 +1,17 @@
+NickaseSVGV = JobSVGV.extend({
+    template:$("#nickase-svg-view-template").html(),
+    initialize:function(){
+       this.binder = new Backbone.EventBinder();
+    },
+    render:function(){
+       this.$el.html(_.template(this.template, {}))
+
+       return this
+    },
+    register_listeners:function(){},
+    initial_draw:function(){},
+})
+
 var NickaseTLOptionsV =Backbone.View.extend({
     className:"nickase-tl-options",
     template:$("#nickase-tl-options-template").html(),
