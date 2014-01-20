@@ -83,3 +83,21 @@ God.watch do |w|
 	  w.log = "/home/ben/crispr/cfront/log/gfserve-monDom5.log"
 	  w.keepalive(:interval => 15.seconds)
 end
+
+God.watch do |w|
+	  w.name = "gfserve-galGal4"
+	  w.group = "gfserve"
+	  w.dir = "/tmp/ramdisk/genomes"	
+	  w.start = "gfServer start localhost 8010 galGal4.2bit -tileSize=8"
+	  w.log = "/home/ben/crispr/cfront/log/gfserve-galGal4.log"
+	  w.keepalive(:interval => 15.seconds)
+end
+
+God.watch do |w|
+	  w.name = "gfserve-tair10"
+	  w.group = "gfserve"
+	  w.dir = "/tmp/ramdisk/genomes"	
+	  w.start = "gfServer start localhost 8011 tair10.2bit -tileSize=8"
+	  w.log = "/home/ben/crispr/cfront/log/gfserve-tair10.log"
+	  w.keepalive(:interval => 15.seconds)
+end
