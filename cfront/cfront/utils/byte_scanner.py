@@ -180,7 +180,7 @@ def run_sequence_vs_genome_shm(sequence, genome, shm_genome_bytes):
     matches = query_library_bytes_shm(genome, sequence, shm_genome_bytes)
     print "matches & length: {0}, {1}".format( matches[0],  len(matches))
     
-    if len(matches) > 5000:
+    if len(matches) > 3000:
         raise TooManyHits()
 
     conn = psycopg2.connect("dbname={0} user={1} password={2}"\
