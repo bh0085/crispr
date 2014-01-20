@@ -82,9 +82,21 @@ def process_queue(ofs, stride):
 
 
     procs = []
-    max_procs = 6
+    max_procs = 9
     manager = Manager()
     jobs_q = JoinableQueue()
+
+
+    r = redis.Redis()
+
+    dcount = 0 
+    while(1):
+        item_json = r.lpop("cfront-{0}:job:hits".format("dev" if cfront_settings.get("debug_mode",False) else "prod"))
+        dcount += 1
+        if item_json == None:
+            break
+    print "popped {0} keys from previous submission".format(dcount)
+
 
 
     for i in range(max_procs):
@@ -113,13 +125,13 @@ def process_queue(ofs, stride):
 
             batched_jobs = [j for j in selected_hit_jobs if j.batch is not None]
             #sorts jobs to process recent submissions and non-batch jobs first        
-            top_jobs = sorted(selected_hit_jobs, key = priority)[:6]
+            top_jobs = sorted(selected_hit_jobs, key = priority)[:12]
             for top_job in top_jobs:
                 if not top_job in Session: top_job = Session.merge(top_job)
 
                 #spacers may be deleted from the session in the interior of this loop
 
-                for i,s in enumerate([s for s in top_job.spacers if s.score is None][:3]):
+                for i,s in enumerate([s for s in top_job.spacers if s.score is None][:2]):
                     jobs_q.put({"genome_name":s.job.genome_name,
                                 "guide":s.guide,
                                 "spacerid":s.id})
@@ -131,8 +143,9 @@ def process_queue(ofs, stride):
         p.join()
 
 
-    r = redis.Redis()
     
+
+
     while(1):
        item_json = r.lpop("cfront-{0}:job:hits".format("dev" if cfront_settings.get("debug_mode",False) else "prod"))
        
@@ -170,8 +183,10 @@ def process_queue(ofs, stride):
               print "EXCEPTED AN UNKNOWN ERROR {0}".format(sid)
               print "EXCEPTED AN UNKNOWN ERROR"
               print "EXCEPTED AN UNKNOWN ERROR"
-              serr = SpacerERR(Spacer.ERR_FAILED_TO_PROCESS_HITS,Session.query(Spacer).get(sid))  
-              print serr.message
+              #spc = Session.query(Spacer).get(sid)
+              
+              #serr = SpacerERR(Spacer.ERR_FAILED_TO_PROCESS_HITS,Session.query(Spacer).get(sid))  
+              #print serr.message
               
            
        spacer = Session.query(Spacer).get(sid)
