@@ -38,9 +38,9 @@
 </script>
 <script type="unknown" id="job-page-status-view-template">
   <h3>CRISPR Job Submission "{{name}}"</h3>
-  <div class="">
-    <h4>Status</h4>
-    <div class="status-text full-width">about ?? minutes left<span class="right"><control class="email"><input id="email-complete" class="inline v-middle" {{email_complete?"checked":""}} type="checkbox"></input><label class="unselectable inline v-middle med-left-margin" for="email-complete">Email when done</label></control></span></div>
+  <div class="header-oneline">
+    <h4>Status: </h4>
+    <div class="status-text">about ?? minutes left<span class="right"><control class="email"><input id="email-complete" class="inline v-middle" {{email_complete?"checked":""}} type="checkbox"></input><label class="unselectable inline v-middle med-left-margin" for="email-complete">Email when done</label></control></span></div>
   </div>
 
 

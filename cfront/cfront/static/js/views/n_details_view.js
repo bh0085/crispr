@@ -7,6 +7,8 @@ NickaseDetailView = Backbone.View.extend({
 	this.model.on("change:hover_locked",this.render,this)
     },
     render:function(){
+
+
 	var nick = this.model.get("active_nick")
 	if(nick == null){return this}
 	this.nick =nick
@@ -31,12 +33,18 @@ NickaseDetailView = Backbone.View.extend({
 		       function(){
 			   APP.set("pacman", current_job.get("hover_locked"))
 		       })
+	
+
 	return this;
     },
     draw_ruler:function(){
 
     },
     draw_dsvg:function(){
+		
+	console.log("RENDERING BASE NICKASE SVG")
+	t0 = new Date()
+
 	this.$(".details-svg-container").empty().append($("<div>").addClass("details-svg"))
 	this.dsvg = $(this.$(".details-svg")).svg({}).svg("get")
 	var ds = this.dsvg
@@ -197,6 +205,8 @@ NickaseDetailView = Backbone.View.extend({
 
 	var so = this.$(".sequence-details-overhang-container")
 	so.empty().append($("<span>").text(str2))
+
+	console.log(new Date() - t0)
 
  
     },

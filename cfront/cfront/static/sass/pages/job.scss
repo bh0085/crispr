@@ -26,6 +26,7 @@ body.job{
 	&.done{
 	    .progress{
 		height:1px;
+		opacity:.5;
 		transition:height 1s, opacity .5s;
 	    }
 	}	

@@ -248,12 +248,18 @@
   position: absolute;
   top: 11px;
   background-color: white;
-  padding-right: 15px; }
+  padding-right: 20px; }
 
 .nav-tabs.crispr-tabs {
   margin-top: 30px;
   margin-bottom: 14px;
   position: relative; }
+
+.tab-header-annotation {
+  opacity: .5; }
+
+.header-oneline > * {
+  display: inline-block; }
 
 .footer {
   margin-top: 100px;
@@ -718,6 +724,7 @@ body.job .job-page-status-view {
       margin-bottom: 10px; }
     body.job .job-page-status-view .status.done .progress {
       height: 1px;
+      opacity: .5;
       transition: height 1s, opacity 0.5s; }
 body.job .right {
   position: absolute;
