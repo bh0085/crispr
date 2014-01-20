@@ -41,7 +41,7 @@ class JobERR(Exception):
 
         # Now for your custom code...
         self.job = job
-        
+        self.message = message
         s = StringIO.StringIO()
         traceback.print_stack(None, None, s)
         s.seek(0)

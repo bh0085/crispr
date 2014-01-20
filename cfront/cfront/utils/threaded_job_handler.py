@@ -60,9 +60,17 @@ def process_queue(ofs, stride):
                     Session.add(Spacer(job = j,**spacer_info))
                 j.computed_spacers = True
                 Session.add(j)
+                print j.id
             except JobERR, e:
-                print "Excepted a job error during Spacer finding for Job: {0}".format(j.id)
-                print j.sequence
+                if e.message == Job.NOSPACERS:
+                    print "No spacers in JOB ID: {0}".format(j.id)
+                elif e.message == Job.ERR_INVALID_CHARACTERS:
+                    print e.message
+                else:
+                    print "Excepted a job error during Spacer finding for Job: {0}".format(j.id)
+                    print j.id
+                    print j.sequence
+                    raise e
 
 
     possible_hit_jobs =  Session.query(Job)\
@@ -74,7 +82,7 @@ def process_queue(ofs, stride):
 
 
     procs = []
-    max_procs = 6
+    max_procs = 9
     manager = Manager()
     jobs_q = JoinableQueue()
 
@@ -96,7 +104,6 @@ def process_queue(ofs, stride):
             def priority(j):
                 from random import random
                 f = 1 if random() > .5 else -1
-                if j.key == "7956546276189290" : return -100000
                 if j.batch is not None: return 100000000
                 else: return f* j.id 
 
@@ -106,7 +113,7 @@ def process_queue(ofs, stride):
 
             batched_jobs = [j for j in selected_hit_jobs if j.batch is not None]
             #sorts jobs to process recent submissions and non-batch jobs first        
-            top_jobs = sorted(selected_hit_jobs, key = priority)[:4]
+            top_jobs = sorted(selected_hit_jobs, key = priority)[:6]
             for top_job in top_jobs:
                 if not top_job in Session: top_job = Session.merge(top_job)
 
@@ -145,11 +152,11 @@ def process_queue(ofs, stride):
           try:
               if not success:
                   #exception handling
-                  if output=="too_many_hits":
+                  if hits=="too_many_hits":
                       raise SpacerERR(Spacer.ERR_TOOMANYHITS, Session.query(Spacer).get(sid))
-                  elif output =="no_hits":
+                  elif hits =="no_hits":
                       raise SpacerERR(Spacer.ERR_NO_HITS,Session.query(Spacer).get(sid))
-                  elif output == "failed":
+                  elif hits == "failed":
                       raise SpacerERR(Spacer.ERR_FAILED_TO_RETRIEVE_HITS,Session.query(Spacer).get(sid))
               else:
                   genome_db.process_hits_for_spacer(sid, hits)
@@ -157,7 +164,8 @@ def process_queue(ofs, stride):
           except JobERR, e:
               print "excepted a job/spacer error on COMPUTE for job {0}".format(s.job.id, top_job)
           except SpacerERR, e:
-              print "excepted a spacer error for spacer id {0}".format(s.id)
+              print "excepted a spacer error for spacer id {0}".format(Session.query(Spacer).get(sid))
+              print e.message
            
        spacer = Session.query(Spacer).get(sid)
 
