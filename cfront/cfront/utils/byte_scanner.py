@@ -104,7 +104,7 @@ def init_library_bytes(genome):
             print "{0} millions of lines of library bytes done.".format(i/1e6)
 
     with open(LIBRARY_BYTES_PATH,'w') as f:
-        np.save(f, bytes_array)
+        bytes_array.tofile(f)
     print "saved lines to a bytes array at {0}".format(LIBRARY_BYTES_PATH)
     
 def init_reference_dictionary(genome):
@@ -163,6 +163,7 @@ def init_reference_dictionary(genome):
 class TooManyHits(Exception):
     pass
 
+
     
 def run_sequence_vs_genome_shm(sequence, genome, shm_genome_bytes):
     if not len(sequence) == 20:
@@ -177,6 +178,7 @@ def run_sequence_vs_genome_shm(sequence, genome, shm_genome_bytes):
                         
     #loads and queries the correct genomewide library
     matches = query_library_bytes_shm(genome, sequence, shm_genome_bytes)
+    print "matches & length: {0}, {1}".format( matches[0],  len(matches))
     
     if len(matches) > 5000:
         raise TooManyHits()
@@ -216,11 +218,12 @@ def init_library_bytes_shm(genome):
     lfpath  = library_file(genome)
     with open(lfpath) as f:
         open_libraries[genome] = shm.fromfile(f,dtype = np.dtype("uint8"))
-    
+
 def get_library_bytes_shm(genome):
     if needs_init_library_bytes_shm(genome):
         init_library_bytes_shm(genome)
     return open_libraries[genome]
+
 
 ## NOW TAKES THE SHM ARRAY AS INPUT
 def query_library_bytes_shm(genome, sequence, shm_genome_bytes):
@@ -265,6 +268,8 @@ def main():
         init_reference_dictionary(args.genome)
     if args.program == "create":
         create_locs_file(args.genome)
+    if args.program == "convert":
+        convert_library_bytes_shm(args.genome)
     if args.program == "test":
         shm_library_bytes = get_library_bytes_shm(args.genome)
         run_sequence_vs_genome_shm("GGCTGCTGTCAGGGAGCTCA",args.genome, shm_library_bytes)
