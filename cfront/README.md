@@ -47,6 +47,8 @@ RD_DATAROOT = "/tmp/ramdisk/crispr"
 
 ## Genomes
 For every genome, the following is required:
+
+
 1. a bitpacked spacer library created by
 utils/byte_scanner.py -p init -g {GENOME}
 

@@ -54,7 +54,7 @@ def fetch_hits_in_thread_shm(guide_sequence,genome_name,shm_genome_array):
         hits = byte_scanner.run_sequence_vs_genome_shm(guide_sequence, genome_name, shm_genome_array)
         if len(hits) == 0:
             rval = (False, "no_hits")
-        rval =  (True, hits[:10])
+        rval =  (True, hits)
     except byte_scanner.TooManyHits, e:
         rval =  (False, "too_many_hits")
     except Exception, e:
@@ -88,6 +88,8 @@ def process_hits_for_spacer(spacer_id, hits):
 
         #CREATE HITS
         found_ontarget = False
+        starts = set([])
+
         for idx in hits_taken_idxs:
             hit = hits[idx]
             mismatches = mismatches_by_hit.get(idx,array([]))
@@ -97,7 +99,6 @@ def process_hits_for_spacer(spacer_id, hits):
                     ontarget = True 
                     found_ontarget = True
             else: ontarget = False
-            
 
             Session.add(Hit(spacer = spacer,
                             chr = hit["chr"][:6],

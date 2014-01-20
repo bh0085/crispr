@@ -111,6 +111,7 @@ def process_queue(ofs, stride):
                 if not top_job in Session: top_job = Session.merge(top_job)
 
                 #spacers may be deleted from the session in the interior of this loop
+
                 for i,s in enumerate([s for s in top_job.spacers if s.score is None][:3]):
                     jobs_q.put({"genome_name":s.job.genome_name,
                                 "guide":s.guide,
