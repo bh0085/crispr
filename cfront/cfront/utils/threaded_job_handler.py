@@ -166,6 +166,13 @@ def process_queue(ofs, stride):
           except SpacerERR, e:
               print "excepted a spacer error for spacer id {0}".format(Session.query(Spacer).get(sid))
               print e.message
+          except Exception, e:
+              print "EXCEPTED AN UNKNOWN ERROR {0}".format(sid)
+              print "EXCEPTED AN UNKNOWN ERROR"
+              print "EXCEPTED AN UNKNOWN ERROR"
+              serr = SpacerERR(Spacer.ERR_FAILED_TO_PROCESS_HITS,Session.query(Spacer).get(sid))  
+              print serr.message
+              
            
        spacer = Session.query(Spacer).get(sid)
 

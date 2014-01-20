@@ -16,6 +16,14 @@ def genes_file(genome_name):
                         .format(path))
     return path
 
+
+def genes_file_gtf(genome_name):
+    path = genomes_settings.get("ensemble_gtf_template").format(genome_name)
+    if not os.path.isfile(path):
+        raise Exception("unsupported genome (file ENSEMBL file does not exist) at\n {0}"\
+                        .format(path))
+    return path
+
 #simple code takes every one of a list of hits and runs a SQL query on an indexed
 #database containing all UCSC exons.
 def get_hit_genes(hits, genome_name):
@@ -139,6 +147,81 @@ def populate_exons(genome_name):
     conn.commit()
     print "populated exons for {0}".format(genome_name)
 
+
+def populate_exons_ensembl(genome_name):
+    conn = psycopg2.connect("dbname={0} user={1} password={2}"\
+                            .format(genomes_settings.get("postgres_database"),
+                                    genomes_settings.get("postgres_user"),
+                                    genomes_settings.get("postgres_password")))
+    cur = conn.cursor()
+
+    init_table = """
+    DROP TABLE IF EXISTS exon_{0};
+    CREATE TABLE exon_{0} (
+    id int PRIMARY KEY,
+    gene_name VARCHAR(50) not null,
+    gene_common_name VARCHAR(50),
+    exon_number SMALLINT not null,
+    chr  VARCHAR(25) not null,
+    strand SMALLINT not null,
+    exon_start INT NOT NULL,
+    exon_end INT NOT NULL,
+    protein_id VARCHAR(50),
+    cds_start INT NOT NULL,
+    cds_end INT NOT NULL
+    );
+    
+    """.format(genome_name)
+    cur.execute(init_table);
+    buf = StringIO.StringIO()
+    cols = ['chrom_num',
+            'source',
+            'feature',
+            'start',
+            'end',
+            'score',
+            'strand',
+            'frame',
+            'attribute']
+    #attribute_cols = ["id","gene_name","exon_number","chr","strand","start","end","protein_id","cds_start","cds_end"]
+    attribute_sample_string = '''gene_id "ATMG00160"; transcript_id "ATMG00160.1"; exon_number "1"; gene_name "COX2"; transcript_name "COX2-201"; seqedit "false";'''
+    id_counter = 1
+
+    with open(genes_file_gtf(genome_name)) as f:
+        for l in f:
+            row = dict( [(cols[i],e.strip()) for i,e in enumerate( l.split("\t")) ])
+            if row["feature"] != "exon":
+                continue
+            print row["attribute"]
+
+            attribute = dict([[e.strip().split(" ")[0],
+                               " ".join( e.strip().split(" ")[1:] )] 
+                              for e in (row["attribute"]+" ").split("; ") if e.strip() != ""])
+            
+
+            buffered_row = "\t".join([str(e) for e in [id_counter,
+                                                       attribute["gene_id"],
+                                                       attribute["gene_name"] if "gene_name" in attribute else "unnamed",
+                                                       int(attribute["exon_number"].replace('"',"")),
+                                                       "chr" + row["chrom_num"],
+                                                       1 if row["strand"] == "+" else -1,
+                                                       row["start"],
+                                                       row["end"],
+                                                       None,
+                                                       row["start"],
+                                                       row["end"]]]) + "\n"
+
+            id_counter+=1
+            buf.write(buffered_row)
+    
+
+    buf.seek(0)
+    buf.seek(0)
+    cur.copy_from(buf,"exon_{0}".format(genome_name))
+    buf.close()
+    conn.commit()
+    print "populated exons for {0}".format(genome_name)
+
 def create_indexes(genome_name):
     conn = psycopg2.connect("dbname={0} user={1} password={2}"\
                             .format(genomes_settings.get("postgres_database"),
@@ -164,11 +247,19 @@ if __name__ =="__main__":
     parser.add_argument('--genome', '-g', dest = "genome_name",
                         default="hg19", type = str,
                         help = "genome name [...]", required = True)
+    parser.add_argument('--source', '-s', dest="source",
+                        default="ucsc", type=str,
+                        help = "source ensembl gtf / ucsc tsv", required = True)
+
     parser.add_argument('inifile')
 
     args = parser.parse_args()
     env = bootstrap(args.inifile)
-    populate_exons(args.genome_name)
+    if args.source=="ucsc":
+        populate_exons(args.genome_name)
+    elif args.source =="ensembl":
+        populate_exons_ensembl(args.genome_name)
+        
     create_indexes(args.genome_name)
 
     

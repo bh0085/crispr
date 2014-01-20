@@ -27,6 +27,7 @@ class Spacer(Base):
     ERR_MANY_EXACT_MATCHES = "Many unique matches found in the genome"
     ERR_FAILED_TO_RETRIEVE_HITS = "Failed to retrieve hits from the genome"
     ERR_TOOMANYHITS = "This spacer had over 10,000 similar sequences in the genome"
+    ERR_FAILED_TO_PROCESS_HITS = "Failed to process hits. Unknown reason."
     @property
     def cut_site(self):
         if self.strand == 1:
