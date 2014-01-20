@@ -719,13 +719,16 @@ body.job .cards {
     padding-top: 4px;
     width: 100%;
     text-align: left; }
-  body.job .cards .card {
-    min-height: 0px;
-    height: 200px; }
   body.job .cards #email-complete {
     margin: 0px; }
   body.job .cards .card {
+    min-height: 0px;
+    height: 150px;
+    width: 150px;
+    margin: 35px;
     border-color: lightgray; }
+    body.job .cards .card:first-child {
+      margin-left: 15px; }
     body.job .cards .card .background {
       background-repeat: no-repeat;
       background-position: center;

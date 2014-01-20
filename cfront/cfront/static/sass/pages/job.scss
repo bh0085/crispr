@@ -47,14 +47,22 @@ body.job{
 	    text-align:left;
 	}
 	.card{
-	    min-height:0px;
-	    height:200px;
 	}
 	#email-complete{
 	    margin:0px;
 	}
 	.card{
+	    
+	    min-height:0px;
+	    height:150px;
+	    width:150px;
+	    margin:35px;
+	    
 	    border-color:lightgray;
+	    
+	    &:first-child{
+		margin-left:15px;
+	    }
 	    .background{
 		background-repeat: no-repeat;
 		background-position:center;
