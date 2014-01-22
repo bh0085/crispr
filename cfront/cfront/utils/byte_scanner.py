@@ -76,8 +76,101 @@ def create_locs_file(genome):
                 print "error on index {0} out of {1}".format(i, l)
         f.write(buf)
 
+
+def create_packed_locs_file(genome):
+    LIBRARY_BYTES_PATH = library_file(genome)
+    #enter only some lines... change later    
+
+
+    bytepack_file_template = "/tmp/ramdisk/crispr/{0}_loci_bytes.dat"
+    fpath = bytepack_file_template.format(genome)
+    twobitfile = "/tmp/ramdisk/genomes/{0}.2bit".format(genome)
+    tb = twobitreader.TwoBitFile(twobitfile)
+    chr_names = [k for k in tb.keys() if not "_" in k]
+    rc_dict ={"A":"T","T":"A","G":"C","C":"G"}
+    mask_regex = re.compile("[^ATGC]")
+    reverse_complement_fun = lambda x:"".join([rc_dict[e] for e in x][::-1])
+
+    print "opening file"
+    count = 0
+    loops = 0
+    with open(fpath,"w") as f:
+        #buf = ""
+        for k in sorted(chr_names):
+            print "loading the chromosome {0}".format(k)
+            c = str(tb[k])
+            l = len(c)
+            try:
+                for i in range(l-2):
+                    rng = c[i:i+2]
+                    if (rng == "GG" or rng == "AG")  and (i >= 21 and i < l-3):
+                        subs = c[i-21:i+2]
+                        if mask_regex.search(subs) is None:
+                            f.write( 
+                                pack_flatfile_bytes(**{"chr":k[3:],
+                                                        "strand":1,
+                                                        "start":i-21,
+                                                        "nrg":c[i-1:i+2]}))
+                            count+=1
+                            #"\t".join([k[3:],str(i - 21),  "+",subs]) + "\n"
+
+                    if (rng == "CC" or rng == "CT") and (i < l-23):
+                        subs = c[i:i+23]
+                        if mask_regex.search(subs) is None:
+                            f.write(
+                                pack_flatfile_bytes(**{"chr":k[3:],
+                                                       "strand":-1,
+                                                       "start":i,
+                                                       "nrg":reverse_complement_fun(c[i:i+3])}))
+                            count+=1
+
+                    loops += 1
+                    if loops % 1000000 == 0:  print "{0} millions of locs written".format(count/1e6)
+                    #if count > 100: break
+                    #count +=1 
+                    #if count % 1e6 == 0:
+                    #   print "{0} millions of locs written".format(count/1e6)
+                    #   f.write(buf)
+                    #   buf = ""
+            except IndexError, e:
+                print "error on index {0} out of {1}".format(i, l)
+
+    
+    bytes_array = np.zeros(count * 5, dtype = np.dtype("uint8"))
+    count_2 = 0
+    for k in sorted(chr_names):
+         print "loading the chromosome {0} for the second time".format(k)
+         c = str(tb[k])
+         l = len(c)
+         for i in range(l-2):
+                 rng = c[i:i+2]
+                 if (rng == "GG" or rng == "AG")  and (i >= 21 and i < l-3):
+                     subs = c[i-21:i+2]
+                     if mask_regex.search(subs) is None:                         
+                         for j in range(5):
+                             bytes_array[5*count_2 + j] = bytes_translation_dict.get(subs[j*4:j*4+4],0)
+                         count_2+=1
+
+                 if (rng == "CC" or rng == "CT") and (i < l-23):
+                     subs = c[i:i+23]
+                     if mask_regex.search(subs) is None:                         
+                         for j in range(5):
+                             bytes_array[5*count_2 + j] = bytes_translation_dict.get(reverse_complement_fun(subs)[j*4:j*4+4],0)
+                         count_2+=1
+
+                 loops += 1
+                 if loops % 1000000 == 0: print "byte array {0}% written".format(float(count_2)/count)
+
+    print count, count_2
+    
+    LIBRARY_BYTES_PATH = library_file(genome)
+    with open(LIBRARY_BYTES_PATH + ".tmp",'w') as f:
+        bytes_array.tofile(f)
+    print "saved lines to a bytes array at {0}".format(LIBRARY_BYTES_PATH)
+
+
 def library_file(genome):
-    LIBRARY_BYTES_PATH =  os.path.join(RD_DATAROOT,"{0}_bytes.npy".format(genome))
+    LIBRARY_BYTES_PATH =  os.path.join(RD_DATAROOT,"{0}_bytes.npy.tmp".format(genome))
     return LIBRARY_BYTES_PATH
 
 def reference_file(genome):
@@ -164,7 +257,109 @@ class TooManyHits(Exception):
     pass
 
 
+
+
+#max value in the chr translation dict is 46656 in binary ... fits in 2 bytes
+chr_translation_dict = dict([ (e,"{0:016b}".format(i)) 
+                              for i,e in enumerate([ l1 + l2 + l3
+                                                     for l1 in " ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+                                                     for l2 in " ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+                                                     for l3 in " ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"])
+
+                        ])
+nt_bits_dict = {
     
+    "A":"00",
+    "T":"01",
+    "G":"10",
+    "C":"11"
+}
+nt_rev_bits_dict = dict([(v,k) for k,v in nt_bits_dict.iteritems()])
+nrg_rev_bits_dict = dict([(k1 + k2 + k3 ,v1 + v2 + v3) 
+                          for k1,v1 in nt_rev_bits_dict.iteritems()
+                          for k2,v2 in nt_rev_bits_dict.iteritems()
+                          for k3,v3 in nt_rev_bits_dict.iteritems()])
+chr_rev_translation_dict = dict([(v,k) for k,v in chr_translation_dict.iteritems()])
+
+def pack_flatfile_bytes(nrg = None,chr = None,start = None,strand = None):
+    '''
+    nrg: 6 bits    
+    strand = +1 : 1, -1: 0z
+    strart = 32 bit rep
+    
+    '''
+    cchars = chr[3:6].upper() if chr[0:3] == "chr" else chr[0:3].upper()
+    chr_bits = chr_translation_dict[(cchars + "   ")[:3]]
+    nrg_bits = nt_bits_dict[nrg[0]] + nt_bits_dict[nrg[1]] + nt_bits_dict[nrg[2]]
+    start_bits = "{0:032b}".format(start)
+    line = start_bits + {1:"01",-1:"00"}.get(strand) + nrg_bits + chr_bits
+    
+    assert len(line) == 16 + 32 + 8
+    bytes = np.array([np.packbits(np.uint8([e=="1" for e in line[i*8:i*8+8]]))[0] for i in range(7)], dtype = np.byte).tostring()
+    return bytes
+    
+
+
+def unpack_flatfile_bytes(bytes_line):
+    bits_string = ''.join(["{0:08b}".format(np.fromstring(bytes_line,dtype="uint8")[i]) for i in range(7)])
+    import struct
+    start, = struct.unpack('<I',bytes_line[:4][::-1])
+    strand = 1 if bits_string[32:34] == "01" else -1
+    nrg_bits = bits_string[34:40]
+    nrg_letters = nrg_rev_bits_dict[nrg_bits]
+    chr_letters = "chr" + chr_rev_translation_dict[bits_string[40:56]].strip()
+    
+    return {"start":start,
+            "strand":strand,
+            "nrg":nrg_letters,
+            "chr":chr_letters}
+    
+def extract_bytes_by_line(line_no, bytes_file_pointer):
+    bytes_file_pointer.seek(line_no * 7)
+    line = bytes_file_pointer.read(7)
+    return line
+
+bytepack_file_template = "/tmp/ramdisk/crispr/{0}_loci_bytes.dat"
+def pack_whole_genome_to_flatfile(genome):
+        
+    fpath = bytepack_file_template.format(genome)
+    with open(fpath, 'w') as f:
+        if genome == "fake":
+            hits = [{"chr":"1",
+                     "start":100,
+                     "strand":-1,
+                     "nrg":"ATG"},
+                    {"chr":"chrX",
+                     "start":20000000l,
+                     "strand":1,
+                     "nrg":"ATG"}]
+            for h in hits:
+                f.write(pack_flatfile_bytes(**h))
+        else:
+            
+            conn = psycopg2.connect("dbname={0} user={1} password={2}"\
+                                    .format(genomes_settings.get("postgres_database"),
+                                            genomes_settings.get("postgres_user"),
+                                            genomes_settings.get("postgres_password")),
+                                    cursor_factory=psycopg2.extras.RealDictCursor)
+            cur = conn.cursor()
+            cur.execute("SELECT * FROM loc_references_{0} limit 10;".format(genome))
+            results = cur.fetchall()
+            for r in results:
+                f.write(pack_flatfile_bytes(r))
+    
+            conn.close()
+    
+            raise Exception()
+        
+    
+def retrieve_lines_from_flatfile(genome, lines):
+    fpath = bytepack_file_template.format(genome)
+    with open(fpath) as f:
+        lines = [unpack_flatfile_bytes(extract_bytes_by_line(e,f)) for e in lines]
+    return lines
+    
+
 def run_sequence_vs_genome_shm(sequence, genome, shm_genome_bytes):
     if not len(sequence) == 20:
         raise Exception("wrong length input sequence")
@@ -178,26 +373,8 @@ def run_sequence_vs_genome_shm(sequence, genome, shm_genome_bytes):
                         
     #loads and queries the correct genomewide library
     matches = query_library_bytes_shm(genome, sequence, shm_genome_bytes)
-    print "matches & length: {0}, {1}".format( matches[0],  len(matches))
-    
-    if len(matches) > 5000:
-        raise TooManyHits()
-
-    conn = psycopg2.connect("dbname={0} user={1} password={2}"\
-                            .format(genomes_settings.get("postgres_database"),
-                                    genomes_settings.get("postgres_user"),
-                                    genomes_settings.get("postgres_password")),
-                            cursor_factory=psycopg2.extras.RealDictCursor)
-    cur = conn.cursor()
-
-
-    print "found {0} matches, scanning for loci in postgres".format(len(matches))
-    #retrieve matches from the reference.
-    cur.execute("SELECT * FROM loc_references_{0} WHERE id = ANY(%s);".format(genome), ([long(m) for m in matches],))
-    results = cur.fetchall()
-    print "done scanning for matches in postgres!"
-    
-    conn.close()
+    sequences =[ bytes_to_sequence(shm_genome_bytes[5*m:5*m+5]) for m in matches]
+    results = retrieve_lines_from_flatfile(genome, matches)
     return results
 
 def sample_sequence():
@@ -224,6 +401,15 @@ def get_library_bytes_shm(genome):
         init_library_bytes_shm(genome)
     return open_libraries[genome]
 
+bytes_rev_translation_dict = dict([(v,k) for k,v in bytes_translation_dict.iteritems()])
+
+def bytes_to_sequence(inp_bytes):
+    assert len(inp_bytes) == 5
+    out_str = ""
+    for b in inp_bytes:
+        out_str +=bytes_rev_translation_dict[b]
+    return out_str
+        
 
 ## NOW TAKES THE SHM ARRAY AS INPUT
 def query_library_bytes_shm(genome, sequence, shm_genome_bytes):
@@ -264,6 +450,17 @@ def main():
         create_locs_file(args.genome)
         init_library_bytes(args.genome)
         init_reference_dictionary(args.genome)
+    if args.program == "flatfile":
+        #print "creating the packed locus file"
+        #create_packed_locs_file(args.genome)
+        #print retrieve_lines_from_flatfile(args.genome,[0,1])
+        shm_genome_bytes = get_library_bytes_shm(args.genome)
+        matches = [0,1,2]
+        sequences =[ bytes_to_sequence(shm_genome_bytes[5*m:5*m+5]) for m in matches]
+        results = retrieve_lines_from_flatfile(args.genome, matches)
+        print results
+        print sequences
+
     if args.program == "ref":
         init_reference_dictionary(args.genome)
     if args.program == "create":
