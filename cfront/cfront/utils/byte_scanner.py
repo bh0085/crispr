@@ -375,6 +375,8 @@ def run_sequence_vs_genome_shm(sequence, genome, shm_genome_bytes):
     matches = query_library_bytes_shm(genome, sequence, shm_genome_bytes)
     sequences =[ bytes_to_sequence(shm_genome_bytes[5*m:5*m+5]) for m in matches]
     results = retrieve_lines_from_flatfile(genome, matches)
+    for i,r in enumerate(results):
+        results[i]["sequence"] = sequences[i]
     return results
 
 def sample_sequence():

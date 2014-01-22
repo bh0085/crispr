@@ -82,7 +82,7 @@ def process_queue(ofs, stride):
 
 
     procs = []
-    max_procs = 3
+    max_procs = 9
     manager = Manager()
     jobs_q = JoinableQueue()
 
