@@ -59,11 +59,16 @@ class SpacerERR(Exception):
         # Call the base class constructor with the parameters it needs
         Exception.__init__(self, message)
 
-        # Now for your custom code...
-        self.spacer = spacer
-        print "deleting spacer with id: {0}\n({1})".format(spacer.id, message)
-        Session.delete(spacer)
-        print "done"
+        if spacer is None:
+            print "Spacer already deleted ... "
+            print "(Message: {0})".format(message)
+        else:            
+            # Now for your custom code...
+            self.spacer = spacer
+            print "deleting spacer with id: {0}\n({1})".format(spacer.id, message)
+            Session.delete(spacer)
+            print "done"
+
 
 import model
 from model import *
