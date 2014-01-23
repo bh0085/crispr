@@ -58,6 +58,10 @@ class Job(Base):
         "monDom5":9,
         "galGal4":10,
         "tair10":11,
+        "canFam3":12,
+        "aAegL2":13,
+        "aGamP3":14,
+        "gasAcu1":15,
     }
 
     ERR_BADINPUT = "Problem with query input: "

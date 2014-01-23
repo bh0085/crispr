@@ -131,6 +131,7 @@ def process_queue(ofs, stride):
 
                 #spacers may be deleted from the session in the interior of this loop
 
+                print "GENOME NAME: {0}".format(top_job.genome_name)
                 for i,s in enumerate([s for s in top_job.spacers if s.score is None][:2]):
                     jobs_q.put({"genome_name":s.job.genome_name,
                                 "guide":s.guide,
@@ -180,6 +181,7 @@ def process_queue(ofs, stride):
               print "excepted a spacer error for spacer id {0}".format(Session.query(Spacer).get(sid))
               print e.message
           except Exception, e:
+              
               print "EXCEPTED AN UNKNOWN ERROR {0}".format(sid)
               print "EXCEPTED AN UNKNOWN ERROR"
               print "EXCEPTED AN UNKNOWN ERROR"
