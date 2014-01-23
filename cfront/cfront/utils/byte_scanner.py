@@ -13,6 +13,7 @@ EG:
 
 """
 
+import json
 import psycopg2
 from scipy import sparse
 import argparse
@@ -268,7 +269,7 @@ def unpack_flatfile_bytes(bytes_line):
     strand = 1 if bits_string[32:34] == "01" else -1
     nrg_bits = bits_string[34:40]
     nrg_letters = nrg_rev_bits_dict[nrg_bits]
-    chr_letters = "chr" + chr_rev_translation_dict[bits_string[40:56]].strip()
+    chr_letters = chr_rev_translation_dict[bits_string[40:56]].strip()
     
     return {"start":start,
             "strand":strand,
@@ -338,6 +339,19 @@ def run_sequence_vs_genome_shm(sequence, genome, shm_genome_bytes):
     results = retrieve_lines_from_flatfile(genome, matches)
     for i,r in enumerate(results):
         results[i]["sequence"] = sequences[i]
+        
+    if os.path.isfile(chr_keys_file(genome)):
+        with open(chr_keys_file(genome)) as f:
+            chr_keys = json.loads(f.read())
+        chr_reverse_translation = dict([(v,k) for k,v in chr_keys.iteritems()])
+        for r in results:
+            r["chr"]  = chr_reverse_translation[r["chr"]]
+
+    else:
+        for r in results:
+            if not r["chr"][:3] == "chr":
+                 r["chr"] = "chr" + r["chr"]
+
     return results
 
 def sample_sequence():
