@@ -429,7 +429,9 @@ def query_library_bytes_shm(genome, sequence, shm_genome_bytes):
     n_matches = bc.striding_8bit_comparison(f,g,h,mismatches_threshold)
 
     matches_list = h[:n_matches]
+    print "GENOME: {0}".format(genome)
     print "N MATCHES: ", len(matches_list)
+
     #return matches_list[:100]
     return matches_list
 
