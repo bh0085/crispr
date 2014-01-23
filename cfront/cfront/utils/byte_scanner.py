@@ -37,6 +37,11 @@ bytes_translation_dict = dict([(e,i) for i,e in enumerate([l0+l1+l2+l3 for l0 in
 open_libraries = {}
 open_references = {}
 
+def chr_keys_file(genome):
+    if not os.path.isdir(os.path.join(RD_DATAROOT,genome)):
+        os.makedirs(os.path.join(RD_DATAROOT,genome))
+    return os.path.join(RD_DATAROOT,"{0}/chr_keys.json".format(genome))    
+
 
 def raw_locs_file(genome):
     if not os.path.isdir(os.path.join(RD_DATAROOT,genome)):
@@ -94,6 +99,20 @@ def create_packed_locs_file(genome):
     print "opening file"
     count = 0
     loops = 0
+
+    chr_keys = sorted(chr_names)
+    possible_keys = [l1 + l2 + l3 for l1 in "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+                     for l2 in "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"     
+                     for l3 in "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"]
+    if len(chr_keys) > len(possible_keys) : raise Exception("TOO MANY CHROMOSOMES")
+
+    chr_keys_translation = dict([(e,possible_keys[i]) for i,e in enumerate(chr_keys)])
+
+
+    import json
+    with open(chr_keys_file(genome),'w') as f:
+        f.write(json.dumps(chr_keys_translation))
+    
     with open(fpath,"w") as f:
         #buf = ""
         for k in sorted(chr_names):
@@ -107,7 +126,7 @@ def create_packed_locs_file(genome):
                         subs = c[i-21:i+2]
                         if mask_regex.search(subs) is None:
                             f.write( 
-                                pack_flatfile_bytes(**{"chr":k[3:],
+                                pack_flatfile_bytes(**{"chr":"{0}".format(chr_keys_translation[k]),
                                                         "strand":1,
                                                         "start":i-21,
                                                         "nrg":c[i-1:i+2]}))
@@ -118,7 +137,7 @@ def create_packed_locs_file(genome):
                         subs = c[i:i+23]
                         if mask_regex.search(subs) is None:
                             f.write(
-                                pack_flatfile_bytes(**{"chr":k[3:],
+                                pack_flatfile_bytes(**{"chr":"{0}".format(chr_keys_translation[k]),
                                                        "strand":-1,
                                                        "start":i,
                                                        "nrg":reverse_complement_fun(c[i:i+3])}))
@@ -126,12 +145,6 @@ def create_packed_locs_file(genome):
 
                     loops += 1
                     if loops % 1000000 == 0:  print "{0} millions of locs written".format(count/1e6)
-                    #if count > 100: break
-                    #count +=1 
-                    #if count % 1e6 == 0:
-                    #   print "{0} millions of locs written".format(count/1e6)
-                    #   f.write(buf)
-                    #   buf = ""
             except IndexError, e:
                 print "error on index {0} out of {1}".format(i, l)
 
@@ -199,58 +212,6 @@ def init_library_bytes(genome):
     with open(LIBRARY_BYTES_PATH,'w') as f:
         bytes_array.tofile(f)
     print "saved lines to a bytes array at {0}".format(LIBRARY_BYTES_PATH)
-    
-def init_reference_dictionary(genome):
-    REFERENCE_PATH = reference_file(genome)
-
-    conn = psycopg2.connect("dbname={0} user={1} password={2}"\
-                            .format(genomes_settings.get("postgres_database"),
-                                    genomes_settings.get("postgres_user"),
-                                    genomes_settings.get("postgres_password")),
-                            cursor_factory=psycopg2.extras.RealDictCursor)
-    cur = conn.cursor()
-    
-    init_table = """
-    DROP TABLE IF EXISTS loc_references_{0};
-    CREATE TABLE loc_references_{0} (
-    id int PRIMARY KEY,
-    strand SMALLINT not null,
-    chr  VARCHAR(25) not null,
-    sequence VARCHAR(20) not null,
-    nrg VARCHAR(3) not null,
-    start INT not null
-    );""".format(genome)
-
-    cur.execute(init_table);
-    buf = StringIO.StringIO()
-    cols = ["id","chr", "start", "strand", "sequence", "nrg"] 
-
-    with open(raw_locs_file(genome)) as f:
-        for i,l in enumerate(f):
-            d = dict(zip(["chr","start","strand","sequence"],
-                                  [e.strip() for e in l.split("\t")]))
-            d["nrg"] = d["sequence"][-3:]
-            d["sequence"] = d["sequence"][:-3]
-            d["chr"] = d["chr"] if d["chr"][0:3] == "chr" else "chr" + d["chr"]
-            if len(d["chr"])> 23 : continue
-            d["strand"] = 1 if d["strand"] == "+" else -1
-        
-            buffered_row = "\t".join([str(i)] + [str(d[key]) for key in cols[1:]]) + "\n"
-            buf.write(buffered_row)
-            
-            if i %1e6 == 0:
-                buf.seek(0)
-                cur.copy_from(buf,"loc_references_{0}".format(genome), columns = cols)
-                buf.close()
-                buf = StringIO.StringIO()
-                print "{0} millions of lines of reference written".format(i/1e6)
-
-    buf.seek(0)
-    cur.copy_from(buf,"loc_references_{0}".format(genome), columns = cols)
-    buf.close()
-    conn.commit()
-            
-
 
 
 class TooManyHits(Exception):
@@ -454,14 +415,14 @@ def main():
         init_reference_dictionary(args.genome)
     if args.program == "flatfile":
         #print "creating the packed locus file"
-        #create_packed_locs_file(args.genome)
+        create_packed_locs_file(args.genome)
         #print retrieve_lines_from_flatfile(args.genome,[0,1])
-        shm_genome_bytes = get_library_bytes_shm(args.genome)
-        matches = [0,1,2]
-        sequences =[ bytes_to_sequence(shm_genome_bytes[5*m:5*m+5]) for m in matches]
-        results = retrieve_lines_from_flatfile(args.genome, matches)
-        print results
-        print sequences
+        #shm_genome_bytes = get_library_bytes_shm(args.genome)
+        #matches = [0,1,2]
+        #sequences =[ bytes_to_sequence(shm_genome_bytes[5*m:5*m+5]) for m in matches]
+        #results = retrieve_lines_from_flatfile(args.genome, matches)
+        #print results
+        #print sequences
 
     if args.program == "ref":
         init_reference_dictionary(args.genome)

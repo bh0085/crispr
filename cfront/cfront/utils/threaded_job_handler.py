@@ -20,7 +20,7 @@ def init_env(p):
 def queue_loop(ofs,stride):
     while True:
         process_queue(ofs,stride)
-        time.sleep(2)
+        time.sleep(3)
             
 
 def worker(jobs_q,**genomes):

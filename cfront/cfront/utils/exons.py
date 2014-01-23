@@ -222,6 +222,35 @@ def populate_exons_ensembl(genome_name):
     conn.commit()
     print "populated exons for {0}".format(genome_name)
 
+
+def populate_exons_blank(genome_name):
+    conn = psycopg2.connect("dbname={0} user={1} password={2}"\
+                            .format(genomes_settings.get("postgres_database"),
+                                    genomes_settings.get("postgres_user"),
+                                    genomes_settings.get("postgres_password")))
+    cur = conn.cursor()
+
+    init_table = """
+    DROP TABLE IF EXISTS exon_{0};
+    CREATE TABLE exon_{0} (
+    id int PRIMARY KEY,
+    gene_name VARCHAR(50) not null,
+    gene_common_name VARCHAR(50),
+    exon_number SMALLINT not null,
+    chr  VARCHAR(25) not null,
+    strand SMALLINT not null,
+    exon_start INT NOT NULL,
+    exon_end INT NOT NULL,
+    protein_id VARCHAR(50),
+    cds_start INT NOT NULL,
+    cds_end INT NOT NULL
+    );
+    
+    """.format(genome_name)
+    cur.execute(init_table);
+    conn.commit()
+    print "populated fake exons table for {0}".format(genome_name)
+
 def create_indexes(genome_name):
     conn = psycopg2.connect("dbname={0} user={1} password={2}"\
                             .format(genomes_settings.get("postgres_database"),
@@ -259,7 +288,9 @@ if __name__ =="__main__":
         populate_exons(args.genome_name)
     elif args.source =="ensembl":
         populate_exons_ensembl(args.genome_name)
-        
+    elif args.source =="blank":
+        populate_exons_blank(args.genome_name)
+
     create_indexes(args.genome_name)
 
     
