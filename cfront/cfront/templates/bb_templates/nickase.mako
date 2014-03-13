@@ -102,7 +102,7 @@
 
 	<dl>
 	  <dt>quality</dt><dd>{{reverse_guide.quality}}</dd>
-	  <dt>cuts at</dt><dd>{{reverse_guide.cut_site}}</dd>
+	  <dt>cuts after position</dt><dd>{{reverse_guide.cut_site}} in query</dd>
 	  <dt>sequence</dt><dd class="sequence">{{reverse_guide.sequence}}</dd>
 	  <dt># offtargets</dt><dd>{{reverse_guide.n_offtargets}}</dd>
 	  <dt># genic offtargets</dt><dd>{{reverse_guide.n_genic_offtargets}}</dd>
@@ -116,7 +116,7 @@
       <h5 class="header">Guide B</h5>
 	<dl>
 	  <dt>quality</dt><dd>{{forward_guide.quality}}</dd>
-	  <dt>cut at</dt><dd>{{forward_guide.cut_site}}</dd>
+	  <dt>cuts after position</dt><dd>{{forward_guide.cut_site}} in query</dd>
 	  <dt>sequence</dt><dd class="sequence">{{forward_guide.sequence}}</dd>
 	  <dt># offtargets</dt><dd>{{forward_guide.n_offtargets}}</dd>
 	  <dt># genic offtargets</dt><dd>{{forward_guide.n_genic_offtargets}}</dd>

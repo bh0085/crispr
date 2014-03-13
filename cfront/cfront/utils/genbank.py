@@ -4,6 +4,10 @@ import nickase
 import json                                
 from Bio import SeqFeature, SeqRecord, Seq
 
+#important:
+#cut site is zero based... the base __before__ the first base in the span
+#all starts are zero based, so in th
+
 def all_nicks_to_GB(jobid):
     job = Session.query(Job).get(jobid)
     gb_seq = Seq.Seq(job.sequence,alphabet=Seq.Alphabet.DNAAlphabet())
@@ -18,23 +22,27 @@ def all_nicks_to_GB(jobid):
         sf = n.spacer1
         sr = n.spacer2
         
+        #denotes first base of the span... cut_site +1
+        #span_left = min(sf.cut_site+1, sr.cut_site+1)
+        #span_right = max(sf.cut_site, sr.cut_site)
+    
         span_left = min(sf.cut_site, sr.cut_site)
-        span_right = max(sf.cut_site, sr.cut_site)
+        span_right = max(sf.cut_site -1, sr.cut_site -1)
         
         #in the genbank file, "FWD GUIDE" refers to the guide with FWD strand PAM
         qualifiers = {
             "note":"DS-break overhang",
-            "fwd_guide_cuts":sf.cut_site,
+            "fwd_guide_cuts_before":sf.cut_site+1,
             "fwd_guide_id":sf.id,
             "fwd_guide_score":sf.formatted_score,
             "fwd_guide_n_offtargets":sf.n_offtargets,
-            "rev_guide_cuts":sr.cut_site,
+            "rev_guide_cuts_before":sr.cut_site+1,
             "rev_guide_id":sr.id,
             "rev_guide_score":sr.formatted_score,
             "rev_guide_n_offtargets":sf.n_offtargets
         }
         seq_record.features.append( 
-            SeqFeature.SeqFeature(location = SeqFeature.FeatureLocation(span_left, span_right), 
+            SeqFeature.SeqFeature(location = SeqFeature.FeatureLocation(span_left, span_right+1), 
                                   qualifiers = qualifiers,
                                   type="misc_feature"))
 
@@ -76,9 +84,9 @@ def one_nick_to_GB(job, sfwd, srev):
 
     
     span_left = min(sfwd.cut_site, srev.cut_site)
-    span_right = max(sfwd.cut_site, srev.cut_site)
+    span_right = max(sfwd.cut_site -1, srev.cut_site -1)
 
-    description = """double nickase analysis for job "{0}" a pair of guides nicking the query input at +{1} bp and -{2} bp""".format(job.name, srev.cut_site, sfwd.cut_site)
+    description = """double nickase analysis for job "{0}" a pair of guides nicking the query input before positions +{1} bp and -{2} bp""".format(job.name, srev.cut_site +1, sfwd.cut_site +1)
     
     seq_record = SeqRecord.SeqRecord(gb_seq, 
                                      id = job.key, 
@@ -87,25 +95,25 @@ def one_nick_to_GB(job, sfwd, srev):
 
 
     seq_record.features.append(  SeqFeature.SeqFeature( 
-        location= SeqFeature.FeatureLocation(span_left, span_right), 
+        location= SeqFeature.FeatureLocation(span_left, span_right+1), 
         qualifiers = {"note":json.dumps({"guide_fwd_score":sfwd.score,
                                          "guide_rev_score":srev.score})},
         type="misc_feature"))
 
     seq_record.features.append( SeqFeature.SeqFeature(
-        location = SeqFeature.FeatureLocation(sfwd.start,sfwd.start+23),
+        location = SeqFeature.FeatureLocation(sfwd.start,sfwd.start+20),
         type="protein_bind",
         qualifiers={
-            "bound_moiety":"CRISPR forward-strand guide {0}".format( sfwd.sequence),
+            "bound_moiety":"CRISPR forward-strand guide {0}".format( sfwd.guide),
             "note":json.dumps(dict(score = sfwd.formatted_score))
         }
     ))
     
     seq_record.features.append( SeqFeature.SeqFeature(
-        location = SeqFeature.FeatureLocation(srev.start,srev.start+23),
+        location = SeqFeature.FeatureLocation(srev.start+3,srev.start+23),
         type="protein_bind",
         qualifiers={
-            "bound_moiety":"CRISPR reverse-strand guide {0}".format( srev.sequence),
+            "bound_moiety":"CRISPR reverse-strand guide {0}".format( srev.guide),
             "note":json.dumps(dict(score = srev.formatted_score))
         }
     ))
