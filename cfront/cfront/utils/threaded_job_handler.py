@@ -14,7 +14,10 @@ from multiprocessing import Process, Manager, Value, Array, JoinableQueue, Queue
 import json
 import redis
 
+redis_key = None
 def init_env(p):
+    global redis_key
+    redis_key = "cfront-{0}:job:hits".format("dev" if cfront_settings.get("debug_mode",False) else "prod")
     env = bootstrap(p)
 
 def queue_loop(ofs,stride):
@@ -36,13 +39,12 @@ def worker(jobs_q,**genomes):
             guide = job["guide"]
             genome_name = job["genome_name"]  
             results = genome_db.fetch_hits_in_thread_shm(guide, genome_name, genomes[genome_name])   
-            r.rpush(
-                "cfront-{0}:job:hits".format("dev" if cfront_settings.get("debug_mode",False) else "prod"),
-                json.dumps({"spacerid": spacerid,
-                            "results":results}))
+            print "SPACER ID IN WORKER is {0}".format(spacerid)
+            r.rpush(redis_key,
+                    json.dumps({"spacerid": spacerid,
+                                "results":results}))
                     
         jobs_q.task_done()
-
     return
 
 def process_queue(ofs, stride):
@@ -91,7 +93,7 @@ def process_queue(ofs, stride):
 
     dcount = 0 
     while(1):
-        item_json = r.lpop("cfront-{0}:job:hits".format("dev" if cfront_settings.get("debug_mode",False) else "prod"))
+        item_json = r.lpop(redis_key)
         dcount += 1
         if item_json == None:
             break
@@ -132,6 +134,8 @@ def process_queue(ofs, stride):
                 #spacers may be deleted from the session in the interior of this loop
 
                 print "GENOME NAME: {0}".format(top_job.genome_name)
+                print "SAVING ID INTO QUEUE", top_job.spacers[0] 
+            
                 for i,s in enumerate([s for s in top_job.spacers if s.score is None][:2]):
                     jobs_q.put({"genome_name":s.job.genome_name,
                                 "guide":s.guide,
@@ -146,9 +150,9 @@ def process_queue(ofs, stride):
 
     
 
-
+    print "REDIS KEY IS: {0}".format(redis_key)
     while(1):
-       item_json = r.lpop("cfront-{0}:job:hits".format("dev" if cfront_settings.get("debug_mode",False) else "prod"))
+       item_json = r.lpop(redis_key)
        
        if item_json == None:
            break
@@ -162,6 +166,7 @@ def process_queue(ofs, stride):
           success = result[0]
           hits = result[1]
           sid = item["spacerid"]
+          print "SID", sid
           print("completing {0}".format(sid))
           try:
               if not success:

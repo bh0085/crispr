@@ -73,6 +73,10 @@ def process_hits_for_spacer(spacer_id, hits):
                                     for let in e["sequence"]] for e in hits])
 
         spacer = Session.query(Spacer).get(spacer_id)
+        print spacer_id
+        if spacer is None:
+            print "SPACER IS NONE for ID {0}".format(spacer_id)
+
         spacer_array = np.array([translation.get(let,4) for let in spacer.guide])
 
         nz = array(nonzero(not_equal(spacer_array[newaxis,:],hits_array))).transpose()
@@ -128,7 +132,7 @@ def process_hits_for_spacer(spacer_id, hits):
         
         time = datetime.datetime.utcnow()
         #FIND EXONS
-        if len(spacer.hits) > 0:
+        if len(spacer.hits)  > 0 and spacer.job.genome_name in ["mm9", "hg19"]:
             genes_by_hitid = exons.get_hit_genes(spacer.hits, spacer.job.genome_name)
             for h in spacer.hits:
                 h.gene = genes_by_hitid.get(h.id)
