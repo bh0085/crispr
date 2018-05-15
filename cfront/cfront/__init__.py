@@ -44,6 +44,8 @@ def main(global_config, **settings):
     Base.metadata.bind = engine
     config = Configurator(settings=settings)
 
+    config.include('pyramid_mako')
+
     #static routes
     config.add_static_view('/css', 'static/css', cache_max_age=3600)
     config.add_static_view('/js', 'static/js', cache_max_age=3600)

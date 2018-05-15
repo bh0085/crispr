@@ -48,3 +48,7 @@ def main(argv=sys.argv):
         #import cfront.utils.byte_scanner as byte_scanner
 
         print "please run exons -g {0}".format(g)     
+
+
+if __name__=="__main__":
+    main()

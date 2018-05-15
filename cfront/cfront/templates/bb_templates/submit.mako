@@ -49,7 +49,7 @@
 	  </div>
 	</div>
 	<div class="control-group submit-group">
-	  <div class="controls"><input type="submit"></input>
+	  <div class="controls"><input disabled=true  type="submit"></input>
 	  </div>
 	</div>
       </form>
@@ -80,7 +80,7 @@
 	  </div> 
 	</div>
 	<div class="control-group submit-group">
-	  <div class="controls"><input type="submit"></input>
+	  <div class="controls"><input disabled=true type="submit"></input>
 	  </div>
 	</div>
       </form>

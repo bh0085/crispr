@@ -4,7 +4,7 @@ import psycopg2
 HUMAN_GENES=os.path.join(os.environ["HOME"],"data/zlab/ben/ucsc/hg19-genes.tsv")
 
 def populate_exons():
-    conn = psycopg2.connect("dbname=vineeta user=ben password=random12345")
+    conn = psycopg2.connect("dbname=vineeta user=ben_coolship_io password=random12345")
     cur = conn.cursor()
 
     init_table = """
@@ -57,7 +57,7 @@ def populate_exons():
     conn.commit()
 
 def create_indexes():
-    conn = psycopg2.connect("dbname=vineeta user=ben password=random12345")
+    conn = psycopg2.connect("dbname=vineeta user=ben_coolship_io password=random12345")
     cur = conn.cursor()
     cur.execute("""
     CREATE INDEX exon_start_idx ON exon_hg19(exon_start);

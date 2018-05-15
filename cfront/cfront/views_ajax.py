@@ -20,7 +20,7 @@ def spacer_retrieve_regions(request):
     spacer_id = request.matchdict['spacer_id']
     spacer= Session.query(Spacer).get(spacer_id)
     genome = spacer.job.genome_name
-    genome_path = "/tmp/ramdisk/genomes/{0}.2bit".format(spacer.job.genome_name)
+    genome_path = "/fastdata/genomes/{0}.2bit".format(spacer.job.genome_name)
     tbf = twobitreader.TwoBitFile(genome_path)
     hits = spacer.hits
     return [{"sequence":tbf.get(h.chr)[h.start:h.start+100]} for h in hits[:100]]

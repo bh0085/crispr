@@ -1,7 +1,7 @@
 <script type="unknown" id="about-section-template">
   <div class="row med-margin-top">
     <div id="purpose" class="span6 offset2">
-      <h1>About CRISPR Design</h1>
+      <h1>About CRISPR.MIT.EDU</h1>
       <h3>Purpose of the CRISPR Design Tool</h3>
       <p>The CRISPR design tool is a web tool crafted to simplify the process of CRISPR guide selection in an input DNA sequence by (i) discovering possible offtargets genome-wide, (ii) highlighting guides with high target specificity, and (iii) flagging guides with numerous or genic offtargets in target genomes.</p>
     </div>

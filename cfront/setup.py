@@ -16,6 +16,12 @@ requires = [
     'waitress',
     'psycopg2',
     'cython',
+    'twobitreader',
+    'sharedmem',
+    'biopython',
+    'redis',
+    'pyramid_mako',
+    'scipy',
     ]
 
 setup(name='cfront',

@@ -114,7 +114,7 @@ var SubmitV = Backbone.View.extend({
 
 	self = this;
 	genome_names = sessionInfo.genome_names
-	descriptive_names = {hg19:"human", mm9:"mouse", danRer7:"zebrafish", rn5:"rat",  ce10:"c. elegans", oryCun2:"rabbit",susScr3:"pig",dm3:"fly", monDom5:"possum",galGal4:"chicken", tair10:"a. thaliana",canFam3:"dog", aAegL2:"mosquito (Aedes aegypti)",aGamP3:"mosquito (Anopheles gambiae)", gasAcu1:"stickleback"}
+	descriptive_names = {hg38:"human", mm10:"mouse", danRer11:"zebrafish", rn5:"rat",  ce10:"c. elegans", oryCun2:"rabbit",susScr11:"pig",dm6:"fly", monDom5:"possum",galGal4:"chicken", tair10:"a. thaliana",canFam3:"dog", aAegL2:"mosquito (Aedes aegypti)",aGamP3:"mosquito (Anopheles gambiae)", gasAcu1:"stickleback"}
 
 	control_template =  $("#genome-control-template").html()
 	_.each(this.$(".genome-controls"),

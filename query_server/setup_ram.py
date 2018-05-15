@@ -96,7 +96,7 @@ def load_flatfile(table, nlines):
     tests_array = np.array([translate(e["guide"]) for e in tests])
     times +=[utcnow()]
     min_matches = 12
-    sims_1 = np.greater_equal(np.sum(np.equal(all_seqs-tests_array[np.newaxis,,:],0)),min_matches)
+    sims_1 = np.greater_equal(np.sum(np.equal(all_seqs-tests_array[np.newaxis,:,:],0)),min_matches)
     times +=[utcnow()]
     matches_1 = np.nonzero(sims_1)
     times+= [utcnow()]
@@ -120,7 +120,7 @@ def compute_similarities(table, nlines):
     labels.append("start")
 
     global conn, cur, locsfile
-    conn = psycopg2.connect("dbname=vineeta user=ben password=random12345")
+    conn = psycopg2.connect("dbname=vineeta user=ben_coolship_io password=random12345")
     cur = conn.cursor()
 
     cur.execute(cmd)

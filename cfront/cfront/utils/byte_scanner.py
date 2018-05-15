@@ -28,7 +28,7 @@ import sharedmem as shm
 import numpy as np
 import multiprocessing as mp
 
-RD_DATAROOT = "/tmp/ramdisk/crispr"
+RD_DATAROOT = "/fastdata/crispr"
 if not os.path.isdir(RD_DATAROOT):
     os.makedirs(RD_DATAROOT)
 
@@ -51,7 +51,7 @@ def raw_locs_file(genome):
 
 def create_locs_file(genome):
     rlf = raw_locs_file(genome)
-    twobitfile = "/tmp/ramdisk/genomes/{0}.2bit".format(genome)
+    twobitfile = "/fastdata/genomes/{0}.2bit".format(genome)
     tb = twobitreader.TwoBitFile(twobitfile)
     chr_names = [k for k in tb.keys() if not "_" in k]
     rc_dict ={"A":"T","T":"A","G":"C","C":"G"}
@@ -88,9 +88,9 @@ def create_packed_locs_file(genome):
     #enter only some lines... change later    
 
 
-    bytepack_file_template = "/tmp/ramdisk/crispr/{0}_loci_bytes.dat"
+    bytepack_file_template = "/fastdata/crispr/{0}_loci_bytes.dat"
     fpath = bytepack_file_template.format(genome)
-    twobitfile = "/tmp/ramdisk/genomes/{0}.2bit".format(genome)
+    twobitfile = "/fastdata/genomes/{0}.2bit".format(genome)
     tb = twobitreader.TwoBitFile(twobitfile)
     chr_names = [k for k in tb.keys() if not "_" in k]
     rc_dict ={"A":"T","T":"A","G":"C","C":"G"}
@@ -281,7 +281,7 @@ def extract_bytes_by_line(line_no, bytes_file_pointer):
     line = bytes_file_pointer.read(7)
     return line
 
-bytepack_file_template = "/tmp/ramdisk/crispr/{0}_loci_bytes.dat"
+bytepack_file_template = "/fastdata/crispr/{0}_loci_bytes.dat"
 def pack_whole_genome_to_flatfile(genome):
         
     fpath = bytepack_file_template.format(genome)
@@ -371,7 +371,7 @@ def init_library_bytes_shm(genome):
     global open_libraries
     lfpath  = library_file(genome)
     with open(lfpath) as f:
-        open_libraries[genome] = shm.fromfile(f,dtype = np.dtype("uint8"))
+        open_libraries[genome] = np.fromfile(f,dtype = np.dtype("uint8"))
 
 def get_library_bytes_shm(genome):
     if needs_init_library_bytes_shm(genome):

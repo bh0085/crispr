@@ -5,7 +5,7 @@ from cfront import genomes_settings
 from cfront.models import JobERR
 
 
-TMPPATH = "/tmp/ramdisk/cfront/webserver"
+TMPPATH = "/fastdata/webserver"
 if not os.path.isdir(TMPPATH):
     os.makedirs(TMPPATH)
 def check_genome(sequence, genome):
@@ -27,6 +27,8 @@ def check_genome(sequence, genome):
     print genomes_settings.get("gfport_root")
     print "HIHI"
     prc = spc.Popen(cmd,shell = True, stdout = spc.PIPE, cwd = genomes_settings.get("gfport_root"))
+
+    print cmd
     prc.communicate()
     with open(tmpfile_out) as f:
         content = f.read()

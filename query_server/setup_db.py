@@ -1,4 +1,4 @@
-q#!/usr/bin/env python
+#!/usr/bin/env python
 '''
 populates a postgres database with CRISPR loci
 computes the distribution of letters in each locus
@@ -12,7 +12,7 @@ global cur
 global locsfile
 
 
-DATAPATH=os.path.join(os.environ['HOME'],'data/zlab/vineeta')
+DATAPATH=os.path.join(os.environ['HOME'],'/data/zlab/vineeta')
 
 
 def populate_trgm_table(table,nlines):
@@ -176,7 +176,7 @@ def main():
         exit()
 
     global conn, cur, locsfile
-    conn = psycopg2.connect("dbname=vineeta user=ben password=random12345")
+    conn = psycopg2.connect("dbname=vineeta user=ben_coolship_io password=random12345")
     cur = conn.cursor()
     
     if args.file:

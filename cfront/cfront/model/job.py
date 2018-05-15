@@ -47,21 +47,15 @@ class Job(Base):
 
     #fake enum type for genomes
     GENOMES={
-        "hg19":1,
-        "mm9":2,
+        "hg38":1,
+        "mm10":2,
         "rn5":3,
-        "danRer7":4,
+        "danRer11":4,
         "ce10":5,
-        "dm3":6,
-        "susScr3":7,
+        "dm6":6,
+        "susScr11":7,
         "oryCun2":8,
         "monDom5":9,
-        "galGal4":10,
-        "tair10":11,
-        "canFam3":12,
-        "aAegL2":13,
-        "aGamP3":14,
-        "gasAcu1":15,
     }
 
     ERR_BADINPUT = "Problem with query input: "

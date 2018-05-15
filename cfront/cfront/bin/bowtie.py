@@ -8,10 +8,10 @@ from cfront import cfront_settings
 #ROOT = os.environ["HOME"]
 DATAPATH = os.environ["CFRONTDATA"]
 
-TMPPATH = "/tmp/ramdisk/cfront/bowtie"
+TMPPATH = "/fastadata/bowtie"
 if not os.path.isdir(TMPPATH):
     os.makedirs(TMPPATH)
-GENOMEPATH = "/tmp/ramdisk/genomes/"
+GENOMEPATH = "/fastdata/genomes/"
 
 def run_queries(queries, genome):
 
@@ -43,7 +43,7 @@ def run_queries(queries, genome):
 
     #cmd = "bowtie -n 3 -l 18 {2} -f {0} --quiet -a {1}".format(tmpfile_in,tmpfile_out)
     cmd = "bowtie -n 2 -l 18 {2} -f {0} --quiet -a {1}".format(tmpfile_in,tmpfile_out,genome_string)
-    prc = spc.Popen(cmd, shell=True, cwd="/tmp/ramdisk/bowtie-indexes")
+    prc = spc.Popen(cmd, shell=True, cwd="/fastadata/bowtie-indexes")
     prc.communicate()
 
     with open(tmpfile_out) as f:
