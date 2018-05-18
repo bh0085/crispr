@@ -15,13 +15,13 @@
 	<div class="control-group">
 	  <span class="control-label">search name *</span>
 	  <div class="controls">
-	    <input name="name" id="search-name" type="text" required="true" placeholder="name" value=${"ben_jobX" if cfront_settings.get("debug_mode", False) else ""}>
+	    <input name="name" id="search-name" type="text" required="true" placeholder="name" value=${"" if cfront_settings.get("debug_mode", False) else ""}>
 	  </div>
 	</div>
 	<div class="control-group">
 	  <span class="control-label">email address *</span>
 	  <div class="controls">
-	    <input name="email" id="email-address" type="email" required="true" placeholder="email" value=${"crispr.design@gmail.com" if cfront_settings.get("debug_mode", False) else ""}>
+	    <input name="email" id="email-address" type="email" required="true" placeholder="email" value=${"" if cfront_settings.get("debug_mode", False) else ""}>
 	  </div>
 	</div>
 	<div class="control-group">
@@ -49,12 +49,12 @@
 	  </div>
 	</div>
 	<div class="control-group submit-group">
-	  <div class="controls"><input disabled=true  type="submit"></input>
+	  <div class="controls"><input  ${"" if cfront_settings.get("debug_mode", False) else ""}  type="submit"></input>
 	  </div>
 	</div>
       </form>
     </div>
-    <div id="submit-many" name="submit-fasta" class="tab-pane scrolly-content">
+    <div id="submit-many" disabled=true name="submit-fasta" class="tab-pane scrolly-content">
       <div class="header-description">Submit multiple sequences in Fasta format for CRISPR design and analysis.</div>
       <form class="form-horizontal" name="submit-fasta" >
 
@@ -69,7 +69,7 @@
 	<div class="control-group">
 	  <span class="control-label">email address *</span>
 	  <div class="controls">
-	    <input name="email" id="email-address-2" type="email" required="true" placeholder="email" value=${"crispr.design@gmail.com" if cfront_settings.get("debug_mode", False) else ""}>
+	    <input name="email" id="email-address-2" type="email" required="true" placeholder="email" value=${"" if cfront_settings.get("debug_mode", False) else ""}>
 	  </div>
 	</div>
 	<div class="control-group">
@@ -80,7 +80,7 @@
 	  </div> 
 	</div>
 	<div class="control-group submit-group">
-	  <div class="controls"><input disabled=true type="submit"></input>
+	  <div class="controls"><input  ${"" if cfront_settings.get("debug_mode", False) else ""} type="submit"></input>
 	  </div>
 	</div>
       </form>

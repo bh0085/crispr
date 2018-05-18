@@ -34,12 +34,12 @@
 
 
     %if request.matched_route.name == "submit":
-<div class="alert alert-warning alpha-warning header">
+<div class="alert alert-info alpha-warning header">
   <button type="button" class="close" data-dismiss="alert">&times;</button>
   <div class="content showing-less">
     <span class="text-fixed-width-content">
 
-<strong>2018/05/14 TEMPORARILY IN READ ONLY MODE</strong> Greetings CRISPR ENGINEERS! As this tool re-enters active development, crispr.mit.edu is currently in a temporary "READ-ONLY" mode. You will still be able to view all previous job results, but we will temporarily not be accepting new submissions while we reconfigure our server. Thank you for your patience, and please email benh@broadinstitute.org with any questions or feature requests for how we can make the tool work better for you! --BEN
+<strong>2018/05/16 BACK ONLINE</strong> Greetings CRISPR ENGINEERS! We're happy to let you know that the server at crispr.mit.edu is back up and fully operational. Active development of new features will soon be underway. If you have any questions or feature requests for how we can make the tool work better for you, please drop us an email. benh@broadinstitute.org Enjoy! --BEN
 </span>
 
 
