@@ -43,7 +43,7 @@
 
     <script src="/js/deps/bootstrap/bootstrap.min.js"></script>
     <script type="text/javascript" src="/js/deps/jquery-svg/jquery.svg.min.js"></script>
-    <script type="text/javascript" src="/js/deps/sprintf.js/src/sprintf.min.js"></script>
+    <script type="text/javascript" src="/js/deps/sprintf.min.js"></script>
 
     <%include file="models.html"/>
     <%include file="backbone.mako"/>
