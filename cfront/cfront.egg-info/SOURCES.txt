@@ -8,6 +8,7 @@ readonly.ini
 setup.cfg
 setup.py
 cfront/__init__.py
+cfront/initializedb.py
 cfront/models.py
 cfront/route_factories.py
 cfront/subscribers.py
@@ -206,9 +207,6 @@ cfront/static/js/deps/jquery-tablesorter/themes/green/asc.png
 cfront/static/js/deps/jquery-tablesorter/themes/green/bg.png
 cfront/static/js/deps/jquery-tablesorter/themes/green/desc.png
 cfront/static/js/deps/jquery-tablesorter/themes/green/style.css
-cfront/static/js/deps/sprintf.js/src/sprintf.js
-cfront/static/js/deps/sprintf.js/src/sprintf.min.js
-cfront/static/js/deps/sprintf.js/test/test.html
 cfront/static/js/models/file_m.js
 cfront/static/js/models/genbank.js
 cfront/static/js/models/hit_m.js
