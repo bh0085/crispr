@@ -88,7 +88,7 @@ def process_queue(ofs, stride):
 
 
     procs = []
-    max_procs = 8
+    max_procs = 16
     manager = Manager()
     jobs_q = JoinableQueue()
 
@@ -140,7 +140,7 @@ def process_queue(ofs, stride):
                 print "GENOME NAME: {0}".format(top_job.genome_name)
                 print "SAVING ID INTO QUEUE", top_job.spacers[0] 
             
-                for i,s in enumerate([s for s in top_job.spacers if s.score is None][:2]):
+                for i,s in enumerate([s for s in top_job.spacers if s.score is None][:4]):
                     jobs_q.put({"genome_name":s.job.genome_name,
                                 "guide":s.guide,
                                 "spacerid":s.id})
