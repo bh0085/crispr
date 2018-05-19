@@ -1,174 +1,319 @@
-.navbar {
-  margin-bottom: 0px; }
-  .navbar .navbar-inner {
-    -webkit-font-smoothing: antialiased;
-    border-radius: 0px; }
+/* line 2, ../../sass/include/navbar.scss */
+.navbar .breadcrumb {
+  margin-bottom: 0px;
+  background: none;
+}
 
+/* line 7, ../../sass/include/spacers.scss */
 .high-quality {
-  border-left: 5px solid green; }
+  border-left: 5px solid green;
+}
 
+/* line 10, ../../sass/include/spacers.scss */
 .medium-quality {
-  border-left: 5px solid yellow; }
+  border-left: 5px solid yellow;
+}
 
+/* line 13, ../../sass/include/spacers.scss */
 .low-quality {
-  border-left: 5px solid red; }
+  border-left: 5px solid red;
+}
 
+/* line 16, ../../sass/include/spacers.scss */
 .no-quality {
-  border-left: 5px solid lightgrey; }
+  border-left: 5px solid lightgray;
+}
 
+/* line 20, ../../sass/include/spacers.scss */
 .guide-quality {
   box-sizing: border-box;
   width: 100%;
   padding-top: 10px;
   padding-bottom: 10px;
   margin-top: 10px;
-  margin-bottom: 10px; }
-  .guide-quality > div {
-    padding-left: 10px; }
+  margin-bottom: 10px;
+}
+/* line 27, ../../sass/include/spacers.scss */
+.guide-quality > div {
+  padding-left: 10px;
+}
 
+/* line 31, ../../sass/include/spacers.scss */
 .annotation {
-  opacity: 0.4; }
+  opacity: 0.4;
+}
 
+/* line 37, ../../sass/include/spacers.scss */
 .spacer-v-container {
-  margin-left: 20px; }
+  margin-left: 20px;
+}
 
-.spacers-area {
-  white-space: nowrap; }
-  .spacers-area .col {
-    box-sizing: border-box;
-    position: relative;
-    height: 100%;
-    display: inline-block;
-    vertical-align: text-top; }
-    .spacers-area .col.left {
-      width: 400px;
-      padding-left: 20px;
-      z-index: 1; }
-    .spacers-area .col.right {
-      width: 100%;
-      margin-left: -400px;
-      padding-right: 20px;
-      padding-left: 420px;
-      z-index: 0; }
-
-.job-spacer-list-v {
-  border-right: 1px dotted rgba(0, 0, 0, 0.1);
+/* line 42, ../../sass/include/spacers.scss */
+.col-tables-area {
+  white-space: nowrap;
+}
+/* line 44, ../../sass/include/spacers.scss */
+.col-tables-area .col {
   box-sizing: border-box;
-  min-height: 600px; }
-  .job-spacer-list-v table {
-    width: 100%;
-    margin-right: 10px; }
-    .job-spacer-list-v table tr.spacer-list-v {
-      border-bottom-width: 0px;
-      border-left-width: 5px;
-      border-top-width: 0px; }
-      .job-spacer-list-v table tr.spacer-list-v.active {
-        border-right: 1px solid black;
-        background-color: rgba(0, 0, 0, 0.05); }
-      .job-spacer-list-v table tr.spacer-list-v th, .job-spacer-list-v table tr.spacer-list-v td {
-        padding-left: 10px; }
-        .job-spacer-list-v table tr.spacer-list-v th:not(:last-child), .job-spacer-list-v table tr.spacer-list-v td:not(:last-child) {
-          padding-right: 10px; }
-      .job-spacer-list-v table tr.spacer-list-v th {
-        text-align: center; }
+  position: relative;
+  height: 100%;
+  display: inline-block;
+  vertical-align: text-top;
+}
+/* line 50, ../../sass/include/spacers.scss */
+.col-tables-area .col.left {
+  width: 400px;
+  padding-left: 20px;
+  z-index: 1;
+}
+/* line 55, ../../sass/include/spacers.scss */
+.col-tables-area .col.right {
+  width: 100%;
+  margin-left: -400px;
+  padding-right: 20px;
+  padding-left: 420px;
+  z-index: 0;
+}
 
+/* line 65, ../../sass/include/spacers.scss */
+.job-list-v {
+  box-sizing: border-box;
+  min-height: 600px;
+}
+/* line 73, ../../sass/include/spacers.scss */
+.job-list-v table {
+  width: 100%;
+  margin-right: 10px;
+  border-right: 1px dotted rgba(0, 0, 0, 0.1);
+}
+/* line 78, ../../sass/include/spacers.scss */
+.job-list-v table tr.list-row {
+  border-bottom-width: 0px;
+  border-left-width: 5px;
+  border-top-width: 0px;
+}
+/* line 82, ../../sass/include/spacers.scss */
+.job-list-v table tr.list-row th, .job-list-v table tr.list-row td {
+  padding-left: 10px;
+}
+/* line 84, ../../sass/include/spacers.scss */
+.job-list-v table tr.list-row th:not(:last-child), .job-list-v table tr.list-row td:not(:last-child) {
+  padding-right: 10px;
+}
+/* line 86, ../../sass/include/spacers.scss */
+.job-list-v table tr.list-row th {
+  text-align: center;
+}
+/* line 92, ../../sass/include/spacers.scss */
+.job-list-v table tr.spacer-list-v.active {
+  border-right: 1px solid black;
+  background-color: rgba(0, 0, 0, 0.05);
+}
+/* line 98, ../../sass/include/spacers.scss */
+.job-list-v table tr.nickase-list-v {
+  cursor: pointer;
+}
+/* line 99, ../../sass/include/spacers.scss */
+.job-list-v table tr.nickase-list-v:not(.active) {
+  opacity: .25;
+}
+/* line 103, ../../sass/include/spacers.scss */
+.job-list-v table tr.nickase-list-v.active {
+  border-right: 1px solid black;
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* line 114, ../../sass/include/spacers.scss */
 .qscore {
   font-weight: bold;
-  color: blue; }
+  color: blue;
+}
 
+/* line 120, ../../sass/include/spacers.scss */
 .spacer-h-v-container .info {
-  display: inline-block; }
-  .spacer-h-v-container .info dl.header {
-    margin-top: 8px;
-    margin-bottom: 8px; }
-  .spacer-h-v-container .info dl {
-    margin-top: 0px;
-    margin-bottom: 0px;
-    display: inline-block;
-    box-sizing: border-box; }
-    .spacer-h-v-container .info dl dt, .spacer-h-v-container .info dl dd {
-      display: inline; }
-    .spacer-h-v-container .info dl dt:not(:first-child) {
-      margin-left: 15px;
-      font-weight: bold; }
-    .spacer-h-v-container .info dl dd {
-      margin-left: 2px; }
+  display: inline-block;
+}
+/* line 122, ../../sass/include/spacers.scss */
+.spacer-h-v-container .info dl.header {
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+/* line 126, ../../sass/include/spacers.scss */
+.spacer-h-v-container .info dl {
+  margin-top: 0px;
+  margin-bottom: 0px;
+  display: inline-block;
+  box-sizing: border-box;
+}
+/* line 131, ../../sass/include/spacers.scss */
+.spacer-h-v-container .info dl dt, .spacer-h-v-container .info dl dd {
+  display: inline;
+}
+/* line 134, ../../sass/include/spacers.scss */
+.spacer-h-v-container .info dl dt:not(:first-child) {
+  margin-left: 15px;
+  font-weight: bold;
+}
+/* line 138, ../../sass/include/spacers.scss */
+.spacer-h-v-container .info dl dd {
+  margin-left: 2px;
+}
+/* line 144, ../../sass/include/spacers.scss */
 .spacer-h-v-container .spacer-h-view .table-type-selection {
-  display: block; }
-  .spacer-h-v-container .spacer-h-view .table-type-selection .hspace-80 {
-    height: 0px;
-    vertical-align: middle;
-    margin-left: 20px;
-    margin-right: 10px;
-    border-top: 1px dotted rgba(0, 0, 0, 0.25);
-    width: 140px;
-    display: inline-block; }
-  .spacer-h-v-container .spacer-h-view .table-type-selection input {
-    margin-top: -1px;
-    margin-right: 10px;
-    margin-left: 10px; }
+  display: block;
+}
+/* line 146, ../../sass/include/spacers.scss */
+.spacer-h-v-container .spacer-h-view .table-type-selection .hspace-80 {
+  height: 0px;
+  vertical-align: middle;
+  margin-left: 20px;
+  margin-right: 10px;
+  border-top: 1px dotted rgba(0, 0, 0, 0.25);
+  width: 140px;
+  display: inline-block;
+}
+/* line 155, ../../sass/include/spacers.scss */
+.spacer-h-v-container .spacer-h-view .table-type-selection input {
+  margin-top: -1px;
+  margin-right: 10px;
+  margin-left: 10px;
+}
+/* line 161, ../../sass/include/spacers.scss */
 .spacer-h-v-container .spacer-h-view .hits {
-  margin-top: 20px; }
-  .spacer-h-v-container .spacer-h-view .hits.top table.gene {
-    display: none; }
-  .spacer-h-v-container .spacer-h-view .hits.gene table.top {
-    display: none; }
-  .spacer-h-v-container .spacer-h-view .hits table {
-    width: 100%; }
-    .spacer-h-v-container .spacer-h-view .hits table th, .spacer-h-v-container .spacer-h-view .hits table td {
-      padding-right: 10px; }
-      .spacer-h-v-container .spacer-h-view .hits table th:nth-child(even), .spacer-h-v-container .spacer-h-view .hits table td:nth-child(even) {
-        background-color: rgba(0, 0, 0, 0.02); }
-      .spacer-h-v-container .spacer-h-view .hits table th:not(:first-child), .spacer-h-v-container .spacer-h-view .hits table td:not(:first-child) {
-        padding-left: 10px; }
-    .spacer-h-v-container .spacer-h-view .hits table th {
-      text-align: center; }
-    .spacer-h-v-container .spacer-h-view .hits table td {
-      font-family: courier;
-      white-space: nowrap; }
-      .spacer-h-v-container .spacer-h-view .hits table td.sequence, .spacer-h-v-container .spacer-h-view .hits table td.score, .spacer-h-v-container .spacer-h-view .hits table td.locus, .spacer-h-v-container .spacer-h-view .hits table td.gene {
-        text-align: center; }
+  margin-top: 20px;
+}
+/* line 164, ../../sass/include/spacers.scss */
+.spacer-h-v-container .spacer-h-view .hits.top table.gene {
+  display: none;
+}
+/* line 169, ../../sass/include/spacers.scss */
+.spacer-h-v-container .spacer-h-view .hits.gene table.top {
+  display: none;
+}
+/* line 173, ../../sass/include/spacers.scss */
+.spacer-h-v-container .spacer-h-view .hits table {
+  width: 100%;
+}
+/* line 175, ../../sass/include/spacers.scss */
+.spacer-h-v-container .spacer-h-view .hits table th, .spacer-h-v-container .spacer-h-view .hits table td {
+  padding-right: 10px;
+}
+/* line 176, ../../sass/include/spacers.scss */
+.spacer-h-v-container .spacer-h-view .hits table th:nth-child(even), .spacer-h-v-container .spacer-h-view .hits table td:nth-child(even) {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+/* line 180, ../../sass/include/spacers.scss */
+.spacer-h-v-container .spacer-h-view .hits table th:not(:first-child), .spacer-h-v-container .spacer-h-view .hits table td:not(:first-child) {
+  padding-left: 10px;
+}
+/* line 183, ../../sass/include/spacers.scss */
+.spacer-h-v-container .spacer-h-view .hits table th {
+  text-align: center;
+}
+/* line 186, ../../sass/include/spacers.scss */
+.spacer-h-v-container .spacer-h-view .hits table td {
+  font-family: courier;
+  white-space: nowrap;
+}
+/* line 189, ../../sass/include/spacers.scss */
+.spacer-h-v-container .spacer-h-view .hits table td.sequence, .spacer-h-v-container .spacer-h-view .hits table td.score, .spacer-h-v-container .spacer-h-view .hits table td.locus, .spacer-h-v-container .spacer-h-view .hits table td.gene {
+  text-align: center;
+}
 
-.job-v {
-  margin-left: 20px; }
-  .job-v .svg-container {
-    margin-top: 10px;
-    margin-bottom: 20px;
-    padding-bottom: 20px;
-    display: block;
-    width: 900px;
-    margin-left: auto;
-    margin-right: auto; }
-  .job-v .job-description dd, .job-v .job-description dt {
-    display: inline-block; }
-  .job-v .job-description dt {
-    margin-top: 5px;
-    width: 120px;
-    white-space: nowrap; }
-  .job-v .job-description dd {
-    max-width: 600px;
-    margin-left: 10px; }
-    .job-v .job-description dd.seq {
-      color: rgba(0, 0, 0, 0.25);
-      vertical-align: text-top;
-      line-height: 25px; }
-  .job-v .status {
-    width: 500px;
-    margin: 0 auto;
-    padding: 50px;
-    font-family: courier;
-    text-align: center;
-    overflow: hidden; }
-    .job-v .status .progress {
-      margin-bottom: 10px;
-      margin-top: 10px; }
-    .job-v .status.done {
-      display: none; }
-      .job-v .status.done .progress {
-        height: 0px;
-        opacity: 0;
-        transition: height 1s, opacity 0.5s; }
+/* line 3, ../../sass/include/job.scss */
+.job-v .job-title {
+  line-height: 32px;
+  position: relative;
+  display: inline-block;
+}
+/* line 8, ../../sass/include/job.scss */
+.job-v .show-info {
+  background-image: url(/img/info.svg);
+  width: 32px;
+  height: 32px;
+  margin-bottom: -6px;
+  position: absolute;
+  left: 0px;
+  margin-left: -48px;
+  margin-top: -16px;
+  top: 50%;
+  display: inline-block;
+  opacity: .3;
+  background-size: 100%;
+}
+/* line 21, ../../sass/include/job.scss */
+.job-v .show-info:hover {
+  opacity: .9;
+}
+/* line 26, ../../sass/include/job.scss */
+.job-v .svg-container {
+  margin-top: 10px;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  display: block;
+  width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+/* line 35, ../../sass/include/job.scss */
+.job-v .job-description {
+  position: fixed;
+  right: 0px;
+  left: 0px;
+  margin-left: 100px;
+  margin-right: 100px;
+  background-color: white;
+  border: 5px solid black;
+  border-radius: 12px;
+  padding: 10px;
+  box-shadow: 5px 5px 20px -10px;
+}
+/* line 46, ../../sass/include/job.scss */
+.job-v .job-description dl {
+  margin-bottom: 0px;
+  margin-top: 0px;
+}
+/* line 50, ../../sass/include/job.scss */
+.job-v .job-description dd, .job-v .job-description dt {
+  display: inline-block;
+}
+/* line 53, ../../sass/include/job.scss */
+.job-v .job-description dt {
+  margin-top: 5px;
+  width: 120px;
+  white-space: nowrap;
+}
+/* line 59, ../../sass/include/job.scss */
+.job-v .job-description dd {
+  max-width: 600px;
+  margin-left: 10px;
+}
+/* line 62, ../../sass/include/job.scss */
+.job-v .job-description dd.seq {
+  color: rgba(0, 0, 0, 0.25);
+  vertical-align: text-top;
+  line-height: 25px;
+}
 
+/* line 3, ../../sass/include/batch.scss */
+.job-link-v a > *:second-child {
+  display: inline-block;
+  width: 75px;
+}
+/* line 7, ../../sass/include/batch.scss */
+.job-link-v a .name {
+  font-weight: bold;
+}
+/* line 10, ../../sass/include/batch.scss */
+.job-link-v a .unstarted {
+  color: red;
+}
+/* line 13, ../../sass/include/batch.scss */
+.job-link-v a .started {
+  color: green;
+}
+
+/* line 1, ../../sass/include/file.scss */
 .file-list-v {
   min-height: 10px;
   width: 100%;
@@ -178,12 +323,80 @@
   border-top: 1px rgba(0, 0, 0, 0.05) solid;
   border-bottom: 1px rgba(0, 0, 0, 0.05) solid;
   margin-top: 15px;
-  margin-bottom: 10px; }
-  .file-list-v .files {
-    margin-left: 20px; }
-    .file-list-v .files .file-v {
-      margin-left: 10px; }
-      .file-list-v .files .file-v:not(.ready) {
-        pointer-events: none; }
-        .file-list-v .files .file-v:not(.ready) a {
-          color: rgba(0, 0, 0, 0.3); }
+  margin-bottom: 10px;
+}
+/* line 14, ../../sass/include/file.scss */
+.file-list-v .files {
+  margin-left: 20px;
+}
+/* line 16, ../../sass/include/file.scss */
+.file-list-v .files .file-v {
+  margin-left: 10px;
+}
+/* line 18, ../../sass/include/file.scss */
+.file-list-v .files .file-v:not(.ready) {
+  pointer-events: none;
+}
+/* line 20, ../../sass/include/file.scss */
+.file-list-v .files .file-v:not(.ready) a {
+  color: rgba(0, 0, 0, 0.3);
+}
+
+/* line 3, ../../sass/include/cards.scss */
+.cards .card {
+  vertical-align: top;
+  width: 200px;
+  min-height: 200px;
+  position: relative;
+  display: inline-block;
+  border: 1px solid black;
+  margin: 25px;
+  padding: 10px;
+}
+/* line 4, ../../sass/include/cards.scss */
+.cards .card .header {
+  position: absolute;
+  bottom: 100%;
+  left: 0px;
+}
+/* line 10, ../../sass/include/cards.scss */
+.cards .card .footer {
+  margin-top: 0px;
+  position: absolute;
+  top: 100%;
+  left: 0px;
+  border-top: none;
+}
+/* line 18, ../../sass/include/cards.scss */
+.cards .card .covering-link {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+}
+
+/* line 1, ../../sass/include/tabs.scss */
+.tabs-label {
+  position: absolute;
+  top: 11px;
+  background-color: white;
+  padding-right: 20px;
+}
+
+/* line 8, ../../sass/include/tabs.scss */
+.nav-tabs.crispr-tabs {
+  margin-top: 30px;
+  margin-bottom: 14px;
+  position: relative;
+}
+
+/* line 14, ../../sass/include/tabs.scss */
+.tab-header-annotation {
+  opacity: .5;
+}
+
+/* line 2, ../../sass/include/layout.scss */
+.header-oneline > * {
+  display: inline-block;
+}

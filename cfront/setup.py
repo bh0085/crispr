@@ -22,6 +22,7 @@ requires = [
     'redis',
     'pyramid_mako',
     'scipy',
+    'gffutils',
     ]
 
 setup(name='cfront',

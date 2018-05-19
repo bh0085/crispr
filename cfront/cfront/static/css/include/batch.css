@@ -1,0 +1,17 @@
+/* line 3, ../../sass/include/batch.scss */
+.job-link-v a > *:second-child {
+  display: inline-block;
+  width: 75px;
+}
+/* line 7, ../../sass/include/batch.scss */
+.job-link-v a .name {
+  font-weight: bold;
+}
+/* line 10, ../../sass/include/batch.scss */
+.job-link-v a .unstarted {
+  color: red;
+}
+/* line 13, ../../sass/include/batch.scss */
+.job-link-v a .started {
+  color: green;
+}

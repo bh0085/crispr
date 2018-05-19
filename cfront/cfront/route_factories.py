@@ -36,6 +36,8 @@ def set_request_batch(request):
         else: raise Exception()
 
 
+        
+
 class JobResourceFactory(Res):
     def __init__(self, request):
         set_request_job(request)

@@ -1,0 +1,33 @@
+/* line 3, ../../sass/include/cards.scss */
+.cards .card {
+  vertical-align: top;
+  width: 200px;
+  min-height: 200px;
+  position: relative;
+  display: inline-block;
+  border: 1px solid black;
+  margin: 25px;
+  padding: 10px;
+}
+/* line 4, ../../sass/include/cards.scss */
+.cards .card .header {
+  position: absolute;
+  bottom: 100%;
+  left: 0px;
+}
+/* line 10, ../../sass/include/cards.scss */
+.cards .card .footer {
+  margin-top: 0px;
+  position: absolute;
+  top: 100%;
+  left: 0px;
+  border-top: none;
+}
+/* line 18, ../../sass/include/cards.scss */
+.cards .card .covering-link {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+}

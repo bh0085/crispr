@@ -1,39 +1,74 @@
-.job-v {
-  margin-left: 20px; }
-  .job-v .svg-container {
-    margin-top: 10px;
-    margin-bottom: 20px;
-    padding-bottom: 20px;
-    display: block;
-    width: 900px;
-    margin-left: auto;
-    margin-right: auto; }
-  .job-v .job-description dd, .job-v .job-description dt {
-    display: inline-block; }
-  .job-v .job-description dt {
-    margin-top: 5px;
-    width: 120px;
-    white-space: nowrap; }
-  .job-v .job-description dd {
-    max-width: 600px;
-    margin-left: 10px; }
-    .job-v .job-description dd.seq {
-      color: rgba(0, 0, 0, 0.25);
-      vertical-align: text-top;
-      line-height: 25px; }
-  .job-v .status {
-    width: 500px;
-    margin: 0 auto;
-    padding: 50px;
-    font-family: courier;
-    text-align: center;
-    overflow: hidden; }
-    .job-v .status .progress {
-      margin-bottom: 10px;
-      margin-top: 10px; }
-    .job-v .status.done {
-      display: none; }
-      .job-v .status.done .progress {
-        height: 0px;
-        opacity: 0;
-        transition: height 1s, opacity 0.5s; }
+/* line 3, ../../sass/include/job.scss */
+.job-v .job-title {
+  line-height: 32px;
+  position: relative;
+  display: inline-block;
+}
+/* line 8, ../../sass/include/job.scss */
+.job-v .show-info {
+  background-image: url(/img/info.svg);
+  width: 32px;
+  height: 32px;
+  margin-bottom: -6px;
+  position: absolute;
+  left: 0px;
+  margin-left: -48px;
+  margin-top: -16px;
+  top: 50%;
+  display: inline-block;
+  opacity: .3;
+  background-size: 100%;
+}
+/* line 21, ../../sass/include/job.scss */
+.job-v .show-info:hover {
+  opacity: .9;
+}
+/* line 26, ../../sass/include/job.scss */
+.job-v .svg-container {
+  margin-top: 10px;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  display: block;
+  width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+/* line 35, ../../sass/include/job.scss */
+.job-v .job-description {
+  position: fixed;
+  right: 0px;
+  left: 0px;
+  margin-left: 100px;
+  margin-right: 100px;
+  background-color: white;
+  border: 5px solid black;
+  border-radius: 12px;
+  padding: 10px;
+  box-shadow: 5px 5px 20px -10px;
+}
+/* line 46, ../../sass/include/job.scss */
+.job-v .job-description dl {
+  margin-bottom: 0px;
+  margin-top: 0px;
+}
+/* line 50, ../../sass/include/job.scss */
+.job-v .job-description dd, .job-v .job-description dt {
+  display: inline-block;
+}
+/* line 53, ../../sass/include/job.scss */
+.job-v .job-description dt {
+  margin-top: 5px;
+  width: 120px;
+  white-space: nowrap;
+}
+/* line 59, ../../sass/include/job.scss */
+.job-v .job-description dd {
+  max-width: 600px;
+  margin-left: 10px;
+}
+/* line 62, ../../sass/include/job.scss */
+.job-v .job-description dd.seq {
+  color: rgba(0, 0, 0, 0.25);
+  vertical-align: text-top;
+  line-height: 25px;
+}

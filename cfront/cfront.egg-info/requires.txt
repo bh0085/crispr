@@ -13,3 +13,4 @@ biopython
 redis
 pyramid_mako
 scipy
+gffutils

@@ -1,0 +1,19 @@
+/* line 1, ../../sass/include/tabs.scss */
+.tabs-label {
+  position: absolute;
+  top: 11px;
+  background-color: white;
+  padding-right: 20px;
+}
+
+/* line 8, ../../sass/include/tabs.scss */
+.nav-tabs.crispr-tabs {
+  margin-top: 30px;
+  margin-bottom: 14px;
+  position: relative;
+}
+
+/* line 14, ../../sass/include/tabs.scss */
+.tab-header-annotation {
+  opacity: .5;
+}

@@ -23,6 +23,7 @@
     </script>
 
     <% import json %>
+    
     <script type="text/javascript">
       console.log("INITING")
       %if init_state is not UNDEFINED:
@@ -33,7 +34,7 @@
       %endif
     </script>
 
-    <script type="text/javascript" src="/js/cdn/jquery.min.js" ></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.js" ></script>
     <script type="text/javascript" src="/js/cdn/underscore-min.js" ></script>
     <script type="text/javascript" src="/js/cdn/backbone-min.js" ></script>
     <script type="text/javascript" src="/js/cdn/mustache.min.js" ></script>
@@ -44,6 +45,14 @@
     <script src="/js/deps/bootstrap/bootstrap.min.js"></script>
     <script type="text/javascript" src="/js/deps/jquery-svg/jquery.svg.min.js"></script>
     <script type="text/javascript" src="/js/deps/sprintf.min.js"></script>
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/corejs-typeahead/1.2.1/bloodhound.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/corejs-typeahead/1.2.1/bloodhound.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/corejs-typeahead/1.2.1/typeahead.bundle.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/corejs-typeahead/1.2.1/typeahead.bundle.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/corejs-typeahead/1.2.1/typeahead.jquery.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/corejs-typeahead/1.2.1/typeahead.jquery.min.js"></script>
+
 
     <%include file="models.html"/>
     <%include file="backbone.mako"/>
@@ -57,6 +66,8 @@
     <%include file="bb_templates/file.mako"/>
     <%include file="bb_templates/about.mako"/>
     <%include file="bb_templates/nickase.mako"/>
+    <%include file="bb_templates/submit_v2.mako"/>
+    <%include file="bb_templates/splash_v2.mako"/>
     <script type="text/javascript" src="/js/pages/base.js"></script>
     <script type="text/javascript" src="/js/pages/${request.matched_route.name}.js"></script>
     <script type="text/javascript" src="/js/app/constants.js"></script>
@@ -87,6 +98,8 @@
     <div id=${request.matched_route.name}-container>
     </div>
 
+
+    
     <div class="footer">Zhang Lab, MIT 2013</div> 
-  </body> 
+  </body>
 </html>

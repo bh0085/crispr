@@ -1,0 +1,121 @@
+/* line 2, ../../sass/pages/job.scss */
+body.job #job-container {
+  margin-top: 35px;
+}
+/* line 5, ../../sass/pages/job.scss */
+body.job .job-page-pages-view {
+  margin-bottom: 25px;
+}
+/* line 8, ../../sass/pages/job.scss */
+body.job .job-page-status-view {
+  margin-bottom: 35px;
+}
+/* line 9, ../../sass/pages/job.scss */
+body.job .job-page-status-view .status {
+  box-sizing: border-box;
+  font-family: courier;
+  text-align: center;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+/* line 22, ../../sass/pages/job.scss */
+body.job .job-page-status-view .status .progress {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+/* line 27, ../../sass/pages/job.scss */
+body.job .job-page-status-view .status.done .progress {
+  height: 1px;
+  opacity: .5;
+  transition: height 1s, opacity .5s;
+}
+/* line 37, ../../sass/pages/job.scss */
+body.job .right {
+  position: absolute;
+  right: 0px;
+}
+/* line 41, ../../sass/pages/job.scss */
+body.job .cards {
+  padding-left: 25px;
+  padding-top: 50px;
+  padding-bottom: 50px;
+}
+/* line 45, ../../sass/pages/job.scss */
+body.job .cards .card .footer {
+  padding-top: 4px;
+  width: 100%;
+  text-align: left;
+}
+/* line 52, ../../sass/pages/job.scss */
+body.job .cards #email-complete {
+  margin: 0px;
+}
+/* line 55, ../../sass/pages/job.scss */
+body.job .cards .card {
+  min-height: 0px;
+  height: 150px;
+  width: 150px;
+  margin: 35px;
+  border-color: lightgray;
+}
+/* line 64, ../../sass/pages/job.scss */
+body.job .cards .card:first-child {
+  margin-left: 15px;
+}
+/* line 67, ../../sass/pages/job.scss */
+body.job .cards .card .background {
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: .7;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+}
+/* line 77, ../../sass/pages/job.scss */
+body.job .cards .card:hover {
+  border-color: black;
+}
+/* line 79, ../../sass/pages/job.scss */
+body.job .cards .card:hover .background {
+  opacity: 1;
+}
+/* line 83, ../../sass/pages/job.scss */
+body.job .cards .card.nickase .background {
+  background-image: url("/img/nickase-preview.svg");
+}
+/* line 88, ../../sass/pages/job.scss */
+body.job .cards .card.guides .background {
+  background-image: url("/img/crispr-logo.jpg");
+}
+/* line 96, ../../sass/pages/job.scss */
+body.job:not(.done) .nickase {
+  cursor: wait;
+  opacity: .25;
+}
+/* line 99, ../../sass/pages/job.scss */
+body.job:not(.done) .nickase > * {
+  pointer-events: none;
+}
+/* line 103, ../../sass/pages/job.scss */
+body.job:not(.done) .download-container {
+  cursor: wait;
+}
+/* line 104, ../../sass/pages/job.scss */
+body.job:not(.done) .download-container a {
+  color: rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+}
+/* line 114, ../../sass/pages/job.scss */
+body.job.done .wait-for-nickase {
+  display: none;
+}
+/* line 119, ../../sass/pages/job.scss */
+body.job h3 {
+  margin-top: 20px;
+  margin-bottom: 0px;
+}

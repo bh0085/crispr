@@ -1,3 +1,4 @@
+/* line 1, ../../sass/include/file.scss */
 .file-list-v {
   min-height: 10px;
   width: 100%;
@@ -7,12 +8,21 @@
   border-top: 1px rgba(0, 0, 0, 0.05) solid;
   border-bottom: 1px rgba(0, 0, 0, 0.05) solid;
   margin-top: 15px;
-  margin-bottom: 10px; }
-  .file-list-v .files {
-    margin-left: 20px; }
-    .file-list-v .files .file-v {
-      margin-left: 10px; }
-      .file-list-v .files .file-v:not(.ready) {
-        pointer-events: none; }
-        .file-list-v .files .file-v:not(.ready) a {
-          color: rgba(0, 0, 0, 0.3); }
+  margin-bottom: 10px;
+}
+/* line 14, ../../sass/include/file.scss */
+.file-list-v .files {
+  margin-left: 20px;
+}
+/* line 16, ../../sass/include/file.scss */
+.file-list-v .files .file-v {
+  margin-left: 10px;
+}
+/* line 18, ../../sass/include/file.scss */
+.file-list-v .files .file-v:not(.ready) {
+  pointer-events: none;
+}
+/* line 20, ../../sass/include/file.scss */
+.file-list-v .files .file-v:not(.ready) a {
+  color: rgba(0, 0, 0, 0.3);
+}

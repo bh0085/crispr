@@ -1,42 +1,58 @@
+/* line 1, ../../sass/pages/readout.scss */
+#readout {
+  margin-top: 35px;
+}
+
+/* line 5, ../../sass/pages/readout.scss */
 .left {
-  text-align: left; }
+  text-align: left;
+}
 
+/* line 8, ../../sass/pages/readout.scss */
 .center {
-  text-align: center; }
+  text-align: center;
+}
 
-.med-left-margin {
-  margin-left: 20px; }
-
-.med-top-margin {
-  margin-top: 20px; }
-
-.small-left-margin {
-  margin-left: 1em; }
-
+/* line 13, ../../sass/pages/readout.scss */
 th {
   padding-left: 5px;
-  padding-right: 5px; }
+  padding-right: 5px;
+}
 
+/* line 18, ../../sass/pages/readout.scss */
 svg {
   font-family: courier;
-  font-size: 10px; }
+  font-size: 10px;
+}
 
+/* line 23, ../../sass/pages/readout.scss */
 .dna {
-  font-family: courier; }
+  font-family: courier;
+}
 
+/* line 26, ../../sass/pages/readout.scss */
 .locus {
-  font-family: courier; }
+  font-family: courier;
+}
 
+/* line 29, ../../sass/pages/readout.scss */
 .nrg {
   color: green;
-  font-weight: bold; }
+  font-weight: bold;
+}
 
+/* line 35, ../../sass/pages/readout.scss */
 .occupied {
   color: rgba(0, 0, 0, 0.75);
-  text-decoration: underline; }
+  text-decoration: underline;
+}
 
+/* line 41, ../../sass/pages/readout.scss */
 .break-all {
-  word-break: break-all; }
+  word-break: break-all;
+}
 
+/* line 44, ../../sass/pages/readout.scss */
 .hover {
-  display: none; }
+  display: none;
+}

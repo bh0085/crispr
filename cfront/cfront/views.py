@@ -54,9 +54,20 @@ def submit_view(request):
 
 @view_config(route_name="submit_v2", renderer="base.mako")
 def submit_v2_view(request):
+    assembly = request.matchdict["assembly"]
+    genome_infos = dict([[e["assembly"],e] for e in genomes_settings["genomes_info"]])
+    
+    import gffutils
+    assembly = request.matchdict['assembly']
+    db = gffutils.FeatureDB('/fastdata/zlab-genomes/gffutils/{0}.db'.format(assembly), keep_order=True)
+    allgenes = list(db.features_of_type("gene"))
+    gene_infos = [{"name":e["Name"][0],"strand":e.strand,"start":e.start,"end":e.end,"chrom":e.chrom,'id':e.id} for e in allgenes]
+
+    
     return  { "sessionInfo":
              {"routes":routes_dict(request),
-              "genomes_info":genomes_settings["genomes_info"]}}
+              "genome_info":genome_infos[assembly],
+              "gene_infos":gene_infos}}
 
 @view_config(route_name="splash_v2", renderer="base.mako")
 def splash_v2_view(request):

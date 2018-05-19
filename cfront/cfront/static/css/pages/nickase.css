@@ -1,0 +1,301 @@
+/* line 2, ../../sass/pages/nickase.scss */
+body.nickase #nickase-container {
+  padding-top: 35px;
+}
+/* line 8, ../../sass/pages/nickase.scss */
+body.nickase .page-header:not(h4) {
+  margin-top: 0px;
+}
+/* line 13, ../../sass/pages/nickase.scss */
+body.nickase .pane1 {
+  width: 100%;
+  display: inline-block;
+}
+/* line 15, ../../sass/pages/nickase.scss */
+body.nickase .pane1 label {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+/* line 20, ../../sass/pages/nickase.scss */
+body.nickase .pane1 .radio {
+  padding-left: 25px;
+}
+/* line 23, ../../sass/pages/nickase.scss */
+body.nickase .pane1 .main.graphics {
+  overflow: hidden;
+}
+/* line 28, ../../sass/pages/nickase.scss */
+body.nickase .pane2 {
+  z-index: 2;
+  display: inline-block;
+}
+/* line 31, ../../sass/pages/nickase.scss */
+body.nickase .pane2 .nicks-list {
+  position: relative;
+  max-height: 300px;
+  padding-top: 5px;
+  max-height: 351px;
+  overflow-x: visible;
+  overflow-y: auto;
+}
+/* line 40, ../../sass/pages/nickase.scss */
+body.nickase .pane3 {
+  vertical-align: top;
+  padding-top: 30px;
+}
+/* line 47, ../../sass/pages/nickase.scss */
+body.nickase .pane.left {
+  position: relative;
+  width: 270px;
+  display: inline-block;
+  vertical-align: top;
+}
+/* line 53, ../../sass/pages/nickase.scss */
+body.nickase .pane.right {
+  display: inline-block;
+  margin-left: 25px;
+  margin-left: -270px;
+  padding-left: 290px;
+  width: 100%;
+  box-sizing: border-box;
+  position: relative;
+}
+/* line 64, ../../sass/pages/nickase.scss */
+body.nickase .panes.top {
+  position: relative;
+  white-space: nowrap;
+}
+/* line 67, ../../sass/pages/nickase.scss */
+body.nickase .panes.top > * {
+  white-space: normal;
+}
+/* line 72, ../../sass/pages/nickase.scss */
+body.nickase table {
+  white-space: nowrap;
+}
+/* line 75, ../../sass/pages/nickase.scss */
+body.nickase .nickase-tl-options {
+  width: 100%;
+  margin-bottom: 5px;
+  white-space: normal;
+}
+/* line 80, ../../sass/pages/nickase.scss */
+body.nickase .nickase-tl-options form {
+  margin-left: 20px;
+  margin-bottom: 0px;
+}
+/* line 83, ../../sass/pages/nickase.scss */
+body.nickase .nickase-tl-options form .control-group {
+  margin-bottom: 0px;
+}
+/* line 88, ../../sass/pages/nickase.scss */
+body.nickase .nickase-tl-options .controls {
+  margin-left: 10px;
+}
+/* line 91, ../../sass/pages/nickase.scss */
+body.nickase .nickase-tl-options .full-width-bottom {
+  position: relative;
+  width: 100%;
+}
+/* line 94, ../../sass/pages/nickase.scss */
+body.nickase .nickase-tl-options .full-width-bottom .right {
+  position: absolute;
+  right: 0px;
+}
+/* line 100, ../../sass/pages/nickase.scss */
+body.nickase .hover-helper {
+  margin-left: 33%;
+  position: relative;
+  color: rgba(0, 0, 0, 0.5);
+  vertical-align: text-bottom;
+}
+
+/* line 109, ../../sass/pages/nickase.scss */
+.scores-explanation {
+  padding-top: 10px;
+  white-space: normal;
+}
+
+/* line 113, ../../sass/pages/nickase.scss */
+.graphics {
+  height: 300px;
+  display: block;
+  position: relative;
+  width: 100%;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  border: lightgray solid 1px;
+}
+/* line 128, ../../sass/pages/nickase.scss */
+.graphics.locked .svg-container {
+  pointer-events: none;
+}
+
+/* line 144, ../../sass/pages/nickase.scss */
+body.locked .click-grabber {
+  display: block;
+  pointer-events: auto;
+}
+
+/* line 156, ../../sass/pages/nickase.scss */
+.click-grabber {
+  pointer-events: none;
+  cursor: pointer;
+  position: absolute;
+  display: none;
+  z-index: 10;
+  top: 0px;
+  right: 0px;
+  left: 0px;
+  bottom: 0px;
+}
+
+/* line 169, ../../sass/pages/nickase.scss */
+.nick-active-highlight {
+  opacity: 0;
+}
+/* line 171, ../../sass/pages/nickase.scss */
+.nick-active-highlight[active=true] {
+  opacity: .05;
+}
+
+/* line 176, ../../sass/pages/nickase.scss */
+.nick-svg-view-group:not([active=true]) > text {
+  opacity: 0;
+}
+/* line 180, ../../sass/pages/nickase.scss */
+.nick-svg-view-group:not([active=true]) > line {
+  opacity: .1;
+}
+/* line 183, ../../sass/pages/nickase.scss */
+.nick-svg-view-group[active=true] {
+  opacity: .9;
+}
+
+/* line 193, ../../sass/pages/nickase.scss */
+.nickase-detail-view .page-header {
+  padding-bottom: 3px;
+}
+/* line 197, ../../sass/pages/nickase.scss */
+.nickase-detail-view .full-width.header {
+  width: 100%;
+  margin-bottom: 20px;
+}
+/* line 200, ../../sass/pages/nickase.scss */
+.nickase-detail-view .full-width.header > * {
+  vertical-align: text-bottom;
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+/* line 205, ../../sass/pages/nickase.scss */
+.nickase-detail-view .full-width.header .nickase-detail-title {
+  display: inline-block;
+}
+/* line 212, ../../sass/pages/nickase.scss */
+.nickase-detail-view .cards .card {
+  padding-top: 50px;
+}
+/* line 214, ../../sass/pages/nickase.scss */
+.nickase-detail-view .cards .card.sequence-section {
+  padding-top: 10px;
+}
+/* line 217, ../../sass/pages/nickase.scss */
+.nickase-detail-view .cards .card.sequence-section .sequence {
+  color: rgba(0, 0, 0, 0.25);
+}
+/* line 218, ../../sass/pages/nickase.scss */
+.nickase-detail-view .cards .card.sequence-section .sequence.selected {
+  color: black;
+}
+/* line 223, ../../sass/pages/nickase.scss */
+.nickase-detail-view .cards .card .qbox {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  height: 40px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-right: 5px;
+  border-bottom: 1px dotted black;
+}
+/* line 233, ../../sass/pages/nickase.scss */
+.nickase-detail-view .cards .card .qbox > span {
+  display: block;
+  line-height: 40px;
+  color: white;
+  text-align: right;
+  font-size: 300%;
+}
+/* line 242, ../../sass/pages/nickase.scss */
+.nickase-detail-view .cards .card.high {
+  background-color: rgba(48, 80, 48, 0.05);
+}
+/* line 242, ../../sass/pages/nickase.scss */
+.nickase-detail-view .cards .card.high .qbox {
+  background-color: rgba(16, 112, 16, 0.25);
+}
+/* line 247, ../../sass/pages/nickase.scss */
+.nickase-detail-view .cards .card.medium {
+  background-color: rgba(159, 159, 96, 0.05);
+}
+/* line 247, ../../sass/pages/nickase.scss */
+.nickase-detail-view .cards .card.medium .qbox {
+  background-color: rgba(223, 223, 32, 0.25);
+}
+/* line 253, ../../sass/pages/nickase.scss */
+.nickase-detail-view .cards .card.bad {
+  background-color: rgba(159, 96, 96, 0.05);
+}
+/* line 254, ../../sass/pages/nickase.scss */
+.nickase-detail-view .cards .card.bad .qbox {
+  background-color: rgba(223, 32, 32, 0.25);
+}
+/* line 262, ../../sass/pages/nickase.scss */
+.nickase-detail-view .cards .card.sequence-section .sequence {
+  word-break: break-all;
+}
+/* line 268, ../../sass/pages/nickase.scss */
+.nickase-detail-view .spacer {
+  display: inline-block;
+  width: auto;
+}
+/* line 273, ../../sass/pages/nickase.scss */
+.nickase-detail-view .spacer dd {
+  margin-left: 10px;
+}
+/* line 277, ../../sass/pages/nickase.scss */
+.nickase-detail-view .details-svg-container {
+  margin-top: 20px;
+  margin-bottom: 30px;
+}
+/* line 281, ../../sass/pages/nickase.scss */
+.nickase-detail-view .sequence-details-container {
+  margin-bottom: 25px;
+}
+/* line 284, ../../sass/pages/nickase.scss */
+.nickase-detail-view .sequence {
+  font-family: courier;
+}
+
+/* line 290, ../../sass/pages/nickase.scss */
+body.nickase .nicks-list {
+  border-bottom: 1px dotted rgba(0, 0, 0, 0.1);
+}
+
+/* line 296, ../../sass/pages/nickase.scss */
+.job-list-v.nicks-list .header {
+  padding: 1em;
+  padding-bottom: 0em;
+  font-style: italic;
+}
+
+/* line 309, ../../sass/pages/nickase.scss */
+.nickase.list-row:not(.included) {
+  display: none;
+}

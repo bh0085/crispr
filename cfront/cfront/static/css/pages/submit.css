@@ -1,11 +1,44 @@
+/* line 1, ../../sass/pages/submit.scss */
 #sequence_submission_area {
-  min-width: 400px; }
+  min-width: 325px;
+}
 
-#submit {
-  margin-left: 100px; }
-
-form.submitted {
-  cursor: wait; }
-  form.submitted .submit-group input {
-    pointer-events: none;
-    opacity: .5; }
+/* line 6, ../../sass/pages/submit.scss */
+#submit, #submit_v2 {
+  margin-top: 50px;
+}
+/* line 8, ../../sass/pages/submit.scss */
+#submit .tab-content, #submit_v2 .tab-content {
+  overflow: visible;
+}
+/* line 10, ../../sass/pages/submit.scss */
+#submit .tab-content .tab-pane, #submit_v2 .tab-content .tab-pane {
+  padding-top: 80px;
+  max-width: 600px;
+  margin-right: auto;
+  margin-left: auto;
+}
+/* line 16, ../../sass/pages/submit.scss */
+#submit .tab-content .tab-pane .header-description, #submit_v2 .tab-content .tab-pane .header-description {
+  margin-top: -60px;
+  position: absolute;
+  text-align: center;
+  left: 0px;
+  right: 0px;
+  color: #000;
+  opacity: .5;
+  font-size: 100%;
+}
+/* line 29, ../../sass/pages/submit.scss */
+#submit form.submitted, #submit_v2 form.submitted {
+  cursor: wait;
+}
+/* line 31, ../../sass/pages/submit.scss */
+#submit form.submitted .submit-group input, #submit_v2 form.submitted .submit-group input {
+  pointer-events: none;
+  opacity: .5;
+}
+/* line 35, ../../sass/pages/submit.scss */
+#submit form.submitted input[type='file'], #submit_v2 form.submitted input[type='file'] {
+  width: 95px;
+}
