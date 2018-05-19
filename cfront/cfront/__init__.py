@@ -27,8 +27,17 @@ def set_genomes_settings(settings):
         if prefix == k[:len(prefix)]:
             genomes_settings[k[len(prefix):]] = (v.lower()=='true') \
                                                 if v.lower() in ['true', 'false'] else v
-    genomes_settings["genome_names"] = [e.strip() 
-                                        for e in genomes_settings["genome_names"].split(",")]
+
+    import csv
+    with open("/fastdata/crispr/config/genomes.csv") as f:
+        r = csv.reader(f)
+        cols = r.next()
+        genomes_settings["genomes_info"] = []
+        for l in r:
+            g = dict(zip(cols,l))
+            genomes_settings["genomes_info"].append(g)
+    #genomes_settings["genome_names"] = [e.strip() 
+    #                                    for e in genomes_settings["genome_names"].split(",")]
      
 
 def main(global_config, **settings):

@@ -24,7 +24,6 @@ $(document).on("click", ".show-other-example", function(){
 
 $(document).on("click", "#sequence_submission_area",function(){
     $(this).focus()
-    $(this).select()
 })
 
 
@@ -113,17 +112,16 @@ var SubmitV = Backbone.View.extend({
 	this.$el.html(_.template(this.template, params)).attr("id","submit")
 
 	self = this;
-	genome_names = sessionInfo.genome_names
-	descriptive_names = {hg38:"human", mm10:"mouse", danRer11:"zebrafish", rn5:"rat",  ce10:"c. elegans", oryCun2:"rabbit",susScr11:"pig",dm6:"fly", monDom5:"possum",galGal4:"chicken", tair10:"a. thaliana",canFam3:"dog", aAegL2:"mosquito (Aedes aegypti)",aGamP3:"mosquito (Anopheles gambiae)", gasAcu1:"stickleback"}
+	genomes_info = sessionInfo.genomes_info
 
 	control_template =  $("#genome-control-template").html()
 	_.each(this.$(".genome-controls"),
 	       function(controls){
 		   $controls = $(controls)
-		   _.each(genome_names,function(g, i){
-		       params = {name:g,
+		   _.each(genomes_info,function(g, i){
+		       params = {name:g["assembly"],
 				 checked_string: i == 0 ? "checked" : "",
-				 descriptive_name:descriptive_names[g]}
+				 descriptive_name:g["name"]}
 		       $controls.append(
 			   $("<label>",{class:"radio genome"}).html(
 			       _.template(control_template,params)))

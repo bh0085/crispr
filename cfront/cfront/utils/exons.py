@@ -10,7 +10,7 @@ from pyramid.paster import bootstrap
 from cfront import genomes_settings
 
 def genes_file(genome_name):
-    path = genomes_settings.get("ucsc_tsv_template").format(genome_name)
+    path =  "/fastdata/zlab-genomes/{0}.ucsc.tsv".format(genome_name)
     if not os.path.isfile(path):
         raise Exception("unsupported genome (file ucsc file does not exist) at\n {0}"\
                         .format(path))
@@ -85,9 +85,9 @@ def populate_exons(genome_name):
     DROP TABLE IF EXISTS exon_{0};
     CREATE TABLE exon_{0} (
     id int PRIMARY KEY,
-    gene_name VARCHAR(50) not null,
+    gene_name VARCHAR(255) not null,
     exon_number SMALLINT not null,
-    chr  VARCHAR(25) not null,
+    chr  VARCHAR(250) not null,
     strand SMALLINT not null,
     exon_start INT NOT NULL,
     exon_end INT NOT NULL,

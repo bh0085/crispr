@@ -51,7 +51,7 @@ def raw_locs_file(genome):
 
 def create_locs_file(genome):
     rlf = raw_locs_file(genome)
-    twobitfile = "/fastdata/genomes/{0}.2bit".format(genome)
+    twobitfile = "/fastdata/zlab-genomes/{0}.2bit".format(genome)
     tb = twobitreader.TwoBitFile(twobitfile)
     chr_names = [k for k in tb.keys() if not "_" in k]
     rc_dict ={"A":"T","T":"A","G":"C","C":"G"}
@@ -90,7 +90,7 @@ def create_packed_locs_file(genome):
 
     bytepack_file_template = "/fastdata/crispr/{0}_loci_bytes.dat"
     fpath = bytepack_file_template.format(genome)
-    twobitfile = "/fastdata/genomes/{0}.2bit".format(genome)
+    twobitfile = "/fastdata/zlab-genomes/{0}.2bit".format(genome)
     tb = twobitreader.TwoBitFile(twobitfile)
     chr_names = [k for k in tb.keys() if not "_" in k]
     rc_dict ={"A":"T","T":"A","G":"C","C":"G"}

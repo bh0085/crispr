@@ -107,8 +107,8 @@ def process_queue(ofs, stride):
 
     for i in range(max_procs):
         print("loading {0}".format(i))
-        genomes_dict =dict([n,byte_scanner.get_library_bytes_shm(n) ]
-                           for n in genomes_settings["genome_names"])
+        genomes_dict =dict([g["assembly"],byte_scanner.get_library_bytes_shm(g["assembly"]) ]
+                           for g in genomes_settings["genomes_info"])
         proc = mp.Process(target=worker, args=[jobs_q],
                           kwargs = genomes_dict
                             )
