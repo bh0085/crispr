@@ -63,9 +63,13 @@ def main(global_config, **settings):
     config.add_static_view('/files', 'static/files', cache_max_age=3600)
 
     #page routes
+    
+    config.add_route('splash_v2', '/', factory=PageResourceFactory)
+    config.add_route('submit_v2', '/v2/submit', factory=PageResourceFactory)
+    
     config.add_route('about', '/about', factory=PageResourceFactory)
     config.add_route('batch', '/v1/batch/{batch_key}', factory = BatchResourceFactory)
-    config.add_route('submit', '/', factory=PageResourceFactory)
+    config.add_route('submit', '/v1/submit', factory=PageResourceFactory)
     config.add_route('job', '/v1/job/{job_key}', factory=PageResourceFactory)
     config.add_route('readonly', '/readonly',factory=PageResourceFactory)
     config.add_route('readout', '/v1/guides/{job_key}',factory=PageResourceFactory)

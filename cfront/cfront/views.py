@@ -53,13 +53,13 @@ def submit_view(request):
               "genomes_info":genomes_settings["genomes_info"]}} 
 
 @view_config(route_name="submit_v2", renderer="base.mako")
-def submit2_view(request):
+def submit_v2_view(request):
     return  { "sessionInfo":
              {"routes":routes_dict(request),
               "genomes_info":genomes_settings["genomes_info"]}}
 
 @view_config(route_name="splash_v2", renderer="base.mako")
-def submit2_view(request):
+def splash_v2_view(request):
     return  { "sessionInfo":
              {"routes":routes_dict(request),
               "genomes_info":genomes_settings["genomes_info"]}} 
