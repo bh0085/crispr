@@ -3,24 +3,25 @@
 }
 
 
-#submit, #submit_v2{
+#submit, #submit_v2, #gene_results_v2{
     margin-top:50px;
     .tab-content{
 	overflow:visible;
 	.tab-pane{
-	    padding-top:80px;
+	    padding-top:100px;
 	    max-width: 600px;
 	    margin-right: auto;
 	    margin-left: auto;
 
 	    .header-description{
-		margin-top: -60px;
+		margin-top: -80px;
+		margin-bottom:20px;
 		position: absolute;
 		text-align: center;
 		left: 0px;
 		right: 0px;
-		color: #000;
-		opacity: .5;
+		color: #BBB;
+		opacity: 1;
 		font-size: 100%;
 	    }
 	}	

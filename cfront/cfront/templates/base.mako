@@ -1,8 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <link href="/css/bootstrap/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.css" rel="stylesheet">
     <link href="/css/style.css" rel="stylesheet"/>
+    
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.4/css/selectize.bootstrap3.css"/>
+    
+
+    <!--
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.4/css/selectize.bootstrap3.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.4/css/selectize.bootstrap3.min.css.map"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.4/css/selectize.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.4/css/selectize.default.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.4/css/selectize.default.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.4/css/selectize.default.min.css.map"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.4/css/selectize.legacy.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.4/css/selectize.legacy.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.4/css/selectize.legacy.min.css.map"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.4/css/selectize.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.4/css/selectize.min.css.map/> -->
+    
 
     <meta HTTP-EQUIV="CONTENT-LANGUAGE" CONTENT="en-US">
     <meta charset="utf-8">   
@@ -35,6 +54,7 @@
     </script>
 
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.js" ></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/js/cdn/underscore-min.js" ></script>
     <script type="text/javascript" src="/js/cdn/backbone-min.js" ></script>
     <script type="text/javascript" src="/js/cdn/mustache.min.js" ></script>
@@ -42,7 +62,6 @@
     <script type="text/javascript" src="/js/deps/backbone-relational/backbone-relational.js" ></script>
     <script type="text/javascript" src="/js/deps/jquery-tablesorter/jquery.tablesorter.min.js" ></script>
 
-    <script src="/js/deps/bootstrap/bootstrap.min.js"></script>
     <script type="text/javascript" src="/js/deps/jquery-svg/jquery.svg.min.js"></script>
     <script type="text/javascript" src="/js/deps/sprintf.min.js"></script>
 
@@ -52,6 +71,16 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/corejs-typeahead/1.2.1/typeahead.bundle.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/corejs-typeahead/1.2.1/typeahead.jquery.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/corejs-typeahead/1.2.1/typeahead.jquery.min.js"></script>
+
+
+
+    
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/microplugin/0.0.3/microplugin.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.4/js/selectize.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.4/js/standalone/selectize.min.js"></script>
+
+
+    
 
 
     <%include file="models.html"/>
@@ -68,6 +97,7 @@
     <%include file="bb_templates/nickase.mako"/>
     <%include file="bb_templates/submit_v2.mako"/>
     <%include file="bb_templates/splash_v2.mako"/>
+    <%include file="bb_templates/gene_results_v2.mako"/>
     <script type="text/javascript" src="/js/pages/base.js"></script>
     <script type="text/javascript" src="/js/pages/${request.matched_route.name}.js"></script>
     <script type="text/javascript" src="/js/app/constants.js"></script>
@@ -100,6 +130,6 @@
 
 
     
-    <div class="footer">Zhang Lab, MIT 2013</div> 
+    <div class="footer">Zhang Lab, MIT 2018</div> 
   </body>
 </html>

@@ -1,0 +1,41 @@
+/* line 6, ../../sass/pages/splash_v2.scss */
+body.splash_v2 li {
+  list-style: none;
+  padding-top: 5px;
+}
+/* line 12, ../../sass/pages/splash_v2.scss */
+body.splash_v2 ul {
+  padding-left: 0px;
+}
+/* line 17, ../../sass/pages/splash_v2.scss */
+body.splash_v2 .splash-greeting-container {
+  text-align: center;
+}
+/* line 22, ../../sass/pages/splash_v2.scss */
+body.splash_v2 .splash-greeting-container .biline {
+  margin-bottom: 25px;
+}
+/* line 24, ../../sass/pages/splash_v2.scss */
+body.splash_v2 .splash-greeting-container .biline p {
+  margin-bottom: 5px;
+}
+/* line 27, ../../sass/pages/splash_v2.scss */
+body.splash_v2 .splash-greeting-container .biline a:link {
+  text-decoration: underline;
+}
+/* line 32, ../../sass/pages/splash_v2.scss */
+body.splash_v2 #genome-v2-links {
+  margin-bottom: 25px;
+}
+/* line 34, ../../sass/pages/splash_v2.scss */
+body.splash_v2 #genome-v2-links .human {
+  margin-bottom: 8px;
+}
+/* line 36, ../../sass/pages/splash_v2.scss */
+body.splash_v2 #genome-v2-links .human a {
+  font-weight: bold;
+}
+/* line 40, ../../sass/pages/splash_v2.scss */
+body.splash_v2 #genome-v2-links a:link {
+  text-decoration: underline;
+}

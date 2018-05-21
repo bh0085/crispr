@@ -1,35 +1,18 @@
-<div class="navbar unselectable">
-  <div class=""><!--removed navbar inner styling -->
-    <div class="container"> 
-      <ol class="breadcrumb brand">
-	<li><a href="/">CRISPR Design</a><span class="divider">/</span></li>
-      </ol>
-
-      <!-- Everything you want hidden at 940px or less, place within here -->
-      <ul class="nav pull-right">
-        <li><a href="/about">Help</a></li>        
-        <li><a href="https://groups.google.com/forum/#!forum/crispr">Forum</a></li>        
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#" href="/">CRISPR Design</a>
+    </div>
+    
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+	<li><a href="/about">Help</a></li>        
+        <li><a href="https://groups.google.com/forum/#!forum/crispr">Forum</a></li> 
       </ul>
     </div>
   </div>
 </div>
-<!--
-
-%if request.matched_route.name == "nickase" or request.matched_route.name == "downloads":
-<div class="alert alert-warning alpha-warning header">
-  <button type="button" class="close" data-dismiss="alert">&times;</button>
-  <div class="content showing-less">
-    <span class="text-fixed-width-content">Heads up -- this page is brand new and is still having the kinks worked out of it. If anything seems to be amiss, please head over to the <a href="https://groups.google.com/forum/#!forum/crispr">discussion forum</a> and let us know!
-    </span>
-    <a class=" less show-more">show more</a>
-    <span class="more"></span>
-    <a class="med-left-margin more show-less">... show less</a> 
-  </div>
-</div>
-%endif
-
--->
-
 
 
 

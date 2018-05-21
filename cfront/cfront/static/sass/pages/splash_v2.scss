@@ -1,0 +1,46 @@
+
+
+body.splash_v2{
+
+    //element styling
+    li{
+	list-style:none;
+	padding-top:5px;
+    }
+    
+
+    ul{
+	padding-left:0px;
+    }
+    
+    //page layout
+    .splash-greeting-container{
+	text-align:center;
+	.headline{
+
+	}
+	.biline{
+	    margin-bottom:25px;
+	    p{
+		margin-bottom:5px;
+	    }
+	    a:link{
+		text-decoration:underline;
+	    }
+	}
+    }
+    #genome-v2-links{
+	margin-bottom:25px;
+	.human{
+	    margin-bottom:8px;
+	    a{
+		font-weight:bold;
+	    }
+	}
+	a:link{
+	    text-decoration:underline;
+	}
+    }
+
+
+}

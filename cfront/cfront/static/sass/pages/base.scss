@@ -46,12 +46,7 @@ body{
     }
 
 }
-.navbar.navbar.navbar{
-    a,.brand{
-	padding-top:5px;
-	padding-bottom:5px;
-    }
-}
+
 
 body{
     &.submit{
@@ -62,22 +57,7 @@ body{
 	    }
 	}
     }
-    .navbar{
-	margin-bottom:0px;
-	.brand{
-	    opacity:.9;
-	    font-family: 'Alegreya SC', serif;
-	}
-	>*{
-	    
-	    padding-left:10px;
-	    padding-right:10px;
-	    background-color:#fafafa;
-            -webkit-font-smoothing: antialiased;
-            border-radius:0px;	
-	    border-bottom:1px solid #ddd;
-	}
-    }
+    
 }
 .alert.header{
     margin-bottom:0px;
@@ -157,11 +137,6 @@ body{
 body{
     .float-left{
    }
-    .navbar{
-        li>a, .brand{
-            color:black;
-        }
-    }
 }
 
 
@@ -188,60 +163,4 @@ body{
 .inactive{
     opacity: .25;
     pointer-events:none;
-}
-
-#navparent{
-    width:0px;
-    height:0px;
-    display:inline-block;
-    position:fixed;
-    left:0px;
-    top:50%;
-    margin-top:-56px;
-}
-.bs-docs-sidenav {
-    width: 128px;
-    margin: 0px 0 0;
-    padding: 0;
-    background-color: #fff;
-    -webkit-border-radius: 6px;
-    -moz-border-radius: 6px;
-    border-radius: 6px;
-    -webkit-box-shadow: 0 1px 4px rgba(0,0,0,.065);
-    -moz-box-shadow: 0 1px 4px rgba(0,0,0,.065);
-    box-shadow: 0 1px 4px rgba(0,0,0,.065);
-}
-
-.bs-docs-sidenav > li > a {
-    display: block;
-    width: 90px 9;
-    margin: 0 0 -1px;
-    padding: 8px 14px;
-    border: 1px solid #e5e5e5;
-}
-
-.bs-docs-sidenav .icon-chevron-right {
-    float: right;
-    margin-top: 2px;
-    margin-right: -6px;
-    opacity: .25;
-}
-.bs-docs-sidenav .active .icon-chevron-right, .bs-docs-sidenav .active a:hover .icon-chevron-right {
-    background-image: url(../img/glyphicons-halflings-white.png);
-    opacity: 1;
-}
-
-.bs-docs-sidenav > .active > a {
-    position: relative;
-    z-index: 2;
-    padding: 9px 15px;
-    border: 0;
-    text-shadow: 0 1px 0 rgba(0,0,0,.15);
-    -webkit-box-shadow: inset 1px 0 0 rgba(0,0,0,.1), inset -1px 0 0 rgba(0,0,0,.1);
-    -moz-box-shadow: inset 1px 0 0 rgba(0,0,0,.1), inset -1px 0 0 rgba(0,0,0,.1);
-    box-shadow: inset 1px 0 0 rgba(0,0,0,.1), inset -1px 0 0 rgba(0,0,0,.1);
-}
-
-a{
-    cursor:pointer;
 }

@@ -1,0 +1,202 @@
+
+$cas9bg:red;
+$cpcf1bg:green;
+
+body.gene_results_v2{
+
+    a:link{
+	text-decoration:underline;
+    }
+    .pam.before{
+	color:green;
+    }
+
+    .pam.after{
+	color:red;
+    }
+
+    .line.one{
+	white-space:nowrap;
+	>*{white-space:nowrap;}
+    }
+
+    ul{
+	padding-left:0px;
+    }
+
+    .tool-view-container{
+	h2{
+	    text-align:center;
+	}
+    }
+
+    li{
+	list-style:none;
+	margin-bottom:10px;
+    }
+    .gene-view-container{
+	.gene-view{
+
+	    .download-gb{
+		color:black;
+		display:none;
+		a:link{
+		    color:blue;
+		}
+	
+	    }
+
+	    .margin-spacer{
+		border-width:1px;
+		border-style:solid;
+		padding:4px;
+		background-color:lightgray;
+		
+	    }
+	    .margin-spacer.margin-spacer.highlighted{
+		//border-color:white;
+		background-color:white;
+		z-index:10;
+		box-shadow:10px 10px 20px rgba(0, 0, 0, .2);
+	    }
+	    .guide.cas9{
+		.margin-spacer:not(.highlighted){
+		    border-color:red;
+		}
+		.margin-spacer.highlighted .line.one{
+		    background-color:red;
+		    color:white;
+		}
+
+	    }
+	    .guide.cpcf1{
+		.margin-spacer:not(.highlighted){
+		    border-color:green;
+		}
+		.margin-spacer.highlighted .line.one{
+		    background-color:green;
+		    color:white;
+		    border-color:green;
+
+		    
+		    
+		}
+
+	    }
+
+	    .text-spacer:not(.highlighted){
+		display:none;
+	    }
+	    .text-spacer{
+		position:absolute;
+		left:50%;
+		margin-left:-150px;
+		width:300px;
+		background-color:white;
+		border:1px solid black;
+		opacity:.9;
+		color:black;
+		text-align:center;
+		.download-gb{
+		    display:block;
+		    color:black;
+		}
+		
+	    }
+	    
+
+			    
+	    .margin-spacer.highlighted{
+		.pam{
+		    color:white;
+		}
+		.download-gb{
+		    display:block;
+		    color:black;
+		}
+	    }
+	    
+	    .letters{
+		width:60.5ch;
+		margin-left:auto;
+		margin-right:auto;
+
+		.guide.cas9 .margin-spacer{
+
+		    left:0px;
+		    margin-left:-300px;
+		    text-align:left;
+		}
+		
+		.guide.cpcf1 .margin-spacer{
+		    left:50%;
+		    margin-left:30ch;
+		    text-align:left;
+		}
+		
+		.margin-spacer{
+		    font-family:courier;
+		    color:black;
+		    position:absolute;
+		    width:300px;
+		}
+		
+		.exon{
+		    color:black;
+		}
+		.exon,.intron{
+		    display:block;
+			
+		}
+		.exon-helper{
+		    position:absolute;
+		    width:auto;
+		    text-align:right;
+		    width:200px;
+		    margin-left:-220px;
+		}
+		.intron{
+			.firstline,.lastline{
+			    display: -webkit-box;
+			    -webkit-line-clamp: 1;
+			    -webkit-box-orient: vertical;  
+			}
+			.before-middle{
+			    content:"...";
+			    text-align:center;
+			    height:10px;
+			    display:block;
+			}
+			.middle{
+			    display:none;
+			}
+		}
+		font-family:courier;
+		max-width: 100%;
+		overflow: hidden;
+		word-break: break-all;
+
+		a.white{
+		    color:white;
+		}
+		a.white:link{
+		    color:white;
+		}
+		.guide{
+		    background-color:red;
+		    color:white;
+		    padding:0px;
+		    word-break:break-all;
+
+		}
+		.guide.cas9{
+		    background-color:$cas9bg;
+		}
+		.guide.cpcf1{
+		    background-color:$cpcf1bg;
+		}
+	    }
+	}
+    }
+
+}

@@ -6,31 +6,6 @@ from cfront import cfront_settings
 
 
 
-@view_config(route_name='genes_autocomplete_info',renderer='json')
-def genes_autocomplete_info(request):
-
-    import gffutils
-    assembly = request.matchdict['assembly']
-    db = gffutils.FeatureDB('/fastdata/zlab-genomes/gffutils/{0}.db'.format(assembly), keep_order=True)
-    allgenes = list(db.features_of_type("gene"))
-    #allnames = [e["Name"] for e in allgenes]
-    genes_dict = dict([( e["Name"][0], {"strand":e.strand,"start":e.start,"end":e.end,"chrom":e.chrom}) for e in allgenes])
-    return genes_dict
-
-
-
-@view_config(route_name='genes_autocomplete_array',renderer='json')
-def genes_autocomplete_array(request):
-
-    import gffutils
-    assembly = request.matchdict['assembly']
-    db = gffutils.FeatureDB('/fastdata/zlab-genomes/gffutils/{0}.db'.format(assembly), keep_order=True)
-    allgenes = list(db.features_of_type("gene"))
-    return [ e["Name"][0] for e in allgenes]
-
-
-
-
 @view_config(route_name='job_check_spacers', renderer='json')
 def job_check_spacers(request):
     return request.job.computed_spacers

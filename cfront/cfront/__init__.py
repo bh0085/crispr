@@ -65,10 +65,17 @@ def main(global_config, **settings):
     #page routes
     
     config.add_route('splash_v2', '/', factory=PageResourceFactory)
+    config.add_route('gene_results_v2', '/v2/{assembly}/{geneid}/gene_results', factory=PageResourceFactory)
     config.add_route('submit_v2', '/v2/{assembly}/submit', factory=PageResourceFactory)
     config.add_route('genes_autocomplete_array', '/v2/{assembly}/gene_names.json')
     config.add_route('genes_autocomplete_info', '/v2/{assembly}/genes_info.json')
-    
+    config.add_route('gene_genbank', '/v2/{assembly}/{geneid}/gene.gb')
+    config.add_route('gene_genbank_spacer', '/v2/{assembly}/{geneid}/{tool}/{guide_sequence}/gene.gb')
+    config.add_route('gene_genbank_all_spacers', '/v2/{assembly}/{geneid}/all_spacers.gb')
+    config.add_route('gene_fasta', '/v2/{assembly}/{geneid}/gene.fa')
+    config.add_route('gene_genbank_json', '/v2/{assembly}/{geneid}/genbank.json')
+    config.add_route('gene_sequence', '/v2/{assembly}/{geneid}/sequence.json')
+    config.add_route('job_data','/v2/{assembly}/{geneid}/job.json')
     
     config.add_route('about', '/about', factory=PageResourceFactory)
     config.add_route('batch', '/v1/batch/{batch_key}', factory = BatchResourceFactory)
@@ -87,6 +94,8 @@ def main(global_config, **settings):
     config.add_route('csv_all_guides', '/v1/export/csv_all_guides/{job_key}',factory=JobResourceFactory)
     config.add_route('gb_all_guides', '/v1/export/guides_gb/{job_key}',factory=JobResourceFactory)
     
+    #v2 ajax routes
+    config.add_route('v2_query_gene', '/v2/{assembly}/{geneid}/{email}/query_gene')
 
     #ajax routes
     config.add_route('job_check_spacers','/j/check_spacers/{job_key}',factory=JobResourceFactory)

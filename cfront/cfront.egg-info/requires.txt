@@ -14,3 +14,4 @@ redis
 pyramid_mako
 scipy
 gffutils
+pyfaidx

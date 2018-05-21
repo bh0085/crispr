@@ -1,18 +1,29 @@
 
 
+
 .gene-info{
-    background-color:#EFEFEF;
+    max-height:200px;
     font-family:courier;
-    padding:50px;
-    height:300px;
+    background-color:#EEEEEE;
     overflow-y:scroll;
+    white-space: pre-wrap;
+    
+		    
     
 }
 
-.gene-info-container{
-    margin-bottom:25px;
+.gene-helpers{
+    padding-top:20px;
+    padding-bottom:20px;
 }
 
+.gene-info-helpers{
+    text-align:center;
+    li{
+	padding-left:20px;
+	display:inline;
+    }
+}
 
 //default styles from one of the styling examples for autocomplete js
 .tt-input,.tt-hint {
@@ -27,38 +38,6 @@
 
 
 
-
-.tt-hint {
-    color: #999;
-}
-
-.tt-menu {
-  max-height: 150px;
-  overflow-y: auto;
-}
-.tt-menu {
-    width: 422px;
-    margin-top: 12px;
-    padding: 8px 0;
-    background-color: #fff;
-    border: 1px solid #ccc;
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    border-radius: 8px;
-    box-shadow: 0 5px 10px rgba(0,0,0,.2);
-}
-
-.tt-suggestion {
-    padding: 3px 20px;
-    font-size: 18px;
-    line-height: 24px;
-}
-
-.tt-suggestion.tt-cursor {
-    color: #fff;
-    background-color: #0097cf;
-
-}
-
-.tt-suggestion p {
-    margin: 0;
+.selectize-input.selectize-input{
+//    width:208px;
 }

@@ -50,47 +50,23 @@ body .disabled {
   color: black;
 }
 
-/* line 50, ../../sass/pages/base.scss */
-.navbar.navbar.navbar a, .navbar.navbar.navbar .brand {
-  padding-top: 5px;
-  padding-bottom: 5px;
-}
-
-/* line 59, ../../sass/pages/base.scss */
+/* line 54, ../../sass/pages/base.scss */
 body.submit .navbar > * {
   padding-left: 75px;
   padding-right: 75px;
 }
-/* line 65, ../../sass/pages/base.scss */
-body .navbar {
-  margin-bottom: 0px;
-}
-/* line 67, ../../sass/pages/base.scss */
-body .navbar .brand {
-  opacity: .9;
-  font-family: 'Alegreya SC', serif;
-}
-/* line 71, ../../sass/pages/base.scss */
-body .navbar > * {
-  padding-left: 10px;
-  padding-right: 10px;
-  background-color: #fafafa;
-  -webkit-font-smoothing: antialiased;
-  border-radius: 0px;
-  border-bottom: 1px solid #ddd;
-}
 
-/* line 82, ../../sass/pages/base.scss */
+/* line 62, ../../sass/pages/base.scss */
 .alert.header {
   margin-bottom: 0px;
 }
 
-/* line 85, ../../sass/pages/base.scss */
+/* line 65, ../../sass/pages/base.scss */
 .alert .content {
   max-width: 500px;
   margin: 0 auto;
 }
-/* line 86, ../../sass/pages/base.scss */
+/* line 66, ../../sass/pages/base.scss */
 .alert .content.showing-less .text-fixed-width-content {
   max-width: 400px;
   white-space: nowrap;
@@ -99,27 +75,27 @@ body .navbar > * {
   display: inline-block;
   opacity: .7;
 }
-/* line 94, ../../sass/pages/base.scss */
+/* line 74, ../../sass/pages/base.scss */
 .alert .content > * {
   vertical-align: text-bottom;
 }
 
-/* line 105, ../../sass/pages/base.scss */
+/* line 85, ../../sass/pages/base.scss */
 .med-left-margin {
   margin-left: 20px;
 }
 
-/* line 109, ../../sass/pages/base.scss */
+/* line 89, ../../sass/pages/base.scss */
 .med-top-margin {
   margin-top: 20px;
 }
 
-/* line 112, ../../sass/pages/base.scss */
+/* line 92, ../../sass/pages/base.scss */
 .small-left-margin {
   margin-left: 1em;
 }
 
-/* line 117, ../../sass/pages/base.scss */
+/* line 97, ../../sass/pages/base.scss */
 .unselectable {
   -moz-user-select: -moz-none;
   -khtml-user-select: none;
@@ -127,23 +103,23 @@ body .navbar > * {
   user-select: none;
 }
 
-/* line 124, ../../sass/pages/base.scss */
+/* line 104, ../../sass/pages/base.scss */
 .disabled {
   color: lightgray;
   cursor: not-allowed;
 }
 
-/* line 129, ../../sass/pages/base.scss */
+/* line 109, ../../sass/pages/base.scss */
 .sequence {
   font-family: courier;
 }
 
-/* line 133, ../../sass/pages/base.scss */
+/* line 113, ../../sass/pages/base.scss */
 .v-middle {
   vertical-align: middle;
 }
 
-/* line 136, ../../sass/pages/base.scss */
+/* line 116, ../../sass/pages/base.scss */
 .valid {
   position: fixed;
   width: 200px;
@@ -154,123 +130,53 @@ body .navbar > * {
   margin: 25px;
   bottom: 0px;
 }
-/* line 145, ../../sass/pages/base.scss */
+/* line 125, ../../sass/pages/base.scss */
 .valid .dna {
   word-break: break-all;
 }
-/* line 148, ../../sass/pages/base.scss */
+/* line 128, ../../sass/pages/base.scss */
 .valid li {
   margin-top: 10px;
 }
 
-/* line 154, ../../sass/pages/base.scss */
+/* line 134, ../../sass/pages/base.scss */
 .showing-less > .more {
   display: none;
 }
 
-/* line 155, ../../sass/pages/base.scss */
+/* line 135, ../../sass/pages/base.scss */
 .showing-more > .less {
   display: none;
 }
 
-/* line 161, ../../sass/pages/base.scss */
-body .navbar li > a, body .navbar .brand {
-  color: black;
-}
-
-/* line 169, ../../sass/pages/base.scss */
+/* line 144, ../../sass/pages/base.scss */
 .section {
   padding: .5em;
   margin: 1em;
 }
 
-/* line 174, ../../sass/pages/base.scss */
+/* line 149, ../../sass/pages/base.scss */
 .section.bad {
   border: 1px solid rgba(255, 0, 0, 0.3);
 }
-/* line 177, ../../sass/pages/base.scss */
+/* line 152, ../../sass/pages/base.scss */
 .section.bad .header {
   color: red;
 }
 
-/* line 181, ../../sass/pages/base.scss */
+/* line 156, ../../sass/pages/base.scss */
 .section.good {
   border: 1px solid rgba(0, 255, 0, 0.3);
 }
-/* line 184, ../../sass/pages/base.scss */
+/* line 159, ../../sass/pages/base.scss */
 .section.good .header {
   color: green;
 }
 
-/* line 188, ../../sass/pages/base.scss */
+/* line 163, ../../sass/pages/base.scss */
 .inactive {
   opacity: .25;
   pointer-events: none;
-}
-
-/* line 193, ../../sass/pages/base.scss */
-#navparent {
-  width: 0px;
-  height: 0px;
-  display: inline-block;
-  position: fixed;
-  left: 0px;
-  top: 50%;
-  margin-top: -56px;
-}
-
-/* line 202, ../../sass/pages/base.scss */
-.bs-docs-sidenav {
-  width: 128px;
-  margin: 0px 0 0;
-  padding: 0;
-  background-color: #fff;
-  -webkit-border-radius: 6px;
-  -moz-border-radius: 6px;
-  border-radius: 6px;
-  -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.065);
-  -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.065);
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.065);
-}
-
-/* line 215, ../../sass/pages/base.scss */
-.bs-docs-sidenav > li > a {
-  display: block;
-  width: 90px 9;
-  margin: 0 0 -1px;
-  padding: 8px 14px;
-  border: 1px solid #e5e5e5;
-}
-
-/* line 223, ../../sass/pages/base.scss */
-.bs-docs-sidenav .icon-chevron-right {
-  float: right;
-  margin-top: 2px;
-  margin-right: -6px;
-  opacity: .25;
-}
-
-/* line 229, ../../sass/pages/base.scss */
-.bs-docs-sidenav .active .icon-chevron-right, .bs-docs-sidenav .active a:hover .icon-chevron-right {
-  background-image: url(../img/glyphicons-halflings-white.png);
-  opacity: 1;
-}
-
-/* line 234, ../../sass/pages/base.scss */
-.bs-docs-sidenav > .active > a {
-  position: relative;
-  z-index: 2;
-  padding: 9px 15px;
-  border: 0;
-  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.15);
-  -webkit-box-shadow: inset 1px 0 0 rgba(0, 0, 0, 0.1), inset -1px 0 0 rgba(0, 0, 0, 0.1);
-  -moz-box-shadow: inset 1px 0 0 rgba(0, 0, 0, 0.1), inset -1px 0 0 rgba(0, 0, 0, 0.1);
-  box-shadow: inset 1px 0 0 rgba(0, 0, 0, 0.1), inset -1px 0 0 rgba(0, 0, 0, 0.1);
-}
-
-/* line 245, ../../sass/pages/base.scss */
-a {
-  cursor: pointer;
 }
 
 /* line 2, ../../sass/pages/nickase.scss */
@@ -640,42 +546,43 @@ svg {
 }
 
 /* line 6, ../../sass/pages/submit.scss */
-#submit, #submit_v2 {
+#submit, #submit_v2, #gene_results_v2 {
   margin-top: 50px;
 }
 /* line 8, ../../sass/pages/submit.scss */
-#submit .tab-content, #submit_v2 .tab-content {
+#submit .tab-content, #submit_v2 .tab-content, #gene_results_v2 .tab-content {
   overflow: visible;
 }
 /* line 10, ../../sass/pages/submit.scss */
-#submit .tab-content .tab-pane, #submit_v2 .tab-content .tab-pane {
-  padding-top: 80px;
+#submit .tab-content .tab-pane, #submit_v2 .tab-content .tab-pane, #gene_results_v2 .tab-content .tab-pane {
+  padding-top: 100px;
   max-width: 600px;
   margin-right: auto;
   margin-left: auto;
 }
 /* line 16, ../../sass/pages/submit.scss */
-#submit .tab-content .tab-pane .header-description, #submit_v2 .tab-content .tab-pane .header-description {
-  margin-top: -60px;
+#submit .tab-content .tab-pane .header-description, #submit_v2 .tab-content .tab-pane .header-description, #gene_results_v2 .tab-content .tab-pane .header-description {
+  margin-top: -80px;
+  margin-bottom: 20px;
   position: absolute;
   text-align: center;
   left: 0px;
   right: 0px;
-  color: #000;
-  opacity: .5;
+  color: #BBB;
+  opacity: 1;
   font-size: 100%;
 }
-/* line 29, ../../sass/pages/submit.scss */
-#submit form.submitted, #submit_v2 form.submitted {
+/* line 30, ../../sass/pages/submit.scss */
+#submit form.submitted, #submit_v2 form.submitted, #gene_results_v2 form.submitted {
   cursor: wait;
 }
-/* line 31, ../../sass/pages/submit.scss */
-#submit form.submitted .submit-group input, #submit_v2 form.submitted .submit-group input {
+/* line 32, ../../sass/pages/submit.scss */
+#submit form.submitted .submit-group input, #submit_v2 form.submitted .submit-group input, #gene_results_v2 form.submitted .submit-group input {
   pointer-events: none;
   opacity: .5;
 }
-/* line 35, ../../sass/pages/submit.scss */
-#submit form.submitted input[type='file'], #submit_v2 form.submitted input[type='file'] {
+/* line 36, ../../sass/pages/submit.scss */
+#submit form.submitted input[type='file'], #submit_v2 form.submitted input[type='file'], #gene_results_v2 form.submitted input[type='file'] {
   width: 95px;
 }
 
@@ -806,21 +713,32 @@ body.downloads #downloads-container {
   padding-top: 35px;
 }
 
-/* line 3, ../../sass/pages/submit_v2.scss */
+/* line 4, ../../sass/pages/submit_v2.scss */
 .gene-info {
-  background-color: #EFEFEF;
+  max-height: 200px;
   font-family: courier;
-  padding: 50px;
-  height: 300px;
+  background-color: #EEEEEE;
   overflow-y: scroll;
+  white-space: pre-wrap;
 }
 
-/* line 12, ../../sass/pages/submit_v2.scss */
-.gene-info-container {
-  margin-bottom: 25px;
+/* line 15, ../../sass/pages/submit_v2.scss */
+.gene-helpers {
+  padding-top: 20px;
+  padding-bottom: 20px;
 }
 
-/* line 18, ../../sass/pages/submit_v2.scss */
+/* line 20, ../../sass/pages/submit_v2.scss */
+.gene-info-helpers {
+  text-align: center;
+}
+/* line 22, ../../sass/pages/submit_v2.scss */
+.gene-info-helpers li {
+  padding-left: 20px;
+  display: inline;
+}
+
+/* line 29, ../../sass/pages/submit_v2.scss */
 .tt-input, .tt-hint {
   height: 30px;
   padding: 8px 12px;
@@ -831,43 +749,234 @@ body.downloads #downloads-container {
   outline: none;
 }
 
-/* line 31, ../../sass/pages/submit_v2.scss */
-.tt-hint {
-  color: #999;
+/* line 6, ../../sass/pages/splash_v2.scss */
+body.splash_v2 li {
+  list-style: none;
+  padding-top: 5px;
+}
+/* line 12, ../../sass/pages/splash_v2.scss */
+body.splash_v2 ul {
+  padding-left: 0px;
+}
+/* line 17, ../../sass/pages/splash_v2.scss */
+body.splash_v2 .splash-greeting-container {
+  text-align: center;
+}
+/* line 22, ../../sass/pages/splash_v2.scss */
+body.splash_v2 .splash-greeting-container .biline {
+  margin-bottom: 25px;
+}
+/* line 24, ../../sass/pages/splash_v2.scss */
+body.splash_v2 .splash-greeting-container .biline p {
+  margin-bottom: 5px;
+}
+/* line 27, ../../sass/pages/splash_v2.scss */
+body.splash_v2 .splash-greeting-container .biline a:link {
+  text-decoration: underline;
+}
+/* line 32, ../../sass/pages/splash_v2.scss */
+body.splash_v2 #genome-v2-links {
+  margin-bottom: 25px;
+}
+/* line 34, ../../sass/pages/splash_v2.scss */
+body.splash_v2 #genome-v2-links .human {
+  margin-bottom: 8px;
+}
+/* line 36, ../../sass/pages/splash_v2.scss */
+body.splash_v2 #genome-v2-links .human a {
+  font-weight: bold;
+}
+/* line 40, ../../sass/pages/splash_v2.scss */
+body.splash_v2 #genome-v2-links a:link {
+  text-decoration: underline;
 }
 
-/* line 35, ../../sass/pages/submit_v2.scss */
-.tt-menu {
-  max-height: 150px;
-  overflow-y: auto;
+/* line 7, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 a:link {
+  text-decoration: underline;
 }
-
-/* line 39, ../../sass/pages/submit_v2.scss */
-.tt-menu {
-  width: 422px;
-  margin-top: 12px;
-  padding: 8px 0;
-  background-color: #fff;
-  border: 1px solid #ccc;
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  border-radius: 8px;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+/* line 10, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 .pam.before {
+  color: green;
 }
-
-/* line 50, ../../sass/pages/submit_v2.scss */
-.tt-suggestion {
-  padding: 3px 20px;
-  font-size: 18px;
-  line-height: 24px;
+/* line 14, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 .pam.after {
+  color: red;
 }
-
-/* line 56, ../../sass/pages/submit_v2.scss */
-.tt-suggestion.tt-cursor {
-  color: #fff;
-  background-color: #0097cf;
+/* line 18, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 .line.one {
+  white-space: nowrap;
 }
-
-/* line 62, ../../sass/pages/submit_v2.scss */
-.tt-suggestion p {
-  margin: 0;
+/* line 20, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 .line.one > * {
+  white-space: nowrap;
+}
+/* line 23, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 ul {
+  padding-left: 0px;
+}
+/* line 28, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 .tool-view-container h2 {
+  text-align: center;
+}
+/* line 33, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 li {
+  list-style: none;
+  margin-bottom: 10px;
+}
+/* line 40, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 .gene-view-container .gene-view .download-gb {
+  color: black;
+  display: none;
+}
+/* line 43, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 .gene-view-container .gene-view .download-gb a:link {
+  color: blue;
+}
+/* line 49, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 .gene-view-container .gene-view .margin-spacer {
+  border-width: 1px;
+  border-style: solid;
+  padding: 4px;
+  background-color: lightgray;
+}
+/* line 56, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 .gene-view-container .gene-view .margin-spacer.margin-spacer.highlighted {
+  background-color: white;
+  z-index: 10;
+  box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.2);
+}
+/* line 63, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 .gene-view-container .gene-view .guide.cas9 .margin-spacer:not(.highlighted) {
+  border-color: red;
+}
+/* line 66, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 .gene-view-container .gene-view .guide.cas9 .margin-spacer.highlighted .line.one {
+  background-color: red;
+  color: white;
+}
+/* line 73, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 .gene-view-container .gene-view .guide.cpcf1 .margin-spacer:not(.highlighted) {
+  border-color: green;
+}
+/* line 76, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 .gene-view-container .gene-view .guide.cpcf1 .margin-spacer.highlighted .line.one {
+  background-color: green;
+  color: white;
+  border-color: green;
+}
+/* line 87, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 .gene-view-container .gene-view .text-spacer:not(.highlighted) {
+  display: none;
+}
+/* line 90, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 .gene-view-container .gene-view .text-spacer {
+  position: absolute;
+  left: 50%;
+  margin-left: -150px;
+  width: 300px;
+  background-color: white;
+  border: 1px solid black;
+  opacity: .9;
+  color: black;
+  text-align: center;
+}
+/* line 100, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 .gene-view-container .gene-view .text-spacer .download-gb {
+  display: block;
+  color: black;
+}
+/* line 110, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 .gene-view-container .gene-view .margin-spacer.highlighted .pam {
+  color: white;
+}
+/* line 113, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 .gene-view-container .gene-view .margin-spacer.highlighted .download-gb {
+  display: block;
+  color: black;
+}
+/* line 119, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 .gene-view-container .gene-view .letters {
+  width: 60.5ch;
+  margin-left: auto;
+  margin-right: auto;
+  font-family: courier;
+  max-width: 100%;
+  overflow: hidden;
+  word-break: break-all;
+}
+/* line 124, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 .gene-view-container .gene-view .letters .guide.cas9 .margin-spacer {
+  left: 0px;
+  margin-left: -300px;
+  text-align: left;
+}
+/* line 131, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 .gene-view-container .gene-view .letters .guide.cpcf1 .margin-spacer {
+  left: 50%;
+  margin-left: 30ch;
+  text-align: left;
+}
+/* line 137, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 .gene-view-container .gene-view .letters .margin-spacer {
+  font-family: courier;
+  color: black;
+  position: absolute;
+  width: 300px;
+}
+/* line 144, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 .gene-view-container .gene-view .letters .exon {
+  color: black;
+}
+/* line 147, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 .gene-view-container .gene-view .letters .exon, body.gene_results_v2 .gene-view-container .gene-view .letters .intron {
+  display: block;
+}
+/* line 151, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 .gene-view-container .gene-view .letters .exon-helper {
+  position: absolute;
+  width: auto;
+  text-align: right;
+  width: 200px;
+  margin-left: -220px;
+}
+/* line 159, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 .gene-view-container .gene-view .letters .intron .firstline, body.gene_results_v2 .gene-view-container .gene-view .letters .intron .lastline {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+}
+/* line 164, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 .gene-view-container .gene-view .letters .intron .before-middle {
+  content: "...";
+  text-align: center;
+  height: 10px;
+  display: block;
+}
+/* line 170, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 .gene-view-container .gene-view .letters .intron .middle {
+  display: none;
+}
+/* line 179, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 .gene-view-container .gene-view .letters a.white {
+  color: white;
+}
+/* line 182, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 .gene-view-container .gene-view .letters a.white:link {
+  color: white;
+}
+/* line 185, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 .gene-view-container .gene-view .letters .guide {
+  background-color: red;
+  color: white;
+  padding: 0px;
+  word-break: break-all;
+}
+/* line 192, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 .gene-view-container .gene-view .letters .guide.cas9 {
+  background-color: red;
+}
+/* line 195, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 .gene-view-container .gene-view .letters .guide.cpcf1 {
+  background-color: green;
 }

@@ -72,6 +72,7 @@ cfront/static/css/pages/job.css
 cfront/static/css/pages/nickase.css
 cfront/static/css/pages/readout.css
 cfront/static/css/pages/submit.css
+cfront/static/css/pages/submit_v2.css
 cfront/static/img/crispr-logo.jpg
 cfront/static/img/output_preview.gif
 cfront/static/js/constants.js

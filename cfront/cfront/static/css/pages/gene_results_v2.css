@@ -1,0 +1,189 @@
+/* line 7, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 a:link {
+  text-decoration: underline;
+}
+/* line 10, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 .pam.before {
+  color: green;
+}
+/* line 14, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 .pam.after {
+  color: red;
+}
+/* line 18, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 .line.one {
+  white-space: nowrap;
+}
+/* line 20, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 .line.one > * {
+  white-space: nowrap;
+}
+/* line 23, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 ul {
+  padding-left: 0px;
+}
+/* line 28, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 .tool-view-container h2 {
+  text-align: center;
+}
+/* line 33, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 li {
+  list-style: none;
+  margin-bottom: 10px;
+}
+/* line 40, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 .gene-view-container .gene-view .download-gb {
+  color: black;
+  display: none;
+}
+/* line 43, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 .gene-view-container .gene-view .download-gb a:link {
+  color: blue;
+}
+/* line 49, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 .gene-view-container .gene-view .margin-spacer {
+  border-width: 1px;
+  border-style: solid;
+  padding: 4px;
+  background-color: lightgray;
+}
+/* line 56, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 .gene-view-container .gene-view .margin-spacer.margin-spacer.highlighted {
+  background-color: white;
+  z-index: 10;
+  box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.2);
+}
+/* line 63, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 .gene-view-container .gene-view .guide.cas9 .margin-spacer:not(.highlighted) {
+  border-color: red;
+}
+/* line 66, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 .gene-view-container .gene-view .guide.cas9 .margin-spacer.highlighted .line.one {
+  background-color: red;
+  color: white;
+}
+/* line 73, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 .gene-view-container .gene-view .guide.cpcf1 .margin-spacer:not(.highlighted) {
+  border-color: green;
+}
+/* line 76, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 .gene-view-container .gene-view .guide.cpcf1 .margin-spacer.highlighted .line.one {
+  background-color: green;
+  color: white;
+  border-color: green;
+}
+/* line 87, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 .gene-view-container .gene-view .text-spacer:not(.highlighted) {
+  display: none;
+}
+/* line 90, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 .gene-view-container .gene-view .text-spacer {
+  position: absolute;
+  left: 50%;
+  margin-left: -150px;
+  width: 300px;
+  background-color: white;
+  border: 1px solid black;
+  opacity: .9;
+  color: black;
+  text-align: center;
+}
+/* line 100, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 .gene-view-container .gene-view .text-spacer .download-gb {
+  display: block;
+  color: black;
+}
+/* line 110, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 .gene-view-container .gene-view .margin-spacer.highlighted .pam {
+  color: white;
+}
+/* line 113, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 .gene-view-container .gene-view .margin-spacer.highlighted .download-gb {
+  display: block;
+  color: black;
+}
+/* line 119, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 .gene-view-container .gene-view .letters {
+  width: 60.5ch;
+  margin-left: auto;
+  margin-right: auto;
+  font-family: courier;
+  max-width: 100%;
+  overflow: hidden;
+  word-break: break-all;
+}
+/* line 124, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 .gene-view-container .gene-view .letters .guide.cas9 .margin-spacer {
+  left: 0px;
+  margin-left: -300px;
+  text-align: left;
+}
+/* line 131, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 .gene-view-container .gene-view .letters .guide.cpcf1 .margin-spacer {
+  left: 50%;
+  margin-left: 30ch;
+  text-align: left;
+}
+/* line 137, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 .gene-view-container .gene-view .letters .margin-spacer {
+  font-family: courier;
+  color: black;
+  position: absolute;
+  width: 300px;
+}
+/* line 144, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 .gene-view-container .gene-view .letters .exon {
+  color: black;
+}
+/* line 147, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 .gene-view-container .gene-view .letters .exon, body.gene_results_v2 .gene-view-container .gene-view .letters .intron {
+  display: block;
+}
+/* line 151, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 .gene-view-container .gene-view .letters .exon-helper {
+  position: absolute;
+  width: auto;
+  text-align: right;
+  width: 200px;
+  margin-left: -220px;
+}
+/* line 159, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 .gene-view-container .gene-view .letters .intron .firstline, body.gene_results_v2 .gene-view-container .gene-view .letters .intron .lastline {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+}
+/* line 164, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 .gene-view-container .gene-view .letters .intron .before-middle {
+  content: "...";
+  text-align: center;
+  height: 10px;
+  display: block;
+}
+/* line 170, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 .gene-view-container .gene-view .letters .intron .middle {
+  display: none;
+}
+/* line 179, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 .gene-view-container .gene-view .letters a.white {
+  color: white;
+}
+/* line 182, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 .gene-view-container .gene-view .letters a.white:link {
+  color: white;
+}
+/* line 185, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 .gene-view-container .gene-view .letters .guide {
+  background-color: red;
+  color: white;
+  padding: 0px;
+  word-break: break-all;
+}
+/* line 192, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 .gene-view-container .gene-view .letters .guide.cas9 {
+  background-color: red;
+}
+/* line 195, ../../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 .gene-view-container .gene-view .letters .guide.cpcf1 {
+  background-color: green;
+}

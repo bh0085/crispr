@@ -18,20 +18,21 @@ var SplashV2V = Backbone.View.extend({
 	self = this;
 	genomes_info = sessionInfo.genomes_info
 
-	control_template =  $("#genome-control-template").html()
-	_.each(this.$(".genome-controls"),
-	       function(controls){
-		   $controls = $(controls)
-		   _.each(genomes_info,function(g, i){
-		       params = {name:g["assembly"],
-				 checked_string: i == 0 ? "checked" : "",
-				 descriptive_name:g["name"]}
-		       $controls.append(
-			   $("<label>",{class:"radio genome"}).html(
-			       _.template(control_template,params)))
-		   });
-	       }
-	      );
+
+	_.each(_.sortBy(genomes_info, "name"),
+	       function(e,i){
+		   if(e.name !="human"){
+		       self.$el.find("#genome-v2-links").append(
+			   $("<li>").html(_.template($("#splash-genome-link").html())(e))
+		       )
+		   }else{
+		       self.$el.find("#genome-v2-links").prepend(
+			   $("<li>",{"class":"human"}).html(_.template($("#splash-genome-link").html())(e))
+		       )
+		   }
+	       });
+	      
+	    
 	return this
     },
     on_server_error:function(data){

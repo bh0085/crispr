@@ -4,41 +4,42 @@
 }
 
 /* line 6, ../../sass/pages/submit.scss */
-#submit, #submit_v2 {
+#submit, #submit_v2, #gene_results_v2 {
   margin-top: 50px;
 }
 /* line 8, ../../sass/pages/submit.scss */
-#submit .tab-content, #submit_v2 .tab-content {
+#submit .tab-content, #submit_v2 .tab-content, #gene_results_v2 .tab-content {
   overflow: visible;
 }
 /* line 10, ../../sass/pages/submit.scss */
-#submit .tab-content .tab-pane, #submit_v2 .tab-content .tab-pane {
-  padding-top: 80px;
+#submit .tab-content .tab-pane, #submit_v2 .tab-content .tab-pane, #gene_results_v2 .tab-content .tab-pane {
+  padding-top: 100px;
   max-width: 600px;
   margin-right: auto;
   margin-left: auto;
 }
 /* line 16, ../../sass/pages/submit.scss */
-#submit .tab-content .tab-pane .header-description, #submit_v2 .tab-content .tab-pane .header-description {
-  margin-top: -60px;
+#submit .tab-content .tab-pane .header-description, #submit_v2 .tab-content .tab-pane .header-description, #gene_results_v2 .tab-content .tab-pane .header-description {
+  margin-top: -80px;
+  margin-bottom: 20px;
   position: absolute;
   text-align: center;
   left: 0px;
   right: 0px;
-  color: #000;
-  opacity: .5;
+  color: #BBB;
+  opacity: 1;
   font-size: 100%;
 }
-/* line 29, ../../sass/pages/submit.scss */
-#submit form.submitted, #submit_v2 form.submitted {
+/* line 30, ../../sass/pages/submit.scss */
+#submit form.submitted, #submit_v2 form.submitted, #gene_results_v2 form.submitted {
   cursor: wait;
 }
-/* line 31, ../../sass/pages/submit.scss */
-#submit form.submitted .submit-group input, #submit_v2 form.submitted .submit-group input {
+/* line 32, ../../sass/pages/submit.scss */
+#submit form.submitted .submit-group input, #submit_v2 form.submitted .submit-group input, #gene_results_v2 form.submitted .submit-group input {
   pointer-events: none;
   opacity: .5;
 }
-/* line 35, ../../sass/pages/submit.scss */
-#submit form.submitted input[type='file'], #submit_v2 form.submitted input[type='file'] {
+/* line 36, ../../sass/pages/submit.scss */
+#submit form.submitted input[type='file'], #submit_v2 form.submitted input[type='file'], #gene_results_v2 form.submitted input[type='file'] {
   width: 95px;
 }

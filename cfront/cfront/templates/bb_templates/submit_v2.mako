@@ -5,13 +5,12 @@
   <% from cfront import cfront_settings %>
 
   <ul class="nav nav-tabs">
-    <li class="active"><a href="#submit-one" data-toggle="tab">Single Sequence</a></li>
-    <li ><a href="#submit-many" data-toggle="tab">Batch Mode</a></li>
+    <li class="active"><a href="#submit-one" data-toggle="tab">Single gene ({{genome_assembly}})</a></li>
+    <li ><a href="#submit-many" data-toggle="tab" class="disabled" >Genomic region ({{genome_assembly}})</a></li>
   </ul>
   <div class="tab-content content-area">
     <div id="submit-one" name="submit-sequence" class="tab-pane scrolly-content active">
-      <div class="header-description">{{description}}</div>
-
+      <div class="header-description"><p>{{description}}</p><p style="color:black;">Selected genome: <b>{{genome_name}}</b> ({{genome_assembly}}). <a href="/">Choose another genome?</a></p></div>
       <form class="form-horizontal" >
 
 	<div class="control-group">
@@ -25,34 +24,24 @@
       </form>
 
 
-      <div class="row gene-info-container">
-	<div class="col-xs-12 col-sm-8 col-sm-offset-2">
-	  <div class="gene-info">
-	    
-	  </div>
+      <div class="gene-helpers hidden">
+	<div class="gene-info-container">
+	  <div  class="gene-info"></div>
 	</div>
+	<div class="gene-info-helpers"><ul><li><a class="toggle-gene-info">hide gene info</a></li><li><a class="download-fa" target="_blank">download as fasta</a></li><li><a class="download-gb" target="_blank">download as genbank</a></li></ul></div>
       </div>
 
-      
-      <form class="form-horizontal" >
-	<div class="control-group" readonly>
-	  <span class="control-label">gene ID</span>
-	  <div class="controls">
-	    <input name="gene_id" id="gene_id_value" type="text" placeholder="please select a gene" readonly />
-	  </div>
+      <form id="submit-form">
+	<div class="form-group">
+	  <label for="gene_id_value">crispr.mit.edu gene id</label>
+	  <input disabled="true" type="text" class="form-control updates-target" id="gene_id_value" placeholder="crispr.mit.edu gene ID" required="true">
+	  <small id="emailHelp" class="form-text text-muted">Please select a gene name, above.</small>
 	</div>
-	<div class="control-group">
-	  <span class="control-label">email address *</span>
-	  <div class="controls">
-	    <input name="email" id="email-address" type="email" required="true" placeholder="email">
-	  </div>
+	<div class="form-group">
+	  <label for="email-address">Email address *</label>
+	  <input type="email" class="form-control updates-target" id="email-address" placeholder="your email" required="true">
 	</div>
-
-	
-	<div class="control-group submit-group">
-	  <div class="controls"><input  type="submit"></input>
-	  </div>
-	</div>
+	<button type="submit" class="btn btn-primary">Submit</button>
       </form>
     </div>
   </div>
