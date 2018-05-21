@@ -35,18 +35,12 @@ function init_page(){
     
     $(document).on("click",".highlight.guide",
 		   function(ev){
-		       console.log("CLICKING")
 		       $e = $(ev.currentTarget)
-		       console.log($e)
-		       //target = $e.attr('target')
 		       guide_sequence=$e.attr("guide_sequence")
-
 		       targets = [ "#spacer-mid-margin-"+guide_sequence,
 				   "#spacer-margin-"+guide_sequence]
 		       for (var i = 0; i < targets.length ; i++){
-		       
-			   $t = $(targets[i])
-			   console.log($t)
+		       	   $t = $(targets[i])
 			   is_highlighted = $t.hasClass("highlighted")
 			   $t.toggleClass("highlighted",!is_highlighted)
 		       }
@@ -56,10 +50,8 @@ function init_page(){
    
 
 function get_selected_spacers(tool){
-    max_spacers = 500;
-
+    max_spacers = 10000;
     data = sessionInfo.data
-    console.log(tool)
     spacers_data = data[tool].exonic_spacers
     spacers_sorted = _.sortBy(spacers_data,"score")
     spacers_sorted.reverse()
@@ -70,14 +62,12 @@ function get_selected_spacers(tool){
 
 function get_exons(){
     data = sessionInfo.data
-    exons = data.exons
+    exons = data.cas9.gff_target_search_features
     return exons
 }
 
 
 function render_letters_html(sequence){
-
-    console.log("seq len "+ sequence.length)
     matches = []
     var tools = ["cas9", "cpcf1"]
     for (var j =0 ; j<tools.length; j++){
@@ -145,7 +135,7 @@ function render_letters_html(sequence){
     while (all_transitions.length >0){
 	
 	transition = all_transitions.pop()
-	if( transition[1].type=="exon_start" || transition[1].type=="exon_end"){continue}
+	//if( transition[1].type=="exon_start" || transition[1].type=="exon_end"){continue}
 	s = transition[0]
 	dist = s - pointer
 	html_output += sequence.slice(pointer,pointer + dist)
@@ -197,12 +187,15 @@ var GeneResultsV2V = Backbone.View.extend({
 
 	for( var i = 0; i < 2; i++){
 	    tool = ["cas9","cpcf1"][i]
+	   
 	    $spacerlist = this.$el.find("."+tool).find(".spacer-list")
 	    selected_spacers = get_selected_spacers(tool)
+	    console.log("adding spacers", $spacerlist)
 	    for (var j = 0; j < selected_spacers.length; j++){
+		console.log("adding "+j)
 		spacer = selected_spacers[j]
 		$spacerlist.append(
-		    $("<li>").html(_.template($("#spacer-oneline-result-template").html())(
+		    $("<li>").html(_.template($("#spacer-oneline-header-template").html())(
 			{"guide_sequence":spacer.guide_sequence,
 			 "pam_before":spacer.pam_before?spacer.pam_before:"",
 			 "pam_after":spacer.pam_after?spacer.pam_after:"",
@@ -220,8 +213,6 @@ var GeneResultsV2V = Backbone.View.extend({
 		$e = $(e)
 		letters = $e.text()
 
-		console.log(e)
-		console.log(letters.length)
 		
 		if (letters.length <=160 ){
 		    return
@@ -240,7 +231,6 @@ var GeneResultsV2V = Backbone.View.extend({
 	);
 	this.$el.find(".letters .guide").each(
 	    function(i,e){
-		console.log(e)
 		pam_before= $(e).attr("pam_before") ? $(e).attr("pam_before") : "";
 		pam_after = $(e).attr("pam_after") ? $(e).attr("pam_after") : "";
 		score = $(e).attr("score") ? $(e).attr("score") : "??";
@@ -261,7 +251,7 @@ var GeneResultsV2V = Backbone.View.extend({
 			    }))
 			.attr("id","spacer-margin-"+guide_sequence)
 			.append($('<div class="download-gb">')
-				.append($('<a>',{"href":'/v2/'+assembly+'/'+gene_id+'/'+"cas9"+'/'+guide_sequence+'/gene.gb'}).text("download as genbank"))
+				.append($('<a>',{"target":"_blank","href":'/v2/'+assembly+'/'+gene_id+'/'+"cas9"+'/'+guide_sequence+'/gene.gb'}).text("download as genbank"))
 			       )
 		).append(
 		    $('<div class="text-spacer hidden-sm hidden-md hidden-lg">')
@@ -275,7 +265,7 @@ var GeneResultsV2V = Backbone.View.extend({
 			    }))
 			.attr("id","spacer-mid-margin-"+guide_sequence)
 			.append($('<div class="download-gb">')
-				.append($('<a>',{"href":'/v2/'+assembly+'/'+gene_id+'/'+"cas9"+'/'+guide_sequence+'/gene.gb'}).text("download as genbank"))
+				.append($('<a>',{"target":"_blank","href":'/v2/'+assembly+'/'+gene_id+'/'+"cas9"+'/'+guide_sequence+'/gene.gb'}).text("download as genbank"))
 			       )
 		)
 		

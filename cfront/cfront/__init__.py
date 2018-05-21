@@ -71,7 +71,7 @@ def main(global_config, **settings):
     config.add_route('genes_autocomplete_info', '/v2/{assembly}/genes_info.json')
     config.add_route('gene_genbank', '/v2/{assembly}/{geneid}/gene.gb')
     config.add_route('gene_genbank_spacer', '/v2/{assembly}/{geneid}/{tool}/{guide_sequence}/gene.gb')
-    config.add_route('gene_genbank_all_spacers', '/v2/{assembly}/{geneid}/all_spacers.gb')
+    config.add_route('gene_genbank_all_spacers', '/v2/{assembly}/{geneid}/top_spacers.gb')
     config.add_route('gene_fasta', '/v2/{assembly}/{geneid}/gene.fa')
     config.add_route('gene_genbank_json', '/v2/{assembly}/{geneid}/genbank.json')
     config.add_route('gene_sequence', '/v2/{assembly}/{geneid}/sequence.json')

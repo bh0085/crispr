@@ -28,35 +28,58 @@ tmpdir = "/fastdata/webserver/tmp"
 def run_job(assembly, geneid):
 
     tool_regexes = {"cas9":re.compile("(?P<spacer>[ATGC]{20})(?P<pam_after>[ATGC]GG)"),
-                 "cpcf1":re.compile("(?P<pam_before>TT[ATGC])(?P<spacer>[ATGC]{28})")}
+                    "cpcf1":re.compile("(?P<pam_before>TT[ATGC])(?P<spacer>[ATGC]{28})"),
+                    #"cas13":re.compile("(?P<spacer>[ATGC]{28})(?P<pam_after>GCT)")
+    }
 
 
-        
+    tool_guidelens = {
+        "cas9":20,
+        "cpcf1":31,
+        #"cas13":28,
+    }
+    tool_pamlens = {
+     
+        "cas9":3,
+        "cpcf1":3,
+       #"cas13":3,   
+    }
+    
     db = gffutils.FeatureDB('/fastdata/zlab-genomes/gffutils/{0}.db'.format(assembly), keep_order=True)
     gene = db[geneid]
     out_data={}
 
     count = 0
-    for tool in ["cas9", "cpcf1"]:
+    for tool in tool_regexes.keys():
         out_data[tool] = {}
         out_data["exons"] = []
         out_data[tool]["exonic_spacers"] = []
 
-        tool_spacers = []
+        out_data[tool]["gff_target_search_features"] = []
         
-        for exon in db.children(gene, featuretype='exon', order_by='start'):
+        tool_spacers = []
 
-            exonid = exon.id
+        if tool=="cas13":
+            search_features = db.children(gene, featuretype="mRNA",order_by='start')
+        else:
+            best_mrna = sorted(db.children(gene,featuretype="mRNA"), key = lambda x:len(list(db.children(x))))[-1]
+            search_features = db.children(best_mrna, featuretype="exon",order_by="start")
+
             
-            exondict = dict(exon.attributes.iteritems())
-            exondict["start"] = exon.start
-            exondict["end"] = exon.end
-            exondict["id"] = exon.id
-            exondict["strand"] = exon.strand
-            exondict["chrom"] = exon.chrom
             
-            out_data["exons"].append(exondict)
-            seq_letters = exon.sequence("/fastdata/refseq/{0}.refseq.fa".format(assembly))
+        
+        for feature in search_features:
+            featureid = feature.id
+            featuredict = dict(feature.attributes.iteritems())
+            featuredict["start"] = feature.start
+            featuredict["end"] = feature.end
+            featuredict["id"] = feature.id
+            featuredict["strand"] = feature.strand
+            featuredict["chrom"] = feature.chrom
+            
+            out_data[tool]["gff_target_search_features"].append(featuredict)
+            
+            seq_letters = feature.sequence("/fastdata/refseq/{0}.refseq.fa".format(assembly))
             dna = Seq(seq_letters, DNAAlphabet())
             seq_reverse_letters = str(dna.complement())
             out_status = {"complete":True}
@@ -64,6 +87,8 @@ def run_job(assembly, geneid):
             spacers_file = os.path.join(tmpdir,"{assembly}_{geneid}_{tool}_spacers.fa".format(assembly=assembly,geneid=geneid, tool=tool))
             
             spacer_regex = tool_regexes[tool]
+
+           # out_data[tool]["exons"] = 
 
 
             for i, m in enumerate(spacer_regex.finditer(seq_letters)):
@@ -75,7 +100,7 @@ def run_job(assembly, geneid):
                     "guide_sequence":m.groupdict()["spacer"],
                     "pam_after":m.groupdict().get("pam_after",None),
                     "pam_before":m.groupdict().get("pam_before",None),
-                    "exonid":exonid,
+                    "featureid":featureid,
                     "guide_id":"{0}_g{1}".format(geneid,count),
                     "tool":tool}]
                 count+=1
@@ -89,35 +114,37 @@ def run_job(assembly, geneid):
                     "guide_sequence":m.groupdict()["spacer"],
                     "pam_after":m.groupdict().get("pam_after",None),
                     "pam_before":m.groupdict().get("pam_before",None),
-                    "exonid":exonid,
+                    "featureid":featureid,
                     "guide_id":"{0}_g{1}".format(geneid,count),
                     "tool":tool}]
 
                 count+= 1
         
-            
-        tmpfile = "/fastdata/webserver/tmp/{0}_{1}_exon_spacers.fa".format(geneid,tool)
-        with open(tmpfile, "w") as tf:
-            records = (SeqRecord(Seq(spacer["guide_sequence"], generic_dna),spacer["guide_id"], description =  "{0} target in {1} {2}".format(tool,assembly,geneid)) for spacer in tool_spacers )
-            SeqIO.write(records, tf, "fasta")
-
-        tmpfile_2 = "/fastdata/webserver/tmp/{0}_{1}_pam_exon_spacers.fa".format(geneid,tool)
+        tmpfile_2 = "/fastdata/webserver/tmp/{0}_{1}_pam_feature_spacers.fa".format(geneid,tool)
         with open(tmpfile_2, "w") as tf2:
             if tool =="cpcf1":
                 pams_before = ["TTA","TTG", "TTC", "TTT"]
                 pams_after = [""]
+                bowtie_index ="/fastdata/bowtie/{0}.refseq.bowtie.1".format(assembly)
             if tool =="cas9":
                 pams_before =[""]
                 pams_after = ["AGG","TGG","GGG","CGG"]
+                bowtie_index ="/fastdata/bowtie/{0}.refseq.bowtie.1".format(assembly)
+            if tool =="cas13":
+                pams_before =[""]
+                pams_after = ["GGG"]
+                bowtie_index ="/fastdata/bowtie/{0}.refseq.bowtie.mrnas.1".format(assembly)
+
                 
             records = (SeqRecord(Seq(pbefore + spacer["guide_sequence"] + pafter, generic_dna), spacer["guide_id"], description =  "{0} {3}---{4} target in {1} {2}".format(tool,assembly,geneid,pbefore,pafter)) for spacer in tool_spacers for pbefore in pams_before for pafter in pams_after )
             SeqIO.write(records, tf2, "fasta")
 
-
+        i
+            
         outfile = "/fastdata/webserver/tmp/{0}_{1}_bowtie_hits.map".format(geneid,tool)
         print "calling subprocess"
         import subprocess
-        result = subprocess.call(["bowtie", "-a", "-n", "3", "-c", "-f", "-l", "23", "/fastdata/bowtie/{0}.refseq.bowtie.1".format(assembly), "{0}".format(tmpfile_2), "{0}".format(outfile)])
+        result = subprocess.call(["bowtie", "-a", "-n", "3", "-c", "-f", "-l","{0}".format(tool_guidelens[tool]+tool_pamlens[tool]),bowtie_index, "{0}".format(tmpfile_2), "{0}".format(outfile)])
         print "completed bowtie subprocess"
         print "result: {0}".format(result)
 
@@ -255,7 +282,7 @@ def process_queue(reset = False):
                 print "done! output at: \n{0}".format(os.path.join(gene_queries_directory,f))
                 
 
-                
+    
 
 def main():
     parser = argparse.ArgumentParser()
