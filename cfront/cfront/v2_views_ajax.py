@@ -293,6 +293,7 @@ def gene_genbank_spacers_helper(assembly, geneid, returntype="filename",
 
     
     sfs = []
+    count=0
     for tool,spacer_list in {"cas9":cas9_spacers,
                              "cpcf1":cpcf1_spacers}.items():
         if tool_filter != None:
@@ -311,20 +312,23 @@ def gene_genbank_spacers_helper(assembly, geneid, returntype="filename",
 
             quals = {}
             if s["pam_before"]:
-                quals.update({"pam5":s["pam_before"]})
+                quals.update({"upstream_pam":s["pam_before"]})
                 
             if s["pam_after"]:
-                quals.update({"pam3":s["pam_after"]})
+                quals.update({"downstream_pam":s["pam_after"]})
 
-            quals.update({"score"}:s["score"]})
-            quals.update({"tool"}:tool)
+            quals.update({"score":s["score"],
+                          "tool":tool,
+                          "target_seq":s["guide_sequence"]})
+        
                 
             sfs.append(SeqFeature(FeatureLocation(s["guide_start"],
                                                   s["guide_start"]+s["guide_length"],
                                                   strand=s["guide_strand"]),
-                                  id=s["guide_sequence"],
+                                  id="guide{0}".format(count),
                                   qualifiers=quals,
-                                  type="{0}_tgt".format(tool)))
+                                  type="{0}_guide".format(tool)))
+            count+=1
 
 
 
