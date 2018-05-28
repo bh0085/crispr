@@ -1,9 +1,144 @@
 
-$cas9bg:red;
+$cas9bg:purple;
 $cpcf1bg:green;
+$fixed-width:80ch;
 
 body.gene_results_v2{
 
+    h1,h2,h3,h4,h5,.biline{
+	font-family:Helvetica Neue;
+    }
+
+    a.underline:link{
+	text-decoration:underline;
+    }
+    .header .title{
+	margin-bottom:25px;
+    }
+    
+    .header-container{
+	position:relative;
+	.hiline{
+	    position:absolute;
+	    text-align:right;
+	    bottom:0px;
+	    right:0px;
+	}
+    }
+    .background-stripe{
+	margin-left:-1000px;
+	padding-right:2000px;
+	height: 100%;
+	position: absolute;
+	z-index: -1;
+	background-color: #EFEFEF;
+	height:3em;
+    }
+    font-family:courier;
+    #drawing{
+	width: $fixed-width;
+	position: relative;
+	margin-left: auto;
+	margin-right: auto;
+	
+    }
+
+    .exon-line{
+	stroke:blue;
+	stroke-width:1;
+    }
+    rect.selected{
+	stroke-width:2px;
+	stroke:blue;
+    }
+    .drag-handle{
+	cursor:pointer;
+	fill:aliceblue;
+	stroke-width: 1px;
+	stroke: blue;
+	&:hover{
+	    fill:blue;
+	}
+		 
+    }
+
+    .fixed-width-header{
+	.biline{
+	    font-weight:lighter;
+	    opacity:.99;
+	    color:gray;
+	}
+	h1,h2{
+	    margin-top:40px;
+	    margin-bottom:0px;
+	    line-height:1.4em;
+	}
+	margin-left:auto;
+	margin-right:auto;
+	width:$fixed-width;
+	margin-bottom:20px;
+    }
+    
+    #hero-spacers{
+	margin-left:auto;
+	margin-right:auto;
+	margin-bottom:20px;
+	width:$fixed-width;
+
+	table{
+	    width:100%;
+	}
+	.seq{
+	    padding-left:10px;
+	    padding-right:10px;
+	    font-family:courier;
+	}
+	.pam-before{
+	    color:$cpcf1bg;
+	}
+	
+	.pam-after{
+	    color:$cas9bg;
+	}
+	.cpcf1{
+	    color:white;
+	    background-color:$cpcf1bg;
+	}
+	.cas9{
+	    color:white;
+	    background-color:$cas9bg;
+	}
+	tr{
+	    th{
+		text-align:center;
+	    }
+	    td{
+		text-align:center;
+	    }
+	    padding-top:2px;
+	    padding-bottom:2px;
+	    .flag{
+		padding-left:4px;
+		padding-right:4px;
+	    }
+	}
+    }
+    
+    .selection-left,.selection-right{
+	font-family:courier;
+	margin-left:-20em;
+    }
+    .selection-viewer{
+	font-family:courier;
+	position:absolute;
+    }
+    .selection-left-viewer{
+	right:50%;
+    }
+    .selection-right-viewer{
+	left:50%;
+    }
+    
     a:link{
 	text-decoration:underline;
     }
@@ -42,7 +177,6 @@ body.gene_results_v2{
 	    text-align:center;
 	    
 	}
-	font-size:75%;
 	font-family:courier;
 	max-height:100px;
 	overflow-y:scroll;
@@ -132,7 +266,7 @@ body.gene_results_v2{
 	    }
 	    
 	    .letters{
-		width:60.5ch;
+		width:80.5ch;
 		margin-left:auto;
 		margin-right:auto;
 		
@@ -146,7 +280,7 @@ body.gene_results_v2{
 		
 		.guide.cpcf1 .margin-spacer{
 		    left:50%;
-		    margin-left:38ch;
+		    margin-left:48ch;
 		    text-align:left;
 		}
 		
@@ -172,7 +306,9 @@ body.gene_results_v2{
 		    width:200px;
 		    margin-left:-220px;
 		}
+		
 		.intron{
+		    opacity:.3;
 			.firstline,.lastline{
 			    display: -webkit-box;
 			    -webkit-line-clamp: 1;

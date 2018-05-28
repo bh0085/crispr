@@ -8,7 +8,6 @@
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.4/css/selectize.bootstrap3.css"/>
     
-
     <!--
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.4/css/selectize.bootstrap3.min.css"/>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.4/css/selectize.bootstrap3.min.css.map"/>
@@ -62,7 +61,7 @@
     <script type="text/javascript" src="/js/deps/backbone-relational/backbone-relational.js" ></script>
     <script type="text/javascript" src="/js/deps/jquery-tablesorter/jquery.tablesorter.min.js" ></script>
 
-    <script type="text/javascript" src="/js/deps/jquery-svg/jquery.svg.min.js"></script>
+    <!--<script type="text/javascript" src="/js/deps/jquery-svg/jquery.svg.min.js"></script>-->
     <script type="text/javascript" src="/js/deps/sprintf.min.js"></script>
 
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/corejs-typeahead/1.2.1/bloodhound.js"></script>
@@ -72,11 +71,13 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/corejs-typeahead/1.2.1/typeahead.jquery.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/corejs-typeahead/1.2.1/typeahead.jquery.min.js"></script>
 
+    <script type="text/javascript" src="/js/deps/svg.min.js"></script>
+    <script type="text/javascript" src="/js/deps/svg.draggable.js"></script>
+
+
 
 
     
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/microplugin/0.0.3/microplugin.min.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.4/js/selectize.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.4/js/standalone/selectize.min.js"></script>
 
 

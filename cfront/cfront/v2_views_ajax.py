@@ -17,8 +17,90 @@ import random
 from pyramid.response import FileResponse
 import os
     
+import sendgrid
+import os
+from sendgrid.helpers.mail import *
+
+import base64
 
 
+
+
+@view_config(route_name='email_all_genbank',renderer = 'json')
+def email_all_genbankl(request):
+    assembly = request.matchdict['assembly']
+    geneid = request.matchdict['geneid']
+    email = request.matchdict['email']
+
+    sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
+    from_email = Email("ben@coolship.io")
+    
+    to_email = Email(email)
+    
+    
+    subject = "your genbank files are ready"
+    content = Content("text/plain", "and easy to do anywhere, even with Python")
+    mail = Mail(from_email, subject, to_email, content)
+    #
+    #
+    #
+    #
+    #"""Build attachment mock."""
+    #attachment = Attachment()
+    #attachment.content = (gene_genbank_spacers_helper(assembly, geneid, returntype="text",
+    #                            spacer_sequence_filter=None,
+    #                            tool_filter=None,
+    #                            min_score=90))
+    #
+    #attachment.type = "application/pdf"
+    #attachment.filename = "guides_{0}_{1}.gb".format(assembly,geneid)
+    #attachment.disposition = "attachment"
+    #attachment.content_id = "recommended guides"
+
+
+    attachment = Attachment()
+    text=gene_genbank_spacers_helper(assembly, geneid, returntype="text",
+                                                                       spacer_sequence_filter=None,
+                                                                       tool_filter=None,
+                                                                       min_score=90)
+
+    #text = gene_genbank_spacers_helper(assembly, geneid, returntype="filename",
+    #                                                                   spacer_sequence_filter=None,
+    #                                                                    tool_filter=None,
+    #                                                                    min_score=90)
+
+    #with open('raw/test-report.csv', 'rb') as fd:
+    #b64data = base64.b64encode("""hi, hello
+#    1, 2
+#""")
+
+
+    b64data = base64.b64encode(text)
+    attachment = Attachment()
+    out = str(b64data)
+    attachment.content = out
+    
+    #attachment.content = ( "BwdW")
+    #attachment.type = "text/plain"
+    attachment.filename = "guides_{0}_{1}.gb".format(assembly,geneid)
+    attachment.disposition = "attachment"
+    attachment.content_id = "genbank"
+
+    mail.add_attachment(attachment)
+
+    
+    response = sg.client.mail.send.post(request_body=mail.get())
+
+    #raise Exception(email)
+
+    print(response.status_code)
+    print(response.body)
+    print(response.headers)
+
+
+    
+    return {"status":"success"}
+    
 
 @view_config(route_name='genes_autocomplete_info',renderer='json')
 def genes_autocomplete_info(request):
@@ -206,8 +288,8 @@ def gene_genbank_spacers_helper(assembly, geneid, returntype="filename",
         data = sjson.loads(fopen.next())
 
 
-    cas9_spacers = data["cas9"]["exonic_spacers"]
-    cpcf1_spacers = data["cas9"]["exonic_spacers"]
+    cas9_spacers = data["cas9"]["spacers"]
+    cpcf1_spacers = data["cas9"]["spacers"]
 
     
     sfs = []
@@ -234,6 +316,8 @@ def gene_genbank_spacers_helper(assembly, geneid, returntype="filename",
             if s["pam_after"]:
                 quals.update({"pam3":s["pam_after"]})
 
+            quals.update({"score"}:s["score"]})
+            quals.update({"tool"}:tool)
                 
             sfs.append(SeqFeature(FeatureLocation(s["guide_start"],
                                                   s["guide_start"]+s["guide_length"],

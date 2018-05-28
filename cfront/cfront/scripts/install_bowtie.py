@@ -14,8 +14,6 @@ def main(assembly):
     
     refseq_root = "/fastdata/refseq/"
 
-
-    print "processing mrnas"
     with open(os.path.join(refseq_root,"mrnas/","{0}.refseq.fa".format(assembly)),"w") as fopen:
         mrnas = list( db.features_of_type("mRNA"))
         records =  [SeqRecord(Seq(
@@ -26,20 +24,7 @@ def main(assembly):
                 
                     for mrna in mrnas]
         SeqIO.write(records, fopen, "fasta")
-
-#    print "processing exons"
-#    with open(os.path.join(refseq_root,"exons/","{0}.refseq.fa".format(assembly)),"w") as fopen:
-#        exons = list(db.features_of_type("exon"))[:1000]
-#        records =  [SeqRecord(Seq(
-#            exon.sequence("/fastdata/refseq/{0}.refseq.fa".format(assembly)),
-#            generic_dna),
-#                              id = exon.id,
-#                              description =  "exon sequence eid_{0} for gene gid_{1} in assembly_{2}".format(exon.id,exon.attributes["gene"][0],assembly))
-                
- #                   for exon in exons]
- #       SeqIO.write(records, fopen, "fasta")
-
-
+        
 if __name__ =="__main__":
     
     import argparse

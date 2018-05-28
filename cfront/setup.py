@@ -23,7 +23,8 @@ requires = [
     'pyramid_mako',
     'scipy',
     'gffutils',
-'pyfaidx'
+    'pyfaidx',
+    'sendgrid',
     ]
 
 setup(name='cfront',

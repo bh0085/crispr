@@ -76,6 +76,8 @@ def main(global_config, **settings):
     config.add_route('gene_genbank_json', '/v2/{assembly}/{geneid}/genbank.json')
     config.add_route('gene_sequence', '/v2/{assembly}/{geneid}/sequence.json')
     config.add_route('job_data','/v2/{assembly}/{geneid}/job.json')
+    config.add_route('email_all_genbank', '/v2/{assembly}/{geneid}/{email}/email_all_genbank')
+
     
     config.add_route('about', '/about', factory=PageResourceFactory)
     config.add_route('batch', '/v1/batch/{batch_key}', factory = BatchResourceFactory)

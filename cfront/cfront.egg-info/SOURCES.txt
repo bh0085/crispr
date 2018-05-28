@@ -7,12 +7,15 @@ production.ini
 readonly.ini
 setup.cfg
 setup.py
+spacer1.bwa.txt
 cfront/__init__.py
 cfront/initializedb.py
 cfront/models.py
 cfront/route_factories.py
 cfront/subscribers.py
 cfront/tests.py
+cfront/v2_views.py
+cfront/v2_views_ajax.py
 cfront/views.py
 cfront/views_ajax.py
 cfront/views_export.py
@@ -44,7 +47,10 @@ cfront/model/hit.py
 cfront/model/job.py
 cfront/model/spacer.py
 cfront/scripts/__init__.py
+cfront/scripts/download_refseq.py
+cfront/scripts/init_gffutils.py
 cfront/scripts/initializedb.py
+cfront/scripts/install_bowtie.py
 cfront/scripts/install_genomes.py
 cfront/scripts/readd_jobs.py
 cfront/scripts/reset_all.py
@@ -61,16 +67,17 @@ cfront/static/css/include/cards.css
 cfront/static/css/include/file.css
 cfront/static/css/include/job.css
 cfront/static/css/include/layout.css
-cfront/static/css/include/navbar.css
 cfront/static/css/include/nicks.css
 cfront/static/css/include/spacers.css
 cfront/static/css/include/tabs.css
 cfront/static/css/pages/all.css
 cfront/static/css/pages/base.css
 cfront/static/css/pages/downloads.css
+cfront/static/css/pages/gene_results_v2.css
 cfront/static/css/pages/job.css
 cfront/static/css/pages/nickase.css
 cfront/static/css/pages/readout.css
+cfront/static/css/pages/splash_v2.css
 cfront/static/css/pages/submit.css
 cfront/static/css/pages/submit_v2.css
 cfront/static/img/crispr-logo.jpg
@@ -90,6 +97,9 @@ cfront/static/js/cdn/socket.io.min.js
 cfront/static/js/cdn/underscore-min.js
 cfront/static/js/deps/backbone.eventbinder.js
 cfront/static/js/deps/sprintf.min.js
+cfront/static/js/deps/svg.draggable.js
+cfront/static/js/deps/svg.draggable.min.js
+cfront/static/js/deps/svg.min.js
 cfront/static/js/deps/backbone-relational/LICENSE.txt
 cfront/static/js/deps/backbone-relational/backbone-relational.js
 cfront/static/js/deps/backbone-relational/test/backbone-relational.js
@@ -227,6 +237,7 @@ cfront/static/js/pages/about.js
 cfront/static/js/pages/base.js
 cfront/static/js/pages/batch.js
 cfront/static/js/pages/downloads.js
+cfront/static/js/pages/gene_results_v2.js
 cfront/static/js/pages/job.js
 cfront/static/js/pages/nickase.js
 cfront/static/js/pages/readout.js
@@ -243,7 +254,6 @@ cfront/static/js/views/readout_v.js
 cfront/static/js/views/spacer_v.js
 cfront/static/js/views/svg_v.js
 cfront/static/sass/include/all.css
-cfront/static/sass/include/navbar.css
 cfront/templates/backbone.mako
 cfront/templates/base.mako
 cfront/templates/find.mako
@@ -260,6 +270,7 @@ cfront/templates/bb_templates/about.mako
 cfront/templates/bb_templates/batch.mako
 cfront/templates/bb_templates/downloads.mako
 cfront/templates/bb_templates/file.mako
+cfront/templates/bb_templates/gene_results_v2.mako
 cfront/templates/bb_templates/guides.mako
 cfront/templates/bb_templates/job.mako
 cfront/templates/bb_templates/nickase.mako
@@ -285,4 +296,5 @@ cfront/utils/primer_design.py
 cfront/utils/setup_bytes.py
 cfront/utils/setup_db.py
 cfront/utils/threaded_job_handler.py
+cfront/utils/v2_job_handler.py
 cfront/utils/webserver_db.py

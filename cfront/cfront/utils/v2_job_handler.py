@@ -49,47 +49,55 @@ def run_job(assembly, geneid):
     gene = db[geneid]
     out_data={}
 
+    search_features = []
+    cds = list(db.children(gene,featuretype="CDS",order_by="start"))[::-1]
+    
+    current=cds.pop()
+    current_start = current.start
+    current_end = current.end
+    intervals=[]
+    
+    while cds:
+        n = cds.pop()
+        if n.start <=current_end:
+            current_end = max(n.end,current_end)
+        else:
+            intervals.append({"start":current_start,
+                              "end":current_end})
+            current_start = n.start
+            current_end = n.end
+                          
+
     count = 0
     for tool in tool_regexes.keys():
         out_data[tool] = {}
-        out_data["exons"] = []
-        out_data[tool]["exonic_spacers"] = []
-
-        out_data[tool]["gff_target_search_features"] = []
+        out_data[tool]["spacers"] = []
+        out_data[tool]["search_regions"] = []
         
-        tool_spacers = []
-
-        if tool=="cas13":
-            search_features = db.children(gene, featuretype="mRNA",order_by='start')
-        else:
-            best_mrna = sorted(db.children(gene,featuretype="mRNA"), key = lambda x:len(list(db.children(x))))[-1]
-            search_features = db.children(best_mrna, featuretype="exon",order_by="start")
-
-            
-            
+        tool_spacers = []   
         
-        for feature in search_features:
-            featureid = feature.id
-            featuredict = dict(feature.attributes.iteritems())
-            featuredict["start"] = feature.start
-            featuredict["end"] = feature.end
-            featuredict["id"] = feature.id
-            featuredict["strand"] = feature.strand
-            featuredict["chrom"] = feature.chrom
+        for region in intervals:
+            start = region["start"]
+            end=region["end"]
+            chrom=gene.chrom
+ 
+            from pyfaidx import Fasta
+            genes = Fasta("/fastdata/refseq/{0}.refseq.fa".format(assembly))
+            fa_seq = genes[chrom][start:end]
+                                          
+            region_dict = {"start":start,
+                           "end":end,
+                           "chrom":chrom,
+                           "name":fa_seq.fancy_name}
+            out_data[tool]["search_regions"].append(region_dict)       
+
             
-            out_data[tool]["gff_target_search_features"].append(featuredict)
+            seq_letters = fa_seq.seq
+            seq_reverse_letters = fa_seq.reverse.seq
             
-            seq_letters = feature.sequence("/fastdata/refseq/{0}.refseq.fa".format(assembly))
-            dna = Seq(seq_letters, DNAAlphabet())
-            seq_reverse_letters = str(dna.complement())
             out_status = {"complete":True}
-            
             spacers_file = os.path.join(tmpdir,"{assembly}_{geneid}_{tool}_spacers.fa".format(assembly=assembly,geneid=geneid, tool=tool))
-            
             spacer_regex = tool_regexes[tool]
-
-           # out_data[tool]["exons"] = 
-
 
             for i, m in enumerate(spacer_regex.finditer(seq_letters)):
                 
@@ -100,8 +108,8 @@ def run_job(assembly, geneid):
                     "guide_sequence":m.groupdict()["spacer"],
                     "pam_after":m.groupdict().get("pam_after",None),
                     "pam_before":m.groupdict().get("pam_before",None),
-                    "featureid":featureid,
                     "guide_id":"{0}_g{1}".format(geneid,count),
+                    "region_start":start,
                     "tool":tool}]
                 count+=1
 
@@ -114,8 +122,8 @@ def run_job(assembly, geneid):
                     "guide_sequence":m.groupdict()["spacer"],
                     "pam_after":m.groupdict().get("pam_after",None),
                     "pam_before":m.groupdict().get("pam_before",None),
-                    "featureid":featureid,
                     "guide_id":"{0}_g{1}".format(geneid,count),
+                    "region_start":start,
                     "tool":tool}]
 
                 count+= 1
@@ -181,7 +189,6 @@ def run_job(assembly, geneid):
 
                 if len(items1) > 1000:
                     spacer = filter(lambda x:x["guide_id"] == guide_id, tool_spacers)[0]
-                    #print spacer
                     spacer["offtarget_count"] = len(items1)
                     spacer["ontarget_count"] = 1
                     spacer["score"] = 0
@@ -240,7 +247,7 @@ def run_job(assembly, geneid):
                 
                 #if test_count > 40: break
                          
-        out_data[tool]["exonic_spacers"]+=tool_spacers
+        out_data[tool]["spacers"]+=tool_spacers
             
         
 
