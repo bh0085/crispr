@@ -28,20 +28,20 @@ tmpdir = "/fastdata/webserver/tmp"
 def run_job(assembly, geneid):
 
     tool_regexes = {"cas9":re.compile("(?P<spacer>[ATGC]{20})(?P<pam_after>[ATGC]GG)"),
-                    "cpcf1":re.compile("(?P<pam_before>TT[ATGC])(?P<spacer>[ATGC]{28})"),
+                    "cpf1":re.compile("(?P<pam_before>TT[ATGC])(?P<spacer>[ATGC]{28})"),
                     #"cas13":re.compile("(?P<spacer>[ATGC]{28})(?P<pam_after>GCT)")
     }
 
 
     tool_guidelens = {
         "cas9":20,
-        "cpcf1":31,
+        "cpf1":31,
         #"cas13":28,
     }
     tool_pamlens = {
      
         "cas9":3,
-        "cpcf1":3,
+        "cpf1":3,
        #"cas13":3,   
     }
     
@@ -130,7 +130,7 @@ def run_job(assembly, geneid):
         
         tmpfile_2 = "/fastdata/webserver/tmp/{0}_{1}_pam_feature_spacers.fa".format(geneid,tool)
         with open(tmpfile_2, "w") as tf2:
-            if tool =="cpcf1":
+            if tool =="cpf1":
                 pams_before = ["TTA","TTG", "TTC", "TTT"]
                 pams_after = [""]
                 bowtie_index ="/fastdata/bowtie/{0}.refseq.bowtie.1".format(assembly)

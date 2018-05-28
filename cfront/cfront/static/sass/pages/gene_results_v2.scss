@@ -1,6 +1,6 @@
 
 $cas9bg:purple;
-$cpcf1bg:green;
+$cpf1bg:green;
 $fixed-width:80ch;
 
 body.gene_results_v2{
@@ -94,15 +94,15 @@ body.gene_results_v2{
 	    font-family:courier;
 	}
 	.pam-before{
-	    color:$cpcf1bg;
+	    color:$cpf1bg;
 	}
 	
 	.pam-after{
 	    color:$cas9bg;
 	}
-	.cpcf1{
+	.cpf1{
 	    color:white;
-	    background-color:$cpcf1bg;
+	    background-color:$cpf1bg;
 	}
 	.cas9{
 	    color:white;
@@ -218,7 +218,7 @@ body.gene_results_v2{
 		}
 
 	    }
-	    .guide.cpcf1{
+	    .guide.cpf1{
 		.margin-spacer:not(.highlighted){
 		    border-color:green;
 		}
@@ -278,7 +278,7 @@ body.gene_results_v2{
 		    text-align:left;
 		}
 		
-		.guide.cpcf1 .margin-spacer{
+		.guide.cpf1 .margin-spacer{
 		    left:50%;
 		    margin-left:48ch;
 		    text-align:left;
@@ -344,8 +344,8 @@ body.gene_results_v2{
 		.guide.cas9{
 		    background-color:$cas9bg;
 		}
-		.guide.cpcf1{
-		    background-color:$cpcf1bg;
+		.guide.cpf1{
+		    background-color:$cpf1bg;
 		}
 	    }
 	}

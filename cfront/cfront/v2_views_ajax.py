@@ -289,13 +289,13 @@ def gene_genbank_spacers_helper(assembly, geneid, returntype="filename",
 
 
     cas9_spacers = data["cas9"]["spacers"]
-    cpcf1_spacers = data["cas9"]["spacers"]
+    cpf1_spacers = data["cas9"]["spacers"]
 
     
     sfs = []
     count=0
     for tool,spacer_list in {"cas9":cas9_spacers,
-                             "cpcf1":cpcf1_spacers}.items():
+                             "cpf1":cpf1_spacers}.items():
         if tool_filter != None:
             if tool != tool_filter:
                 continue

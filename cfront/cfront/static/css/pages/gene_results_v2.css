@@ -108,7 +108,7 @@ body.gene_results_v2 #hero-spacers .pam-after {
   color: purple;
 }
 /* line 103, ../../sass/pages/gene_results_v2.scss */
-body.gene_results_v2 #hero-spacers .cpcf1 {
+body.gene_results_v2 #hero-spacers .cpf1 {
   color: white;
   background-color: green;
 }
@@ -232,11 +232,11 @@ body.gene_results_v2 .gene-view-container .gene-view .guide.cas9 .margin-spacer.
   color: white;
 }
 /* line 222, ../../sass/pages/gene_results_v2.scss */
-body.gene_results_v2 .gene-view-container .gene-view .guide.cpcf1 .margin-spacer:not(.highlighted) {
+body.gene_results_v2 .gene-view-container .gene-view .guide.cpf1 .margin-spacer:not(.highlighted) {
   border-color: green;
 }
 /* line 225, ../../sass/pages/gene_results_v2.scss */
-body.gene_results_v2 .gene-view-container .gene-view .guide.cpcf1 .margin-spacer.highlighted .line.one {
+body.gene_results_v2 .gene-view-container .gene-view .guide.cpf1 .margin-spacer.highlighted .line.one {
   background-color: green;
   color: white;
   border-color: green;
@@ -287,7 +287,7 @@ body.gene_results_v2 .gene-view-container .gene-view .letters .guide.cas9 .margi
   text-align: left;
 }
 /* line 281, ../../sass/pages/gene_results_v2.scss */
-body.gene_results_v2 .gene-view-container .gene-view .letters .guide.cpcf1 .margin-spacer {
+body.gene_results_v2 .gene-view-container .gene-view .letters .guide.cpf1 .margin-spacer {
   left: 50%;
   margin-left: 48ch;
   text-align: left;
@@ -357,6 +357,6 @@ body.gene_results_v2 .gene-view-container .gene-view .letters .guide.cas9 {
   background-color: purple;
 }
 /* line 347, ../../sass/pages/gene_results_v2.scss */
-body.gene_results_v2 .gene-view-container .gene-view .letters .guide.cpcf1 {
+body.gene_results_v2 .gene-view-container .gene-view .letters .guide.cpf1 {
   background-color: green;
 }

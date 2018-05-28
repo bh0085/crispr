@@ -308,7 +308,7 @@ function get_selected_spacers(tool){
     data = sessionInfo.data
 
     if (tool=="all"){
-	spacers_data = data["cas9"].spacers.concat(spacers_data = data["cpcf1"].spacers)
+	spacers_data = data["cas9"].spacers.concat(spacers_data = data["cpf1"].spacers)
     } else{
 	spacers_data = data[tool].spacers
     }
@@ -336,7 +336,7 @@ function get_exons(){
 
 function render_letters_html(sequence){
     matches = []
-    var tools = ["cas9", "cpcf1"]
+    var tools = ["cas9", "cpf1"]
     for (var j =0 ; j<tools.length; j++){
 	tool = tools[j]
 
@@ -464,7 +464,7 @@ var GeneResultsV2V = Backbone.View.extend({
 	this.$el.find(".genome-assembly").text(genome_info["assembly"])
 
 	for( var i = 0; i < 2; i++){
-	    tool = ["cas9","cpcf1"][i]
+	    tool = ["cas9","cpf1"][i]
 	   
 	    $spacerlist = this.$el.find("."+tool).find(".spacer-list")
 	    selected_spacers = get_selected_spacers(tool)
