@@ -10,35 +10,23 @@
 
   <ul class="nav nav-tabs">
     <li class="active"><a href="#knockout" data-toggle="tab">Knock out with CAS9 or CPCF1</a></li>
-    <!--<li class=""><a href="#knockdown" data-toggle="tab">Knock down with CAS13 **BETA**</a></li>-->
   </ul>
   
   <div class="tab-content">
-    <!--<div id="knockdown" name="knock down" class="tab-pane ">
-      <div class="header-description">in testing... knock down a transcript with cas 13</div>
-    </div>-->
     <div id="knockout" name="knock out" class="tab-pane  active">
-
-      
-
-      <div class="fixed-width-header">
-	<h2>CHOOSE A SUBREGION</h2>
-	<div class="biline">
-	  <div>Drag to select a subregion</div> 
-	</div>
-      </div>
-      
-      
-
       <div class="hero">
 	<div class="selection-container">
 	  <div id="drawing" class="gene">	  
 	  </div>
 	  
+          <div class="content-width-600 selection-slider-container">
+	    <div id="slider"></div>
+	  </div>
+	  <div class="content-width-600">Selecting guides which target <span class="exon-count"></span> exons between bases <span class="range-start"></span> and <span class="range-end"></span> of gene {{gene_name}} of {{genome_name}} ({{assembly}}). Read on for guide recommendations or adjust targeting range by clicking an exon or sliding the window above. </div>
+	  
+	  
 	</div>
-	<div id="hero-spacers">
-	  
-	  
+	<div id="hero-spacers">	  
 	</div>
 	
       </div>
@@ -47,7 +35,7 @@
 	  <div class="fixed-width-header">
 	    <div class="background-stripe"></div>
 	    <div class="header-container"><h2>GUIDE DETAILS</h2><div class="hiline"><a class="download-guide-gb underline disabled" id="download-guide-gb" target="_blank">...download to genbank file</a></div></div>
-	    <div class="biline">selet a guide above to view details</div>
+	    <div class="biline">select a guide above to view details</div>
 
 	    <div class="spacer-details" id="spacer-details-container">
 	      
@@ -55,6 +43,7 @@
 	  </div>
 	</div>
       </div>
+      
       
       
       <div class="row">

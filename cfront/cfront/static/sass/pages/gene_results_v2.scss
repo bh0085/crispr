@@ -1,10 +1,29 @@
 
 $cas9bg:rgb(0, 158, 115);
 $cpf1bg:rgb(0, 114, 178);
+$selection-color:blue;
 $fixed-width:80ch;
 
 body.gene_results_v2{
 
+    .selection-slider-container{
+	width:600px;
+	position:relative;
+	margin-left:auto;
+	margin-right:auto;
+	margin-bottom:20px;
+    }
+    .content-width-600{
+	width:600px;
+	position:relative;
+	margin-left:auto;
+	margin-right:auto;
+    }
+
+    .noUi-connect {
+	background: $selection-color;
+    }
+    
     h1,h2,h3,h4,h5,.biline{
 	font-family:Helvetica Neue;
     }
@@ -66,7 +85,7 @@ body.gene_results_v2{
     }
     font-family:courier; 
     #drawing{
-	width: $fixed-width;
+	width: 600px;
 	position: relative;
 	margin-left: auto;
 	margin-right: auto;
@@ -74,22 +93,12 @@ body.gene_results_v2{
     }
 
     .exon-line{
-	stroke:blue;
+	stroke:$selection-color;
 	stroke-width:1;
     }
     rect.selected{
 	stroke-width:2px;
-	stroke:blue;
-    }
-    .drag-handle{
-	cursor:pointer;
-	fill:aliceblue;
-	stroke-width: 1px;
-	stroke: blue;
-	&:hover{
-	    fill:blue;
-	}
-		 
+	stroke:$selection-color;
     }
 
     .fixed-width-header{
@@ -218,7 +227,7 @@ body.gene_results_v2{
 		color:black;
 		display:none;
 		a:link{
-		    color:blue;
+		    color:$selection-color;
 		}
 	
 	    }
