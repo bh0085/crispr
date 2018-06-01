@@ -12,7 +12,7 @@ def install_expression(genome):
     print "installing expression file at: {0}".format(output_file)
     print "for new expression files, please visit https://genome.ucsc.edu/cgi-bin/hgTables"
 
-    db = gffutils.create_db(input_file, dbfn=output_file, force=True, keep_order=True, merge_strategy='merge', sort_attribute_values=True,gtf_subfeature='transcript',id_spec="gene_id")
+    db = gffutils.create_db(input_file, dbfn=output_file, force=True, keep_order=True, merge_strategy='merge', sort_attribute_values=True,gtf_subfeature='transcript')
 
 def genome_idspec(d):
     #if not d.attributes.get("",False): return None
@@ -21,14 +21,13 @@ def genome_idspec(d):
 
 def install_gff3_genome(genome):
     in_file = "/fastdata/zlab-genomes/gff3/{0}.gff3".format(genome)
-    out_file ='/fastdata/zlab-genomes/gffutils/{0}.new.db'.format(genome)
+    out_file ='/fastdata/zlab-genomes/gffutils/{0}.db'.format(genome)
     db = gffutils.create_db(in_file,
                             dbfn=out_file,
                             force=True,
                             keep_order=True,
                             merge_strategy='merge',
-                            sort_attribute_values=True,
-                            id_spec=genome_idspec)   
+                            sort_attribute_values=True)   
 
 
 if __name__=="__main__":

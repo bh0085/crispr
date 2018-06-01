@@ -1192,25 +1192,51 @@ body.gene_results_v2 h1, body.gene_results_v2 h2, body.gene_results_v2 h3, body.
   font-family: Helvetica Neue;
 }
 /* line 12, ../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 a.disabled {
+  color: gray;
+}
+/* line 16, ../sass/pages/gene_results_v2.scss */
 body.gene_results_v2 a.underline:link {
   text-decoration: underline;
 }
-/* line 15, ../sass/pages/gene_results_v2.scss */
+/* line 19, ../sass/pages/gene_results_v2.scss */
 body.gene_results_v2 .header .title {
   margin-bottom: 25px;
 }
-/* line 19, ../sass/pages/gene_results_v2.scss */
+/* line 24, ../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 table tr:first-child {
+  border-bottom: 1px dashed lightgray;
+  margin-bottom: 5px;
+}
+/* line 28, ../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 table th {
+  vertical-align: bottom;
+}
+/* line 30, ../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 table th input, body.gene_results_v2 table th label {
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+/* line 37, ../sass/pages/gene_results_v2.scss */
 body.gene_results_v2 .header-container {
   position: relative;
 }
-/* line 21, ../sass/pages/gene_results_v2.scss */
+/* line 39, ../sass/pages/gene_results_v2.scss */
 body.gene_results_v2 .header-container .hiline {
   position: absolute;
   text-align: right;
   bottom: 0px;
   right: 0px;
 }
-/* line 28, ../sass/pages/gene_results_v2.scss */
+/* line 48, ../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 .ot-table-container.full .if-empty {
+  display: none;
+}
+/* line 53, ../sass/pages/gene_results_v2.scss */
+body.gene_results_v2 .ot-table-container:not(.full) .if-full {
+  display: none;
+}
+/* line 58, ../sass/pages/gene_results_v2.scss */
 body.gene_results_v2 .background-stripe {
   margin-left: -1000px;
   padding-right: 2000px;
@@ -1220,217 +1246,215 @@ body.gene_results_v2 .background-stripe {
   background-color: #EFEFEF;
   height: 3em;
 }
-/* line 38, ../sass/pages/gene_results_v2.scss */
+/* line 68, ../sass/pages/gene_results_v2.scss */
 body.gene_results_v2 #drawing {
   width: 80ch;
   position: relative;
   margin-left: auto;
   margin-right: auto;
 }
-/* line 46, ../sass/pages/gene_results_v2.scss */
+/* line 76, ../sass/pages/gene_results_v2.scss */
 body.gene_results_v2 .exon-line {
   stroke: blue;
   stroke-width: 1;
 }
-/* line 50, ../sass/pages/gene_results_v2.scss */
+/* line 80, ../sass/pages/gene_results_v2.scss */
 body.gene_results_v2 rect.selected {
   stroke-width: 2px;
   stroke: blue;
 }
-/* line 54, ../sass/pages/gene_results_v2.scss */
+/* line 84, ../sass/pages/gene_results_v2.scss */
 body.gene_results_v2 .drag-handle {
   cursor: pointer;
   fill: aliceblue;
   stroke-width: 1px;
   stroke: blue;
 }
-/* line 59, ../sass/pages/gene_results_v2.scss */
+/* line 89, ../sass/pages/gene_results_v2.scss */
 body.gene_results_v2 .drag-handle:hover {
   fill: blue;
 }
-/* line 65, ../sass/pages/gene_results_v2.scss */
+/* line 95, ../sass/pages/gene_results_v2.scss */
 body.gene_results_v2 .fixed-width-header {
   margin-left: auto;
   margin-right: auto;
   width: 80ch;
   margin-bottom: 20px;
 }
-/* line 66, ../sass/pages/gene_results_v2.scss */
+/* line 96, ../sass/pages/gene_results_v2.scss */
 body.gene_results_v2 .fixed-width-header .biline {
-  font-weight: lighter;
-  opacity: .99;
-  color: gray;
+  color: black;
 }
-/* line 71, ../sass/pages/gene_results_v2.scss */
+/* line 99, ../sass/pages/gene_results_v2.scss */
 body.gene_results_v2 .fixed-width-header h1, body.gene_results_v2 .fixed-width-header h2 {
   margin-top: 40px;
   margin-bottom: 0px;
   line-height: 1.4em;
 }
-/* line 82, ../sass/pages/gene_results_v2.scss */
+/* line 110, ../sass/pages/gene_results_v2.scss */
 body.gene_results_v2 #hero-spacers {
   margin-left: auto;
   margin-right: auto;
   margin-bottom: 20px;
   width: 80ch;
 }
-/* line 88, ../sass/pages/gene_results_v2.scss */
+/* line 116, ../sass/pages/gene_results_v2.scss */
 body.gene_results_v2 #hero-spacers table {
   width: 100%;
 }
-/* line 91, ../sass/pages/gene_results_v2.scss */
+/* line 119, ../sass/pages/gene_results_v2.scss */
 body.gene_results_v2 #hero-spacers .seq {
   padding-left: 10px;
   padding-right: 10px;
   font-family: courier;
 }
-/* line 96, ../sass/pages/gene_results_v2.scss */
+/* line 124, ../sass/pages/gene_results_v2.scss */
 body.gene_results_v2 #hero-spacers .pam-before {
-  color: green;
+  color: #0072b2;
 }
-/* line 100, ../sass/pages/gene_results_v2.scss */
+/* line 128, ../sass/pages/gene_results_v2.scss */
 body.gene_results_v2 #hero-spacers .pam-after {
-  color: purple;
+  color: #009e73;
 }
-/* line 103, ../sass/pages/gene_results_v2.scss */
+/* line 131, ../sass/pages/gene_results_v2.scss */
 body.gene_results_v2 #hero-spacers .cpf1 {
   color: white;
-  background-color: green;
+  background-color: #0072b2;
 }
-/* line 107, ../sass/pages/gene_results_v2.scss */
+/* line 135, ../sass/pages/gene_results_v2.scss */
 body.gene_results_v2 #hero-spacers .cas9 {
   color: white;
-  background-color: purple;
+  background-color: #009e73;
 }
-/* line 111, ../sass/pages/gene_results_v2.scss */
+/* line 139, ../sass/pages/gene_results_v2.scss */
 body.gene_results_v2 #hero-spacers tr {
   padding-top: 2px;
   padding-bottom: 2px;
 }
-/* line 112, ../sass/pages/gene_results_v2.scss */
+/* line 140, ../sass/pages/gene_results_v2.scss */
 body.gene_results_v2 #hero-spacers tr th {
   text-align: center;
 }
-/* line 115, ../sass/pages/gene_results_v2.scss */
+/* line 143, ../sass/pages/gene_results_v2.scss */
 body.gene_results_v2 #hero-spacers tr td {
   text-align: center;
 }
-/* line 120, ../sass/pages/gene_results_v2.scss */
+/* line 148, ../sass/pages/gene_results_v2.scss */
 body.gene_results_v2 #hero-spacers tr .flag {
   padding-left: 4px;
   padding-right: 4px;
 }
-/* line 127, ../sass/pages/gene_results_v2.scss */
+/* line 155, ../sass/pages/gene_results_v2.scss */
 body.gene_results_v2 .selection-left, body.gene_results_v2 .selection-right {
   font-family: courier;
   margin-left: -20em;
 }
-/* line 131, ../sass/pages/gene_results_v2.scss */
+/* line 159, ../sass/pages/gene_results_v2.scss */
 body.gene_results_v2 .selection-viewer {
   font-family: courier;
   position: absolute;
 }
-/* line 135, ../sass/pages/gene_results_v2.scss */
+/* line 163, ../sass/pages/gene_results_v2.scss */
 body.gene_results_v2 .selection-left-viewer {
   right: 50%;
 }
-/* line 138, ../sass/pages/gene_results_v2.scss */
+/* line 166, ../sass/pages/gene_results_v2.scss */
 body.gene_results_v2 .selection-right-viewer {
   left: 50%;
 }
-/* line 142, ../sass/pages/gene_results_v2.scss */
+/* line 170, ../sass/pages/gene_results_v2.scss */
 body.gene_results_v2 a:link {
   text-decoration: underline;
 }
-/* line 145, ../sass/pages/gene_results_v2.scss */
+/* line 173, ../sass/pages/gene_results_v2.scss */
 body.gene_results_v2 .pam.before {
   color: green;
 }
-/* line 149, ../sass/pages/gene_results_v2.scss */
+/* line 177, ../sass/pages/gene_results_v2.scss */
 body.gene_results_v2 .pam.after {
   color: red;
 }
-/* line 153, ../sass/pages/gene_results_v2.scss */
+/* line 181, ../sass/pages/gene_results_v2.scss */
 body.gene_results_v2 .line.one {
   white-space: nowrap;
 }
-/* line 155, ../sass/pages/gene_results_v2.scss */
+/* line 183, ../sass/pages/gene_results_v2.scss */
 body.gene_results_v2 .line.one > * {
   white-space: nowrap;
 }
-/* line 158, ../sass/pages/gene_results_v2.scss */
+/* line 186, ../sass/pages/gene_results_v2.scss */
 body.gene_results_v2 ul {
   padding-left: 0px;
 }
-/* line 163, ../sass/pages/gene_results_v2.scss */
+/* line 191, ../sass/pages/gene_results_v2.scss */
 body.gene_results_v2 .tool-view-container h2 {
   text-align: center;
 }
-/* line 168, ../sass/pages/gene_results_v2.scss */
+/* line 196, ../sass/pages/gene_results_v2.scss */
 body.gene_results_v2 li {
   list-style: none;
 }
-/* line 172, ../sass/pages/gene_results_v2.scss */
+/* line 200, ../sass/pages/gene_results_v2.scss */
 body.gene_results_v2 .header-guides {
   font-family: courier;
   max-height: 100px;
   overflow-y: scroll;
   margin-bottom: 30px;
 }
-/* line 173, ../sass/pages/gene_results_v2.scss */
+/* line 201, ../sass/pages/gene_results_v2.scss */
 body.gene_results_v2 .header-guides h4 {
   text-align: center;
 }
-/* line 176, ../sass/pages/gene_results_v2.scss */
+/* line 204, ../sass/pages/gene_results_v2.scss */
 body.gene_results_v2 .header-guides .spacer-list {
   text-align: center;
 }
-/* line 189, ../sass/pages/gene_results_v2.scss */
+/* line 217, ../sass/pages/gene_results_v2.scss */
 body.gene_results_v2 .gene-view-container .gene-view .download-gb {
   color: black;
   display: none;
 }
-/* line 192, ../sass/pages/gene_results_v2.scss */
+/* line 220, ../sass/pages/gene_results_v2.scss */
 body.gene_results_v2 .gene-view-container .gene-view .download-gb a:link {
   color: blue;
 }
-/* line 198, ../sass/pages/gene_results_v2.scss */
+/* line 226, ../sass/pages/gene_results_v2.scss */
 body.gene_results_v2 .gene-view-container .gene-view .margin-spacer {
   border-width: 1px;
   border-style: solid;
   padding: 4px;
   background-color: lightgray;
 }
-/* line 205, ../sass/pages/gene_results_v2.scss */
+/* line 233, ../sass/pages/gene_results_v2.scss */
 body.gene_results_v2 .gene-view-container .gene-view .margin-spacer.margin-spacer.highlighted {
   background-color: white;
   z-index: 10;
   box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.2);
 }
-/* line 212, ../sass/pages/gene_results_v2.scss */
+/* line 240, ../sass/pages/gene_results_v2.scss */
 body.gene_results_v2 .gene-view-container .gene-view .guide.cas9 .margin-spacer:not(.highlighted) {
   border-color: red;
 }
-/* line 215, ../sass/pages/gene_results_v2.scss */
+/* line 243, ../sass/pages/gene_results_v2.scss */
 body.gene_results_v2 .gene-view-container .gene-view .guide.cas9 .margin-spacer.highlighted .line.one {
   background-color: red;
   color: white;
 }
-/* line 222, ../sass/pages/gene_results_v2.scss */
+/* line 250, ../sass/pages/gene_results_v2.scss */
 body.gene_results_v2 .gene-view-container .gene-view .guide.cpf1 .margin-spacer:not(.highlighted) {
   border-color: green;
 }
-/* line 225, ../sass/pages/gene_results_v2.scss */
+/* line 253, ../sass/pages/gene_results_v2.scss */
 body.gene_results_v2 .gene-view-container .gene-view .guide.cpf1 .margin-spacer.highlighted .line.one {
   background-color: green;
   color: white;
   border-color: green;
 }
-/* line 236, ../sass/pages/gene_results_v2.scss */
+/* line 264, ../sass/pages/gene_results_v2.scss */
 body.gene_results_v2 .gene-view-container .gene-view .text-spacer:not(.highlighted) {
   display: none;
 }
-/* line 239, ../sass/pages/gene_results_v2.scss */
+/* line 267, ../sass/pages/gene_results_v2.scss */
 body.gene_results_v2 .gene-view-container .gene-view .text-spacer {
   position: absolute;
   left: 50%;
@@ -1442,21 +1466,21 @@ body.gene_results_v2 .gene-view-container .gene-view .text-spacer {
   color: black;
   text-align: center;
 }
-/* line 249, ../sass/pages/gene_results_v2.scss */
+/* line 277, ../sass/pages/gene_results_v2.scss */
 body.gene_results_v2 .gene-view-container .gene-view .text-spacer .download-gb {
   display: block;
   color: black;
 }
-/* line 259, ../sass/pages/gene_results_v2.scss */
+/* line 287, ../sass/pages/gene_results_v2.scss */
 body.gene_results_v2 .gene-view-container .gene-view .margin-spacer.highlighted .pam {
   color: white;
 }
-/* line 262, ../sass/pages/gene_results_v2.scss */
+/* line 290, ../sass/pages/gene_results_v2.scss */
 body.gene_results_v2 .gene-view-container .gene-view .margin-spacer.highlighted .download-gb {
   display: block;
   color: black;
 }
-/* line 268, ../sass/pages/gene_results_v2.scss */
+/* line 296, ../sass/pages/gene_results_v2.scss */
 body.gene_results_v2 .gene-view-container .gene-view .letters {
   width: 80.5ch;
   margin-left: auto;
@@ -1465,35 +1489,35 @@ body.gene_results_v2 .gene-view-container .gene-view .letters {
   overflow: hidden;
   word-break: break-all;
 }
-/* line 274, ../sass/pages/gene_results_v2.scss */
+/* line 302, ../sass/pages/gene_results_v2.scss */
 body.gene_results_v2 .gene-view-container .gene-view .letters .guide.cas9 .margin-spacer {
   left: 0px;
   margin-left: -300px;
   text-align: left;
 }
-/* line 281, ../sass/pages/gene_results_v2.scss */
+/* line 309, ../sass/pages/gene_results_v2.scss */
 body.gene_results_v2 .gene-view-container .gene-view .letters .guide.cpf1 .margin-spacer {
   left: 50%;
   margin-left: 48ch;
   text-align: left;
 }
-/* line 287, ../sass/pages/gene_results_v2.scss */
+/* line 315, ../sass/pages/gene_results_v2.scss */
 body.gene_results_v2 .gene-view-container .gene-view .letters .margin-spacer {
   font-family: courier;
   color: black;
   position: absolute;
   width: 300px;
 }
-/* line 294, ../sass/pages/gene_results_v2.scss */
+/* line 322, ../sass/pages/gene_results_v2.scss */
 body.gene_results_v2 .gene-view-container .gene-view .letters .exon {
   color: black;
   font-weight: bold;
 }
-/* line 298, ../sass/pages/gene_results_v2.scss */
+/* line 326, ../sass/pages/gene_results_v2.scss */
 body.gene_results_v2 .gene-view-container .gene-view .letters .exon, body.gene_results_v2 .gene-view-container .gene-view .letters .intron {
   display: block;
 }
-/* line 302, ../sass/pages/gene_results_v2.scss */
+/* line 330, ../sass/pages/gene_results_v2.scss */
 body.gene_results_v2 .gene-view-container .gene-view .letters .exon-helper {
   position: absolute;
   width: auto;
@@ -1501,47 +1525,47 @@ body.gene_results_v2 .gene-view-container .gene-view .letters .exon-helper {
   width: 200px;
   margin-left: -220px;
 }
-/* line 310, ../sass/pages/gene_results_v2.scss */
+/* line 338, ../sass/pages/gene_results_v2.scss */
 body.gene_results_v2 .gene-view-container .gene-view .letters .intron {
   opacity: .3;
 }
-/* line 312, ../sass/pages/gene_results_v2.scss */
+/* line 340, ../sass/pages/gene_results_v2.scss */
 body.gene_results_v2 .gene-view-container .gene-view .letters .intron .firstline, body.gene_results_v2 .gene-view-container .gene-view .letters .intron .lastline {
   display: -webkit-box;
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
 }
-/* line 317, ../sass/pages/gene_results_v2.scss */
+/* line 345, ../sass/pages/gene_results_v2.scss */
 body.gene_results_v2 .gene-view-container .gene-view .letters .intron .before-middle {
   content: "...";
   text-align: center;
   height: 10px;
   display: block;
 }
-/* line 323, ../sass/pages/gene_results_v2.scss */
+/* line 351, ../sass/pages/gene_results_v2.scss */
 body.gene_results_v2 .gene-view-container .gene-view .letters .intron .middle {
   display: none;
 }
-/* line 331, ../sass/pages/gene_results_v2.scss */
+/* line 359, ../sass/pages/gene_results_v2.scss */
 body.gene_results_v2 .gene-view-container .gene-view .letters a.white {
   color: white;
 }
-/* line 334, ../sass/pages/gene_results_v2.scss */
+/* line 362, ../sass/pages/gene_results_v2.scss */
 body.gene_results_v2 .gene-view-container .gene-view .letters a.white:link {
   color: white;
 }
-/* line 337, ../sass/pages/gene_results_v2.scss */
+/* line 365, ../sass/pages/gene_results_v2.scss */
 body.gene_results_v2 .gene-view-container .gene-view .letters .guide {
   background-color: red;
   color: white;
   padding: 0px;
   word-break: break-all;
 }
-/* line 344, ../sass/pages/gene_results_v2.scss */
+/* line 372, ../sass/pages/gene_results_v2.scss */
 body.gene_results_v2 .gene-view-container .gene-view .letters .guide.cas9 {
-  background-color: purple;
+  background-color: #009e73;
 }
-/* line 347, ../sass/pages/gene_results_v2.scss */
+/* line 375, ../sass/pages/gene_results_v2.scss */
 body.gene_results_v2 .gene-view-container .gene-view .letters .guide.cpf1 {
-  background-color: green;
+  background-color: #0072b2;
 }

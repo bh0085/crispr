@@ -10,13 +10,13 @@
 
   <ul class="nav nav-tabs">
     <li class="active"><a href="#knockout" data-toggle="tab">Knock out with CAS9 or CPCF1</a></li>
-    <li class=""><a href="#knockdown" data-toggle="tab">Knock down with CAS13 **BETA**</a></li>
+    <!--<li class=""><a href="#knockdown" data-toggle="tab">Knock down with CAS13 **BETA**</a></li>-->
   </ul>
   
   <div class="tab-content">
-    <div id="knockdown" name="knock down" class="tab-pane ">
+    <!--<div id="knockdown" name="knock down" class="tab-pane ">
       <div class="header-description">in testing... knock down a transcript with cas 13</div>
-    </div>
+    </div>-->
     <div id="knockout" name="knock out" class="tab-pane  active">
 
       
@@ -46,8 +46,23 @@
 	<div class="col-xs-12">
 	  <div class="fixed-width-header">
 	    <div class="background-stripe"></div>
-	    <div class="header-container"><h2>SEQUENCE VIEW</h2><div class="hiline"><a class="download-letters underline">...download as genbank</a></div></div>
-	    <div class="biline">view guide sequences in exonic content</div>
+	    <div class="header-container"><h2>GUIDE DETAILS</h2><div class="hiline"><a class="download-guide-gb underline disabled" id="download-guide-gb" target="_blank">...download to genbank file</a></div></div>
+	    <div class="biline">selet a guide above to view details</div>
+
+	    <div class="spacer-details" id="spacer-details-container">
+	      
+	    </div>
+	  </div>
+	</div>
+      </div>
+      
+      
+      <div class="row">
+	<div class="col-xs-12">
+	  <div class="fixed-width-header">
+	    <div class="background-stripe"></div>
+	    <div class="header-container"><h2>SEQUENCE VIEW</h2><div class="hiline"><a class="download-letters underline" href="/v2/{{assembly}}/{{geneid}}/top_spacers.gb" target="_blank">...download as genbank</a></div></div>
+	    <div class="biline">view guide sequences in exonic context</div>
 	  </div>
 	  <div class="gene-view-container">
 	    <div class="gene-view">
@@ -69,28 +84,30 @@
       <div class="background-stripe"></div>
       <h2>SUGGESTED GUIDES</h2>
       <div class="hiline">
-	<div><a href="/v2/{{genome_assembly}}/{{gene_info.id}}/top_spacers.gb">...download selected guides</a>
+	<div><a id="download-selected" class="disabled" target="_blank">...download selected guides</a>
 	</div>
       </div>
     </div>
     <div class="biline">top guide choices from bases <span class="start-base"></span>..<span class="end-base"></span></div>
   </div>
-
+  <form>
   <table>
-  <tr>
-    <th><input class="export-all" type="checkbox"/></th>
-    <th>guide</th>
-    <th>tool</th>
-    <th>ot</th>
-    <!--
-    <th>ov</th>
-    <th>es</th>
-    <th>av</th>
+    <tr>
+      <th>show</br>details</th>
+      <th><label for="export-all"> export all</label></br><input id="export-all" class="export-all" type="checkbox"/></th>
+      <th>guide</th>
+      <th>tool</th>
+      <th>score</th>
+      <!--
+	  <th>ov</th>
+      <th>es</th>
+      <th>av</th>
     <th>as</th>
     <th>vs</th>
     -->
   </tr>
   </table>
+  </form>
 </script>
 
 <script type="unknown" id="spacer-oneline-header-template">
@@ -102,6 +119,7 @@
 </script>
 
 <script type="unknown" id="hero-spacer-template">
+  <td><input guide_sequence="{{guide_sequence}}" class="show-details" name="details" type="radio"/></td>
   <td><input name="{{guide_sequence}}" class="export" type="checkbox"/></td>
   <td class="seq"><span class="pam-before ">{{pam_before != null?pam_before:""}}</span>
   <span class="guide-sequence ">{{guide_sequence}}</span>
@@ -116,7 +134,7 @@
   <td class="flag mouse-only asiago-guide"><input disabled="true" type="checkbox"/></td>    
   <td class="flag human-only variant-safe"><input disabled="true" type="checkbox"/></td>
   -->
-</space>
+</script>
 
 <script type="unknown" id="results-waiting-template">
   <div class="row">
@@ -127,4 +145,39 @@
       <div>please sit tight while your results are being computed</div>
       <div>if you need to return to this job later, you can use this link:</div>
       <a href="{{location}}">{{location}}</div>
+</script>
+
+
+<script type="unknown" id="spacer-detail-view-template">
+  guide detail view for {{spacer.guide_id}}, ({{spacer.guide_sequence}})
+  <dl>
+    <dt>tool</dt><dd>{{spacer.tool}}</dd>
+    <dt>5' pam</dt>{{spacer.pam_before}}<dd></dd>
+    <dt>3' pam</dt><dd>{{spacer.pam_after}}</dd>
+    <dt>on target locus</dt><dd>{{spacer.chrom}} {{spacer.guide_start + gene.start}}</dd>
+    <dt>strand</dt><dd>{{spacer.guide_strand}}</dd>    
+  </dl>
+
+  <h3>offtarget alignments</h3>
+  <div class="ot-table-container empty">
+    <div class="if-empty">
+      no off-targets with less than 3 mismatches found for {{spacer.guide_sequence}} with {{spacer.tool}} in {{assembly}}
+    </div>
+    <div class="if-full">
+      <table class="ot-table">
+      <tr><th>offtarget position</th><th>mismatches</th></tr>
+      
+
+      </table>
+    </div>
+  </div>
+</script>
+
+
+<script type="unknown" id="offtarget-spacer-row-template">
+
+  <tr>
+    <td>{{a.chrom}} {{a.start}} {{a.strand}}</td>
+    <td>{{a.mismatches}}</td>
+  </tr>
 </script>

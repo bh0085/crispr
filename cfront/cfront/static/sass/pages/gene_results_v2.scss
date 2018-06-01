@@ -1,6 +1,6 @@
 
-$cas9bg:purple;
-$cpf1bg:green;
+$cas9bg:rgb(0, 158, 115);
+$cpf1bg:rgb(0, 114, 178);
 $fixed-width:80ch;
 
 body.gene_results_v2{
@@ -9,11 +9,29 @@ body.gene_results_v2{
 	font-family:Helvetica Neue;
     }
 
+    a.disabled{
+	color:gray;
+    }
+    
     a.underline:link{
 	text-decoration:underline;
     }
     .header .title{
 	margin-bottom:25px;
+    }
+
+    table{
+	tr:first-child{
+	    border-bottom:1px dashed lightgray;
+	    margin-bottom:5px;
+	}
+	th{
+	    vertical-align:bottom;
+	    input,label{
+		margin-top:0px;
+		margin-bottom:0px;
+	    }
+	}
     }
     
     .header-container{
@@ -25,6 +43,18 @@ body.gene_results_v2{
 	    right:0px;
 	}
     }
+    .ot-table-container{
+	&.full{
+	    .if-empty{
+		display:none;
+	    }
+	}
+	&:not(.full){
+	    .if-full{
+		display:none;
+	    }
+	}
+    }
     .background-stripe{
 	margin-left:-1000px;
 	padding-right:2000px;
@@ -34,7 +64,7 @@ body.gene_results_v2{
 	background-color: #EFEFEF;
 	height:3em;
     }
-    font-family:courier;
+    font-family:courier; 
     #drawing{
 	width: $fixed-width;
 	position: relative;
@@ -64,9 +94,7 @@ body.gene_results_v2{
 
     .fixed-width-header{
 	.biline{
-	    font-weight:lighter;
-	    opacity:.99;
-	    color:gray;
+	    color:black;
 	}
 	h1,h2{
 	    margin-top:40px;

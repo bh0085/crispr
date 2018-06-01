@@ -6,6 +6,7 @@ selection_start = null
 selection_end = null
 letters_timer = null
 max_spacers = 20
+min_per_guide = 5
 selection_timer = null
 exon_line = null
 exon_select_line = null
@@ -268,6 +269,7 @@ function init_page(){
 	draw_svg()
     }
 
+    
     if (sessionInfo.data == null)
     {
 	$("#gene_results_v2-container").html(
@@ -280,14 +282,101 @@ function init_page(){
 
     $(document).on("change",".export-all",function(ev){
 	$(".export").prop("checked",$(ev.currentTarget).prop("checked"))
+	$("#download-selected").attr("href","/v2/"+sessionInfo.assembly+"/"+sessionInfo.geneid+"/selected_spacers.gb?"+$.param({ 'spacers' : JSON.stringify(_.map($(".export:checked"),function(e){return $(e).attr("name")})) }))
+	$("#download-selected").toggleClass("disabled", $(".export:checked").length ==0)
+
     })
 
     
     $(document).on("change",".export",function(ev){
 	$(".export-all").prop("checked",false)
+	$("#download-selected").attr("href","/v2/"+sessionInfo.assembly+"/"+sessionInfo.geneid+"/selected_spacers.gb?"+$.param({ 'spacers' : JSON.stringify(_.map($(".export:checked"),function(e){return $(e).attr("name")})) }))
+	$("#download-selected").toggleClass("disabled", $(".export:checked").length ==0)
+	
     })
 
+    $(document).on("change", ".show-details",
+		   function(ev){
+		       seq = $(ev.currentTarget).attr("guide_sequence")
+		       
+		       spacer = _.filter(get_selected_spacers("all"),function(e){
+			   return e.guide_sequence==seq
+		       })[0]
+		       $("#spacer-details-container").html(
+			   _.template($("#spacer-detail-view-template").html())(
+			       {
+				   "spacer":spacer,
+				   "gene":sessionInfo.gene_info,
+				   "assembly":sessionInfo.assembly
+			       }))
+
+		       for(var i = 0; i < spacer.offtarget_alignments.length; ++i) {
+			   $("#spacer-details-container .ot-table-container").addClass('full')
+			   var a = spacer.offtarget_alignments[i]
+			   $("#spacer-details-container").find("table").append(_.template($("#offtarget-spacer-row-template").html())({"a":a}))
+		       }
+		       
+		       $("#download-guide-gb").attr("href","/v2/"+sessionInfo.assembly+"/"+sessionInfo.geneid+"/"+spacer.tool+"/"+spacer.guide_sequence+"/guide.gb")
+		       $("#download-guide-gb").toggleClass("disabled",false)
+		   })
     
+
+
+	    /*
+
+   <% for(var i = 0; i < spacer.offtarget_alignments.length; ++i) { %>
+       <% a = spacer.offtarget_alignments[i] %>
+       <tr>
+	 <td>a.chrom a.start a.strand</td>
+	 <td>a.mismatches</td>
+       </tr>
+       <% } %>
+*/
+
+
+    /*$(document).on("click","#download-selected",function(ev){
+
+
+	
+$.post( "/v2/"+sessionInfo.assembly+"/"+sessionInfo.geneid+"/selected_spacers.gb",
+		, function() {
+	    window.location.href = '/Page2';
+	});
+
+	window.open('http://www.theuntappedsource.com/results.php?category=422');
+
+	
+	url =  "/v2/"+sessionInfo.assembly+"/"+sessionInfo.geneid+"/selected_spacers.gb"
+	$.ajax({
+	    type: "POST",
+	    url:  url,
+	    data: {spacers:},
+	    success: function(response, status, request) {
+		var disp = request.getResponseHeader('Content-Disposition');
+
+		console.log(disp)
+		
+		
+		//if (disp && disp.search('attachment') != -1) {
+		    console.log("creating form")
+		    var form = $('<form method="POST" action="' + url + '">');
+		    $.each(params, function(k, v) {
+			form.append($('<input type="hidden" name="' + k +
+				      '" value="' + v + '">'));
+		    });
+		    $('body').append(form);
+		    form.submit();
+		    console.log("submitted")
+		//}
+	    }
+	});
+	
+    })*/
+	
+	
+ 
+
+    /*
     $(document).on("click",".highlight.guide",
 		   function(ev){
 		       $e = $(ev.currentTarget)
@@ -300,6 +389,7 @@ function init_page(){
 			   $t.toggleClass("highlighted",!is_highlighted)
 		       }
 		   })
+    */
     
 }
    
@@ -322,7 +412,34 @@ function get_selected_spacers(tool){
     
     spacers_sorted = _.sortBy(selected_spacers,"score")
     spacers_sorted.reverse()
-    selected_spacers = spacers_sorted.slice(0,max_spacers)
+
+    var cas9_count = 0
+    var cpf1_count=0
+    var total_count =0
+
+    // adds at least "min_per_guide" spacers of each type to the list.
+    // maes out at max_spacers + min_per_guide * n-1
+    selected_spacers =_.filter(_.map(spacers_sorted,function(e){
+	if(e.tool == "cpf1"){
+	    if( cpf1_count <min_per_guide){
+		cpf1_count+=1
+		total_count+-1
+		return e
+	    }
+	} else{
+	    if( cas9_count < min_per_guide){
+		cas9_count+= 1
+		total_count+=1
+		return e
+	    }
+	}
+	if(total_count <max_spacers){
+	    total_count+=1
+	    return e
+	}
+    }), function(e){return e!=null})
+    
+    //selected_spacers = spacers_sorted.slice(0,max_spacers)
     return selected_spacers
 
 }
@@ -454,7 +571,9 @@ var GeneResultsV2V = Backbone.View.extend({
 		  "genome_assembly":genome_info["assembly"],
 		  "gene_info":gene_info,
 		  "data":data,
-		  "status":status  
+		  "status":status ,
+		  "assembly":genome_info["assembly"],
+		  "geneid":sessionInfo.geneid,
 		 }
 
 	

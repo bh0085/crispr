@@ -1,10 +1,5 @@
 name,assembly,blat
-mosquito,anoGam1,8001
-cow,bosTau7,8002
 dog,canFam3,8003
-zebrafish,danRer11,8004
-fly,dm6,8005
-chicken,galGal4,8006
 human,hg38,8007
 mouse,mm10,8008
 tibetan frog,nanPar1,8009

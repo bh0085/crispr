@@ -16,11 +16,11 @@ import StringIO
 import random
 from pyramid.response import FileResponse
 import os
-    
-import sendgrid
-import os
-from sendgrid.helpers.mail import *
 
+
+
+import sendgrid
+from sendgrid.helpers.mail import *
 import base64
 
 
@@ -33,46 +33,30 @@ def email_all_genbankl(request):
     email = request.matchdict['email']
 
     sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
-    from_email = Email("ben@coolship.io")
-    
+    from_email = Email("hi@crispr.mit.edu","crispr design platform")
     to_email = Email(email)
-    
-    
-    subject = "your genbank files are ready"
-    content = Content("text/plain", "and easy to do anywhere, even with Python")
+    subject = "Your crispr query of {0} is complete!".format(geneid)
+    content = Content("text/plain", """Hello--you've successfully submitted a guide search to crispr.mit.edu and your results are ready. 
+
+To see your job's output at our online gateway, please head over to:
+http://35.231.249.4:6539/v2/{0}/{1}/gene_results
+
+We've also attached our top guide recommendations for cas9 and cpf1 targeting of {1} in genbank format to this email.
+
+If you have any questions about job output, or for feature suggestions and important announcements, please visit our forum,
+https://groups.google.com/forum/#!forum/crispr
+
+Thanks for using crispr.mit.edu!
+--the Zhang Lab
+
+    """.format(assembly, geneid))
     mail = Mail(from_email, subject, to_email, content)
-    #
-    #
-    #
-    #
-    #"""Build attachment mock."""
-    #attachment = Attachment()
-    #attachment.content = (gene_genbank_spacers_helper(assembly, geneid, returntype="text",
-    #                            spacer_sequence_filter=None,
-    #                            tool_filter=None,
-    #                            min_score=90))
-    #
-    #attachment.type = "application/pdf"
-    #attachment.filename = "guides_{0}_{1}.gb".format(assembly,geneid)
-    #attachment.disposition = "attachment"
-    #attachment.content_id = "recommended guides"
-
-
+  
     attachment = Attachment()
     text=gene_genbank_spacers_helper(assembly, geneid, returntype="text",
                                                                        spacer_sequence_filter=None,
                                                                        tool_filter=None,
                                                                        min_score=90)
-
-    #text = gene_genbank_spacers_helper(assembly, geneid, returntype="filename",
-    #                                                                   spacer_sequence_filter=None,
-    #                                                                    tool_filter=None,
-    #                                                                    min_score=90)
-
-    #with open('raw/test-report.csv', 'rb') as fd:
-    #b64data = base64.b64encode("""hi, hello
-#    1, 2
-#""")
 
 
     b64data = base64.b64encode(text)
@@ -151,6 +135,8 @@ def gene_genbank_spacer(request):
 
     assembly = request.matchdict['assembly']
     geneid = request.matchdict['geneid']
+
+    
     fname = gene_genbank_spacers_helper(assembly,geneid,returntype="filename",spacer_sequence_filter=guide_sequence,tool_filter=tool)
 
 
@@ -180,6 +166,20 @@ def gene_genbank_all_spacers(request):
         )
     return response
 
+@view_config(route_name="gene_genbank_selected_spacers")
+def gene_genbank_selected_spacers(request):
+    assembly = request.matchdict['assembly']
+    geneid = request.matchdict['geneid']
+
+    spacers = sjson.loads( request.params['spacers'])
+    fname = gene_genbank_spacers_helper(assembly,geneid,returntype="filename",spacer_sequence_filter=spacers)
+    
+    response = FileResponse(
+        fname,
+        request=request,
+        content_type='text'
+        )
+    return response
 
 
 @view_config(route_name="gene_fasta")
@@ -289,7 +289,7 @@ def gene_genbank_spacers_helper(assembly, geneid, returntype="filename",
 
 
     cas9_spacers = data["cas9"]["spacers"]
-    cpf1_spacers = data["cas9"]["spacers"]
+    cpf1_spacers = data["cpf1"]["spacers"]
 
     
     sfs = []
@@ -300,10 +300,15 @@ def gene_genbank_spacers_helper(assembly, geneid, returntype="filename",
             if tool != tool_filter:
                 continue
         print tool
+
         for s in spacer_list:
-            if spacer_sequence_filter:
-                if s["guide_sequence"] != spacer_sequence_filter:
-                    continue
+            if spacer_sequence_filter:            
+                if type(spacer_sequence_filter) == str or type(spacer_sequence_filter) == unicode:
+                    if s["guide_sequence"] != spacer_sequence_filter:
+                        continue
+                elif type(spacer_sequence_filter) == list:
+                    if not s["guide_sequence"] in spacer_sequence_filter:
+                        continue
             if min_score != None:
                 
                 print s["score"]
@@ -320,6 +325,12 @@ def gene_genbank_spacers_helper(assembly, geneid, returntype="filename",
             quals.update({"score":s["score"],
                           "tool":tool,
                           "target_seq":s["guide_sequence"]})
+
+            ot_mms = dict([["offtarget_{0}_mms".format(i),ot["mismatches"]] for i,ot in enumerate( s["offtarget_alignments"]) ])
+            quals.update(ot_mms)
+            
+            ot_loci = dict([["offtarget_{0}_locus".format(i),"{0} {1}{2}".format(ot["chrom"],ot["strand"],ot["start"])] for i,ot in enumerate( s["offtarget_alignments"]) ])
+            quals.update(ot_loci)
         
                 
             sfs.append(SeqFeature(FeatureLocation(s["guide_start"],
@@ -367,7 +378,7 @@ def post_or_update_gene_query(assembly, geneid, email):
     #create an empty datafile
     with open(query_data_file,"a"): pass
 
-    email_clean  = re.compile("[^A-z]").sub("_",email)
+    email_clean  = email #re.compile("[^A-z]").sub("_",email)
     user_email_directory = os.path.join(emails_directory,email_clean)
     if not os.path.isdir(user_email_directory): os.makedirs(user_email_directory)
     if not os.path.isfile(os.path.join(user_email_directory,query_data_basename)):
