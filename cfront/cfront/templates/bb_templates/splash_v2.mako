@@ -33,9 +33,9 @@
 	<h3>Previous Versions</h3>
 	<ul>
 	  <li><dt>JUNE 2018 -- CRISPR DESIGN PLATFORM (*BETA)</dt>
-	    <dd><a href="crispr.mit.edu/v1/submit">crispr.mit.edu</a><br/>Our second generation tool is designed to simplify the process of choosing guides in located anywhere the coding sequence of a target gene. Choose a gene and scan it for all possible guides for either Cas9 or Cpf1. <i><p>COMING SOON: RNA knock down design with Cas13.</i></dd>
+	    <dd><a href="http://crispr.mit.edu">crispr.mit.edu</a><br/>Our second generation tool is designed to simplify the process of choosing guides in located anywhere the coding sequence of a target gene. Choose a gene and scan it for all possible guides for either Cas9 or Cpf1. <i><p>COMING SOON: RNA knock down design with Cas13.</i></dd>
 	  <li><dt>JULY 2013 -- OFF TARGET OPTIMIZATION</dt></li>
-	  <dd><a href="crispr.mit.edu/v1/submit">crispr.mit.edu/v1</a><br/>Select optimal CRISPR Cas9 target sites in a genomic locus or synthetic sequence, evaluating guide optimality in a 5--250 bp region, using off-target predictions based on <a href="http://www.nature.com/nbt/journal/v31/n9/full/nbt.2647.html">Hsu et al, Nature Biotechnology 2013</a>.</dd></li>
+	  <dd><a href="http://crispr.mit.edu/v1/submit">crispr.mit.edu/v1</a><br/>Select optimal CRISPR Cas9 target sites in a genomic locus or synthetic sequence, evaluating guide optimality in a 5--250 bp region, using off-target predictions based on <a href="http://www.nature.com/nbt/journal/v31/n9/full/nbt.2647.html">Hsu et al, Nature Biotechnology 2013</a>.</dd></li>
 	</ul>
       </div>
     </div>

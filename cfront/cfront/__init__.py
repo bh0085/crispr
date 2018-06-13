@@ -64,7 +64,7 @@ def main(global_config, **settings):
 
     #page routes
     
-    config.add_route('splash_v2', '/', factory=PageResourceFactory)
+    config.add_route('splash_v2', '/v2', factory=PageResourceFactory)
     config.add_route('gene_results_v2', '/v2/{assembly}/{geneid}/gene_results', factory=PageResourceFactory)
     config.add_route('submit_v2', '/v2/{assembly}/submit', factory=PageResourceFactory)
     config.add_route('genes_autocomplete_array', '/v2/{assembly}/gene_names.json')
@@ -82,7 +82,7 @@ def main(global_config, **settings):
     
     config.add_route('about', '/about', factory=PageResourceFactory)
     config.add_route('batch', '/v1/batch/{batch_key}', factory = BatchResourceFactory)
-    config.add_route('submit', '/v1/submit', factory=PageResourceFactory)
+    config.add_route('submit', '/', factory=PageResourceFactory)
     config.add_route('job', '/v1/job/{job_key}', factory=PageResourceFactory)
     config.add_route('readonly', '/readonly',factory=PageResourceFactory)
     config.add_route('readout', '/v1/guides/{job_key}',factory=PageResourceFactory)
