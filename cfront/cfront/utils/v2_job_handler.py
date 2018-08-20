@@ -173,6 +173,8 @@ def email_complete(assembly,geneid):
                 continue
             with open(os.path.join(folderpath,f)) as fopen:
                 status = sjson.loads(fopen.next())
+                if status.get("failed",False):
+                    continue
                 data = sjson.loads(fopen.next())
                 dates = status.get("email-dates",[])
                 if len(dates) == 0:
@@ -212,7 +214,11 @@ def run_job(assembly, geneid):
     out_data={}
 
     search_features = []
+
     cds = list(db.children(gene,featuretype="CDS",order_by="start"))[::-1]
+
+    if len(cds) == 0:
+        return   {"failed":True}, {}
     
     current=cds.pop()
     current_start = current.start
@@ -336,8 +342,11 @@ def run_job(assembly, geneid):
             records = (SeqRecord(Seq(pbefore + spacer["guide_sequence"] + pafter, generic_dna), spacer["guide_id"], description =  "{0} {3}---{4} target in {1} {2}".format(tool,assembly,geneid,pbefore,pafter)) for spacer in tool_spacers for pbefore in pams_before for pafter in pams_after )
             SeqIO.write(records, tf2, "fasta")
 
-
+        if count ==0:
+            return  {"failed":True}, {}
             
+        
+        
         outfile = "/fastdata/webserver/tmp/{0}_{1}_bowtie_hits.map".format(geneid,tool)
         import subprocess
 
@@ -471,7 +480,9 @@ def run_job(assembly, geneid):
 gene_queries_directory = "/fastdata/crispr/gene_queries"
 emails_directory = "/fastdata/crispr/emails"
 def process_queue(reset = False):
-    for f in os.listdir(gene_queries_directory):
+
+    
+    for f in os.listdir(gene_queries_directory)[::-1]:
         do_run_job = reset
         
         with open(os.path.join(gene_queries_directory,f)) as fopen:
@@ -482,8 +493,9 @@ def process_queue(reset = False):
                         do_run_job = True
                     else:
                         status_line = sjson.loads(l0.rstrip())
-                    
-                        if not status_line.get("complete",False):
+                        if status_line.get("failed",False):
+                            do_run_job = False
+                        elif not status_line.get("complete",False):
                             do_run_job = True
                 except StopIteration as e:
                     do_run_job = True
@@ -497,6 +509,7 @@ def process_queue(reset = False):
                 print "running job for {0} / {1} at time {2}".format(assembly,geneid,strftime("%a, %d %b %Y %H:%M:%S +0000", gmtime()))
 
                 status, data = run_job(assembly,geneid)
+                
                 fopen.writelines([sjson.dumps(status)+"\n",sjson.dumps(data)+"\n"])
                 print "done! output at: \n{0}".format(os.path.join(gene_queries_directory,f))
         

@@ -18,7 +18,7 @@
 
 
 	<div class="fixed-width-header">
-	  <div class="biline">1. ADJUST RANGE to select target exons in {{genome_name}} ({{assembly}}) gene, {{gene_name}}.</div>
+	  <div class="biline">1. ADJUST RANGE to select target exons in {{genome_name}} ({{assembly}}) gene, {{gene_name}}. [Click to target one exon]</div>
 	  
 	  <div class="selection-container">
 	    <div id="drawing" class="gene">	  

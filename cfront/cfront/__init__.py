@@ -56,8 +56,8 @@ def main(global_config, **settings):
     config.include('pyramid_mako')
 
     #static routes
-    config.add_static_view('/css', 'static/css', cache_max_age=3600)
-    config.add_static_view('/js', 'static/js', cache_max_age=3600)
+    config.add_static_view('/v2/css', 'static/css', cache_max_age=3600)
+    config.add_static_view('/v2/js', 'static/js', cache_max_age=3600)
     config.add_static_view('/img', 'static/img', cache_max_age=3600)
     config.add_static_view('/pages', 'static/pages', cache_max_age=3600)
     config.add_static_view('/files', 'static/files', cache_max_age=3600)

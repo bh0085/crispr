@@ -25,6 +25,8 @@ var GeneResultsV2V = Backbone.View.extend({
 	this.$el.find(".genome-name").text(genome_info["name"])
 	this.$el.find(".genome-assembly").text(genome_info["assembly"])
 	render_letters()
+
+	
 	return this
     },
     
@@ -77,14 +79,19 @@ function draw_svg(){
 	right = transform_exon_x(e.end)
 
 	
-	
-	return { "exon": draw.rect( right - left, 10).move(left,svg_exon_y-5),
-		 "text": draw.text(function(add) {
+
+	grp = draw.group().addClass("exon-group").attr("exon_range_start",get_exon_start_in_gene(e)).attr("exon_range_end",get_exon_end_in_gene(e))
+	rect = grp.rect( right - left, 10).move(left,svg_exon_y-5)
+	text = grp.text( function(add) {
 		     add.tspan('EXON '+i).newLine()
 		     add.tspan("start: "+ get_exon_start_in_gene(e)).newLine()
 		     add.tspan("end: "+ get_exon_end_in_gene(e)).newLine()
 
 		 }).move(left, svg_exon_y - 75)
+	
+	return { "group":grp,
+		 "exon": rect,
+		 "text": text,
 	       }
 	
     })
@@ -593,6 +600,40 @@ function init_page(){
 	draw_svg()
     }
 
+    $(document).on("mouseover", "rect",function(ev){
+	$tgt = $(ev.currentTarget).parent()
+	$tgt.attr("class", $tgt.attr("class").replace("focused","") + " focused")
+    })
+    $(document).on("mouseout", "rect",function(ev){
+	$tgt = $(ev.currentTarget).parent()
+	$tgt.attr("class", $tgt.attr("class").replace("focused",""))
+    })
+
+    $(document).on("click", "rect",function(ev){
+	
+	$tgt = $(ev.currentTarget).parent()
+
+	classes = $tgt.attr("class")
+	if (classes.search("ranged") > 0)
+	{
+
+	    letters = sessionInfo.seq_letters
+	    slider.noUiSlider.set([0,letters.length])
+	    $tgt.attr("class", $tgt.attr("class").replace("ranged",""))
+
+	    
+	} else {
+	    exon_range_start = $tgt.attr("exon_range_start")
+	    exon_range_end = $tgt.attr("exon_range_end")
+	    slider.noUiSlider.set([Number(exon_range_start),Number(exon_range_end)])
+	    $tgt.attr("class", $tgt.attr("class").replace("ranged","") + " ranged")
+
+	}
+    })
+
+	
+    
+    
     $(document).on("change",".export-all",function(ev){
 	$(".export").prop("checked",$(ev.currentTarget).prop("checked"))
 	$("#download-selected").attr("href","/v2/"+sessionInfo.assembly+"/"+sessionInfo.geneid+"/selected_spacers.gb?"+$.param({ 'spacers' : JSON.stringify(_.map($(".export:checked"),function(e){return $(e).attr("name")})) }))

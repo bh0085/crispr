@@ -64,6 +64,12 @@ body.gene_results_v2{
 		opacity:.3;
 	    }
 	}
+	.exon-group:not(.focused){
+
+	    text{
+		display:none;
+	    }
+	}
 
     }
 
